@@ -1,24 +1,32 @@
-package entities;
+package Library.demo.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Entity(name = "books")
+@Entity(name = "BOOKS")
 public class Books {
 
-    private @Id @GeneratedValue int  isbn;
-    private int count;
-    private String author, name, description;
+    @Id
+    @GeneratedValue
+    private long isbn;
 
-    public Books(int count, String author, String name, String description) {
-        this.count = count;
+    private int count_books;
+
+    private String author;
+
+    private String name;
+
+    private String description;
+
+    public Books( int count_books, String author, String name, String description) {
+
+        this.count_books = count_books;
         this.author = author;
         this.name = name;
         this.description = description;
     }
 
-    public int getIsbn() {
+
+    public long getIsbn() {
         return isbn;
     }
 
@@ -27,11 +35,11 @@ public class Books {
     }
 
     public int getCount() {
-        return count;
+        return count_books;
     }
 
     public void setCount(int count) {
-        this.count = count;
+        this.count_books = count;
     }
 
     public String getAuthor() {
