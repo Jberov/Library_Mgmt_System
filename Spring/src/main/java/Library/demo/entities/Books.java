@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class Books {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long isbn;
 
     private int count_books;
@@ -18,11 +18,13 @@ public class Books {
     private String description;
 
     public Books( int count_books, String author, String name, String description) {
-
         this.count_books = count_books;
         this.author = author;
         this.name = name;
         this.description = description;
+    }
+
+    public Books() {
     }
 
 
