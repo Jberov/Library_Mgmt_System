@@ -1,8 +1,8 @@
 package Library.demo.dao;
 
 import Library.demo.entities.Books;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import org.hibernate.QueryTimeoutException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class BooksDAOImpl {
     @Autowired
     BookRepository bookRepository;
 
-    public LinkedList<Books> get_all_books() throws ResponseStatusException{
+    public LinkedList<Books> getAllBooks() throws ResponseStatusException{
         try {
             LinkedList<Books> books = new LinkedList<>();
 
@@ -35,7 +35,7 @@ public class BooksDAOImpl {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error");
         }
     }
-    public void addBook_admin(int count, String name, String author, String description) throws ResponseStatusException{
+    public void addBookAdmin(int count, String name, String author, String description) throws ResponseStatusException{
         try {
             Books book = new Books(count, name, author, description);
             for (Books record : bookRepository.findAll()) {
@@ -52,9 +52,8 @@ public class BooksDAOImpl {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
         }catch(QueryTimeoutException qte){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error");
         }
     }
 
 }
+
