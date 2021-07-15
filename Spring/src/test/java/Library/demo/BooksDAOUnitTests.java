@@ -50,4 +50,11 @@ public class BooksDAOUnitTests {
 
 
     }
+
+    @Test
+    public void deleteBook() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.delete("/books/delete?name=Под Игото")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

@@ -2,7 +2,6 @@ package Library.demo.dao;
 
 import Library.demo.entities.Books;
 import org.hibernate.QueryTimeoutException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,8 @@ public class BooksDAOImpl {
 
     public LinkedList<Books> getAllBooks() throws ResponseStatusException{
         try {
-            LinkedList<Books> books = new LinkedList<>();
 
-            for (Books book : bookRepository.findAll()) {
-                books.add(book);
-            }
+            LinkedList<Books> books = new LinkedList<>(bookRepository.findAll());
             System.out.println(bookRepository.count());
             return books;
         }catch (JDBCConnectionException jdbcConnectionException){
@@ -55,5 +51,40 @@ public class BooksDAOImpl {
         }
     }
 
+    public String deleteBookAdmin(String name){
+        try {
+            if (bookRepository.getBookByName(name).getName().equals(name)) {
+                bookRepository.deleteById(bookRepository.getBookByName(name).getIsbn());
+                return "Delete successful";
+            } else {
+                return "No such book found";
+            }
+        }catch (JDBCConnectionException jdbc){
+            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
+        }catch (InputMismatchException ime){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
+        }catch(DataException dataException){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
+        }catch(QueryTimeoutException qte){
+            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
+        }
+    }
+    public Books getBook(long isbn) throws ResponseStatusException{
+        try{
+            if(bookRepository.findById(isbn).isPresent()){
+                return bookRepository.findById(isbn).get();
+            }else{
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No such book found ");
+            }
+        }catch (JDBCConnectionException jdbc){
+            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
+        }catch (InputMismatchException ime){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
+        }catch(DataException dataException){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
+        }catch(QueryTimeoutException qte){
+            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
+        }
+    }
 }
 

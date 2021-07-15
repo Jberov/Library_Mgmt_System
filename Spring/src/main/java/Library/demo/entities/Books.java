@@ -9,13 +9,15 @@ public class Books {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long isbn;
 
+    @Column
     private int count_books;
-
+    @Column
     private String author;
-
+    @Column
     private String name;
-
+    @Column
     private String description;
+
 
     public Books( int count_books, String author, String name, String description) {
         this.count_books = count_books;
