@@ -14,7 +14,7 @@ public class DeleteBookAdminCommand {
     BooksDAOImpl bookDAO;
 
     @DeleteMapping("/books/delete")
-    public void execute(@RequestParam String name){
-        bookDAO.deleteBookAdmin(name);
+    public String execute(@RequestParam String name){
+        return bookDAO.deleteBookAdmin(name);
     }
 }

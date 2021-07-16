@@ -53,8 +53,8 @@ public class BooksDAOImpl {
 
     public String deleteBookAdmin(String name){
         try {
-            if (bookRepository.getBookByName(name).getName().equals(name)) {
-                bookRepository.deleteById(bookRepository.getBookByName(name).getIsbn());
+            if (bookRepository.findByName(name).getName().equals(name)) {
+                bookRepository.deleteById(bookRepository.findByName(name).getIsbn());
                 return "Delete successful";
             } else {
                 return "No such book found";

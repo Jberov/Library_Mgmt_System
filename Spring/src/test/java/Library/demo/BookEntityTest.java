@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class BookEntityIntegrationTest {
+public class BookEntityTest {
     @Autowired
     private TestEntityManager entityManager;
 
@@ -26,7 +26,7 @@ public class BookEntityIntegrationTest {
         entityManager.persist(book);
         entityManager.flush();
 
-        Books found = bookRepository.getBookByName(book.getName());
+        Books found = bookRepository.findByName(book.getName());
 
         AssertionsForClassTypes.assertThat(found.getAuthor())
                 .isEqualTo(book.getAuthor());
