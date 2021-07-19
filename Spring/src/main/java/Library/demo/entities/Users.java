@@ -3,10 +3,13 @@ package Library.demo.entities;
 import javax.persistence.*;
 
 
-@Entity(name = "user")
-public class User {
-    public User(String name) {
+@Entity(name = "users")
+public class Users {
+    public Users(String name) {
         this.name = name;
+    }
+
+    public Users() {
     }
 
     public long getId() {

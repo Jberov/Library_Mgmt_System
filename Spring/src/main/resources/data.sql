@@ -11,3 +11,14 @@ INSERT INTO BOOKS (count_books, author, name, description) VALUES
   (2,'Иван Вазов', 'Под Игото', 'В малко градче пристига странник и им показва значението на свободата'),
   (4,'Димитър Димов','Тютюн' , 'История за човешки характери, поквара и любов на фона на ВСВ.'),
   (6,'Клетниците', 'Виктор Юго', 'Разтърсваща история за човешкия падеж и неговото възстановяване.');
+
+DROP TABLE IF EXISTS USERS;
+CREATE TABLE USERS(
+id LONG  AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(30) NOT NULL UNIQUE
+);
+
+INSERT INTO USERS (name) VALUES
+  ('JBaller'),
+  ('Hero'),
+  ('User');

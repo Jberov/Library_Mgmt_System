@@ -1,16 +1,16 @@
 package Library.demo.dto;
 
 import Library.demo.dao.UserDAOImpl;
-import Library.demo.entities.User;
+import Library.demo.entities.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserDTO {
     @Autowired
-    UserDAOImpl userDAO;
+    private UserDAOImpl userDAO;
 
-    public User getUser(String name){
+    public Users getUser(String name){
         if(userDAO.findUserByName(name) != null){
             return userDAO.findUserByName(name);
         }else{

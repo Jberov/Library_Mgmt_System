@@ -2,7 +2,7 @@ package Library.demo;
 
 
 import Library.demo.dto.UserDTO;
-import Library.demo.entities.User;
+import Library.demo.entities.Users;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserDTO.class)
-public class UserDTOTests {
+public class UsersDTOTests {
     @Autowired
     private MockMvc mvc;
 
@@ -30,7 +30,7 @@ public class UserDTOTests {
 
     @Test
     public void getUserTest() throws Exception{
-        User user = new User("JBaller");
+        Users user = new Users("JBaller");
         BDDMockito.given(userDTO.getUser("JBaller")).willReturn(user);
         mvc.perform(MockMvcRequestBuilders.get("/users/profile")
                 .contentType(MediaType.APPLICATION_JSON))
