@@ -21,7 +21,7 @@ public class UserBooksCommand {
     UserDTO userDTO;
 
     @GetMapping("user/history")
-    public LinkedList<Books> userHistory(@RequestParam String username){
+    public LinkedList<LinkedList<Books>> userHistory(@RequestParam String username){
         try{
             if(userDTO.userUsedBooks(username)==null){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No books ");

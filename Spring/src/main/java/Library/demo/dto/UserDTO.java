@@ -46,7 +46,7 @@ public class UserDTO {
             return bookRecordsDAO.returnBook(isbn, username);
         }
     }
-    public LinkedList<Books> userUsedBooks(String username){
+    public LinkedList<LinkedList<Books>> userUsedBooks(String username){
         if(bookRecordsDAO.booksUsedByUser(username).isEmpty()){
             return null;
         }else{

@@ -27,16 +27,16 @@ public class Users {
     private String name;
 
 
-    public LinkedList<Books> getUserHistory() {
+    public LinkedList<LinkedList<Books>> getUserHistory() {
         return userHistory;
     }
 
-    public void setUserHistory(LinkedList<Books> userHistory) {
+    public void setUserHistory(LinkedList<LinkedList<Books>> userHistory) {
         this.userHistory = userHistory;
     }
 
     @Transient
-    private LinkedList<Books> userHistory;
+    private LinkedList<LinkedList<Books>> userHistory;
 
 
     public String getName() {

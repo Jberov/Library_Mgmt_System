@@ -32,27 +32,30 @@ public class BookRecordsDAO {
     }
     public String returnBook(long bookId, String username){
         LinkedList <BooksActivity> test = bookRecordsRepository.findByUserId(user.findUserByName(username).getId());
-        for(BooksActivity i: test){
-            System.out.println(i.getStatus());
-        }
         new BooksActivity();
         BooksActivity temp;
         temp = bookRecordsRepository.findByBooksIsbnAndStatusAndUserId(books.getBook(bookId).getIsbn(),Status.TAKEN,user.findUserByName(username).getId());
-        System.out.println(temp.getBook().getName());
         temp.setStatus(Status.RETURNED);
         books.increaseCount(bookId);
         bookRecordsRepository.save(temp);
         return "Book successfully returned";
     }
-    public LinkedList<Books> booksUsedByUser(String username){
-        LinkedList<Books> books = new LinkedList<>();
+    public LinkedList<LinkedList<Books>> booksUsedByUser(String username){
+        LinkedList<LinkedList<Books>> books = new LinkedList<>();
         LinkedList<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
+        LinkedList<Books> takenBooks = new LinkedList<>();
+        LinkedList<Books> returnedBooks = new LinkedList<>();
+        books.add(takenBooks);
+        books.add(returnedBooks);
         for(BooksActivity i : records){
-            books.add(i.getBook());
+            if(i.getStatus().equals(Status.TAKEN)){
+                books.get(0).add(i.getBook());
+            }else{
+                books.get(1).add(i.getBook());
+            }
         }
         return books;
     }
 
     }
-    //private Books recursiveIterator()
 

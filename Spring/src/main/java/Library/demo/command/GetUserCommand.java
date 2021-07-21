@@ -35,6 +35,8 @@ public class GetUserCommand {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
         }catch(QueryTimeoutException qte){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
+        }catch (NullPointerException nullPointerException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No records for this user");
         }
 
 

@@ -15,15 +15,12 @@ public class UserDAOImpl {
     @Autowired
     private BookRecordsDAO bookRecordsDAO;
 
-    /*public Users getUser(long id){
-        return userRepository.findById(id).get();
-    }*/
     public Users findUserByName(String name){
         Users user =  userRepository.findByName(name);
         user.setUserHistory(usageHistory(name));
         return user;
     }
-    private LinkedList<Books> usageHistory(String name){
+    private LinkedList<LinkedList<Books>> usageHistory(String name){
         return  bookRecordsDAO.booksUsedByUser(name);
     }
 
