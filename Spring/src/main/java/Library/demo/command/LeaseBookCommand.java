@@ -1,40 +1,39 @@
 package Library.demo.command;
 
-
-import Library.demo.dto.BookDTO;
+import Library.demo.dto.UserDTO;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 
-@CrossOrigin
 @RestController
-public class DeleteBookAdminCommand {
+public class LeaseBookCommand {
     @Autowired
-    BookDTO bookDTO;
+    private UserDTO userDTO;
 
-    @DeleteMapping("/books/delete")
-    public String execute(@RequestParam String name){
+    @PatchMapping("/users/lease")
+    public String leaseBook(@RequestParam long isbn, @RequestParam String username){
         try{
-            return bookDTO.deleteBook(name);
+            return userDTO.leaseBook(isbn, username);
         }catch (JDBCConnectionException jdbc){
             return "Error connecting to database";
         }catch (InputMismatchException ime){
-            return "Invalid input";
+            return "Invalid or incomplete input";
         }catch(DataException dataException){
-            return "Data error";
+           return "Data error";
         }catch(QueryTimeoutException qte){
             return "Database connection error";
+        }catch (NoSuchElementException nsee){
+            return "No book with this id exists";
         }catch (Exception e){
             System.out.println(e.getMessage());
             return "Error";
         }
-
     }
 }

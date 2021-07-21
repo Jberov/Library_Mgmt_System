@@ -11,13 +11,20 @@ import java.util.LinkedList;
 @Service
 public class UserDAOImpl {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private BookRecordsDAO bookRecordsDAO;
 
     /*public Users getUser(long id){
         return userRepository.findById(id).get();
     }*/
     public Users findUserByName(String name){
-        return userRepository.findByName(name);
+        Users user =  userRepository.findByName(name);
+        user.setUserHistory(usageHistory(name));
+        return user;
+    }
+    private LinkedList<Books> usageHistory(String name){
+        return  bookRecordsDAO.booksUsedByUser(name);
     }
 
 

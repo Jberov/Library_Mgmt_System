@@ -1,6 +1,7 @@
 package Library.demo.entities;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 
 
 @Entity(name = "users")
@@ -24,12 +25,19 @@ public class Users {
     private long id;
     @Column
     private String name;
-    /*
-    private LinkedList <Books> taken_books;
 
 
-    private LinkedList <Books> returned_books;
-    */
+    public LinkedList<Books> getUserHistory() {
+        return userHistory;
+    }
+
+    public void setUserHistory(LinkedList<Books> userHistory) {
+        this.userHistory = userHistory;
+    }
+
+    @Transient
+    private LinkedList<Books> userHistory;
+
 
     public String getName() {
         return name;
