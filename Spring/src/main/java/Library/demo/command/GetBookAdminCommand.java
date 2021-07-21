@@ -18,7 +18,7 @@ import java.util.InputMismatchException;
 @RestController
 public class GetBookAdminCommand {
     @Autowired
-    BookDTO bookDTO;
+    private BookDTO bookDTO;
 
     @GetMapping("books/book")
     public Books getBook(@RequestParam long isbn){

@@ -1,4 +1,4 @@
-package Library.demo.dao;
+package Library.demo.repositories;
 
 import Library.demo.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package Library.demo.dao;
+package Library.demo.repositories;
 
 import Library.demo.entities.Books;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface BookRepository extends JpaRepository<Books, Long> {
 
     Books findByName(String name);
+
 
 }

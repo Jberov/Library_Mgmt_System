@@ -15,7 +15,7 @@ import java.util.InputMismatchException;
 @RestController
 public class AddBookAdminCommand {
     @Autowired
-    BookDTO bookDTO;
+    private BookDTO bookDTO;
 
     @PostMapping("/books/add")
     public String execute(@RequestParam int count_books, @RequestParam String author, @RequestParam String name, @RequestParam String description) {

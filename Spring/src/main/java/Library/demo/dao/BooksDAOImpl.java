@@ -1,15 +1,11 @@
 package Library.demo.dao;
 
 import Library.demo.entities.Books;
-import org.hibernate.QueryTimeoutException;
-import org.hibernate.exception.DataException;
-import org.hibernate.exception.JDBCConnectionException;
+import Library.demo.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.InputMismatchException;
 import java.util.LinkedList;
 
 @Service
@@ -32,17 +28,30 @@ public class BooksDAOImpl {
         return "Delete successful";
     }
     public Books getBook(long isbn){
-        try{
+        if(bookRepository.findById(isbn).isPresent()){
             return bookRepository.findById(isbn).get();
-        }catch (JDBCConnectionException jdbc){
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
-        }catch (InputMismatchException ime){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
-        }catch(DataException dataException){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
-        }catch(QueryTimeoutException qte){
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
+        }else{
+            return null;
         }
+    }
+    public boolean bookExistsByID(long isbn){
+        return bookRepository.findById(isbn).isPresent();
+    }
+    public boolean bookExists(String name){
+        return bookRepository.findByName(name) != null;
+    }
+    public void decreaseCount(long bookId){
+        Books temp = bookRepository.getById(bookId);
+        temp.setCount(temp.getCount() - 1);
+        bookRepository.save(temp);
+    }
+    public void increaseCount(long bookId){
+        Books temp = bookRepository.getById(bookId);
+        temp.setCount(temp.getCount() + 1);
+        bookRepository.save(temp);
+    }
+    public int checkCount(long isbn){
+        return bookRepository.findById(isbn).get().getCount();
     }
 }
 

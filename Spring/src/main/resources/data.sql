@@ -22,3 +22,13 @@ INSERT INTO USERS (name) VALUES
   ('JBaller'),
   ('Hero'),
   ('User');
+
+DROP TABLE IF EXISTS ACTIVITY;
+CREATE TABLE ACTIVITY(
+    id LONG AUTO_INCREMENT PRIMARY KEY,
+    books_isbn LONG NOT NULL,
+    status ENUM('TAKEN','RETURNED') NOT NULL,
+    user_id LONG NOT NULL,
+    FOREIGN KEY (books_isbn) REFERENCES BOOKS(isbn),
+    FOREIGN KEY (user_id) REFERENCES USERS(id)
+);

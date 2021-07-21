@@ -1,6 +1,6 @@
 package Library.demo;
 
-import Library.demo.dao.BookRepository;
+import Library.demo.repositories.BookRepository;
 import Library.demo.entities.Books;
 
 import org.assertj.core.api.AssertionsForClassTypes;
