@@ -20,7 +20,7 @@ public class GetBookAdminCommand {
     @Autowired
     private BookDTO bookDTO;
 
-    @GetMapping("books/book")
+    @GetMapping("admin/getBook")
     public Books getBook(@RequestParam long isbn){
         try{
             if(bookDTO.getBookById(isbn) != null){

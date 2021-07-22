@@ -56,6 +56,13 @@ public class BookRecordsDAO {
         }
         return books;
     }
-
+    public LinkedList<String> getUsersByBook(long bookId) {
+        LinkedList<String> usernames = new LinkedList<>();
+        LinkedList<BooksActivity> records = bookRecordsRepository.findByBooksIsbnAndStatus(books.getBook(bookId).getIsbn(), Status.TAKEN);
+        for (BooksActivity i : records) {
+            usernames.add(i.getUser().getName());
+        }
+        return usernames;
     }
+}
 

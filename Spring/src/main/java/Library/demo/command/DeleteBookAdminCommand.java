@@ -19,7 +19,7 @@ public class DeleteBookAdminCommand {
     @Autowired
     BookDTO bookDTO;
 
-    @DeleteMapping("/books/delete")
+    @DeleteMapping("/admin/books/delete")
     public String execute(@RequestParam String name){
         try{
             return bookDTO.deleteBook(name);

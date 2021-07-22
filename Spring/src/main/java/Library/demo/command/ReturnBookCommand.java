@@ -16,7 +16,7 @@ public class ReturnBookCommand {
     @Autowired
     private UserDTO userDTO;
 
-    @PatchMapping("/user/returnBook")
+    @PatchMapping("/users/returnBook")
     public String returnBook(@RequestParam long isbn, @RequestParam String username){
         try{
             return userDTO.returnBook(isbn, username);

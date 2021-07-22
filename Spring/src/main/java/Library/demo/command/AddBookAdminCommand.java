@@ -17,7 +17,7 @@ public class AddBookAdminCommand {
     @Autowired
     private BookDTO bookDTO;
 
-    @PostMapping("/books/add")
+    @PostMapping("/admin/addBook")
     public String execute(@RequestParam int count_books, @RequestParam String author, @RequestParam String name, @RequestParam String description) {
         try {
             if (bookDTO.addBookAdmin(count_books, author, name, description)) {

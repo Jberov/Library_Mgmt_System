@@ -53,4 +53,11 @@ public class UserDTO {
             return bookRecordsDAO.booksUsedByUser(username);
         }
     }
+    public LinkedList<String> getUsersByBook(long isbn){
+        if(booksDAO.bookExistsByID(isbn)){
+            return bookRecordsDAO.getUsersByBook(isbn);
+        }else{
+            return null;
+        }
+    }
 }
