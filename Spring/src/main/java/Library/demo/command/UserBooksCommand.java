@@ -20,7 +20,7 @@ public class UserBooksCommand {
     @Autowired
     UserDTO userDTO;
 
-    @GetMapping("user/history")
+    @GetMapping("users/history")
     public LinkedList<LinkedList<Books>> userHistory(@RequestParam String username){
         try{
             if(userDTO.userUsedBooks(username)==null){

@@ -1,7 +1,6 @@
 package Library.demo.command;
 
 import Library.demo.dto.UserDTO;
-import Library.demo.entities.Users;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
@@ -13,19 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.InputMismatchException;
+import java.util.LinkedList;
 
 @RestController
-public class GetUserCommand {
+public class GetBookUsedAtTheMomentCommand {
     @Autowired
     private UserDTO userDTO;
-
-    @GetMapping("/admin/user/profile")
-    public Users getUser(@RequestParam String name){
+    @GetMapping("/admin/book/users")
+    public LinkedList<String> getUsersOfBook(@RequestParam long isbn){
         try{
-            if(userDTO.getUser(name) == null){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such user");
+            if((userDTO.getUsersByBook(isbn) !=null) && (!userDTO.getUsersByBook(isbn).isEmpty())){
+                return userDTO.getUsersByBook(isbn);
+            }else if(userDTO.getUsersByBook(isbn).isEmpty()){
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No users have taken this book");
             }else{
-                return userDTO.getUser(name);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such book");
             }
         }catch (JDBCConnectionException jdbc){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
@@ -35,10 +36,7 @@ public class GetUserCommand {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
         }catch(QueryTimeoutException qte){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
-        }catch (NullPointerException nullPointerException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No records for this user");
         }
-
 
     }
 }

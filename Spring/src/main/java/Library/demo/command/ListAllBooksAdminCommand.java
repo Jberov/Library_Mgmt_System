@@ -20,7 +20,7 @@ import java.util.LinkedList;
 public class ListAllBooksAdminCommand {
     @Autowired
     private BookDTO bookDTO;
-    @GetMapping("/books/all")
+    @GetMapping("/admin/books/all")
     public LinkedList<Books> execute() {
         try{
             if(bookDTO.getAllBooks().isEmpty()){
@@ -34,9 +34,7 @@ public class ListAllBooksAdminCommand {
         }catch (InputMismatchException ime){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
         }catch(DataException dataException){
-            dataException.getMessage();
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
-
         }catch(QueryTimeoutException qte){
             System.out.println(qte.getMessage());
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
