@@ -36,6 +36,8 @@ public class GetBookUsedAtTheMomentCommand {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
         }catch(QueryTimeoutException qte){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
+        }catch (NullPointerException npte){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database connection error");
         }
 
     }

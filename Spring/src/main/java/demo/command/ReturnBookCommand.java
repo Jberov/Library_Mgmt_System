@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
 @RestController
@@ -33,7 +34,8 @@ public class ReturnBookCommand {
             System.out.println(qte.getMessage());
             return "Database connection error";
         }catch(NullPointerException nullPointerException){
-            return "You have already returned this book";
+            System.out.println(nullPointerException.getMessage());
+            return "No such user or book";
         }catch (Exception e){
             System.out.println(e.getMessage());
             return  "Error";

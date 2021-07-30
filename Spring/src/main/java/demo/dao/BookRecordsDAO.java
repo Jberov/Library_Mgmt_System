@@ -35,10 +35,19 @@ public class BookRecordsDAO {
 
 
     }
+    public boolean checkIfUserHasTakenBook(long isbn, String username){
+        for(String i: getUsersByBook(isbn)){
+            if(i.equals(username)){
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean userHistoryExists(long isbn){
         return bookRecordsRepository.existsByBooksIsbnAndStatus(isbn, Status.TAKEN);
     }
     public String returnBook(long bookId, String username){
+
         new BooksActivity();
         BooksActivity temp;
         temp = bookRecordsRepository.findByBooksIsbnAndStatusAndUserId(books.getBook(bookId).getIsbn(),Status.TAKEN,user.findUserByName(username).getId());

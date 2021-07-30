@@ -24,7 +24,7 @@ public class UserBooksCommand {
     public LinkedList<LinkedList<Books>> userHistory(@RequestParam String username){
         try{
             if(userDTO.userUsedBooks(username)==null){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No books ");
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No books or no such user");
             }else{
                 return userDTO.userUsedBooks(username);
             }
@@ -36,6 +36,8 @@ public class UserBooksCommand {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
         }catch(QueryTimeoutException qte){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
+        }catch (NullPointerException npte){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No such user ");
         }
     }
 }

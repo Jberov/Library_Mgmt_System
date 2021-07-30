@@ -38,20 +38,27 @@ public class UserDTO {
         }
     }
     public String returnBook(long isbn, String username){
-        if(!booksDAO.bookExistsByID(isbn)){
-            return "No such book has benn taken or does not exist";
-        }else if(userDAO.findUserByName(username) == null){
+        if(userDAO.findUserByName(username) == null){
             return "No such user";
+        }else if(!bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)){
+            return "You have not taken this book!";
+        }else if(!booksDAO.bookExistsByID(isbn) || !booksDAO.getBook(isbn).isExists()){
+            return "No such book exists";
         }else{
             return bookRecordsDAO.returnBook(isbn, username);
         }
     }
     public LinkedList<LinkedList<Books>> userUsedBooks(String username){
-        if(bookRecordsDAO.booksUsedByUser(username).isEmpty()){
+        if(userDAO.findUserByName(username) == null){
+            return null;
+        }else if(bookRecordsDAO.booksUsedByUser(username).isEmpty()){
+            return null;
+        }else if(userDAO.findUserByName(username) == null){
             return null;
         }else{
             return bookRecordsDAO.booksUsedByUser(username);
         }
+
     }
     public LinkedList<String> getUsersByBook(long isbn){
         if(booksDAO.bookExistsByID(isbn)){
