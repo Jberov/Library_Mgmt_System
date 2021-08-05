@@ -5,12 +5,16 @@ import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;
+
 
 @RestController
 public class ReturnBookCommand {
@@ -41,5 +45,8 @@ public class ReturnBookCommand {
             return  "Error";
         }
     }
-
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public String handleMissingParams(MissingServletRequestParameterException ex) {
+        return ex.getParameterName() + " parameter is missing";
+    }
 }

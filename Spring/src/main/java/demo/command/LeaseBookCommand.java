@@ -5,10 +5,13 @@ import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
+
 
 @RestController
 public class LeaseBookCommand {
@@ -35,5 +38,9 @@ public class LeaseBookCommand {
             System.out.println(e.getMessage());
             return "Error";
         }
+    }
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public String handleMissingParams(MissingServletRequestParameterException ex) {
+        return ex.getParameterName() + " parameter is missing";
     }
 }

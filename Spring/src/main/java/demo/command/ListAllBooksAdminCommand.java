@@ -1,6 +1,5 @@
 package demo.command;
 
-
 import demo.dto.BookDTO;
 import demo.entities.Books;
 import org.hibernate.QueryTimeoutException;
@@ -8,10 +7,12 @@ import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 
@@ -20,7 +21,8 @@ import java.util.LinkedList;
 public class ListAllBooksAdminCommand {
     @Autowired
     private BookDTO bookDTO;
-    @GetMapping("/admin/books/all")
+
+    @GetMapping("/books/all")
     public LinkedList<Books> execute() {
         try{
             if(bookDTO.getAllBooks().isEmpty()){
@@ -39,10 +41,16 @@ public class ListAllBooksAdminCommand {
             System.out.println(qte.getMessage());
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
         }
-
-
-
     }
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public String handleMissingParams(MissingServletRequestParameterException ex) {
+        return ex.getParameterName() + " parameter is missing";
+    }
+    @ExceptionHandler(ResponseStatusException.class)
+    public String handleWeb(ResponseStatusException responseStatusException){
+        return responseStatusException.getLocalizedMessage();
+    }
+
 
 
 }
