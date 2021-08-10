@@ -1,0 +1,16 @@
+---
+applications:
+- name: Library-approuter
+  host: Library-approuter
+  path: C:\Users\I551610\IdeaProjects\ReserveLibrary\Intern_project--Library\Spring\src\main\Static
+  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.56
+  memory: 128M
+  XSAPPNAME: Library-sec
+  destinations: >
+    [{
+       "name":"Library",
+       "url" :"https://libraryapp.cfapps.sap.hana.ondemand.com",
+       "forwardAuthToken": true}
+    ]
+  services:
+  - Library-xsuaa

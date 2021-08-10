@@ -1,0 +1,9 @@
+---
+applications:
+  - name: LibraryApp
+    host: LibraryApp
+    memory: 700M
+    path: C:\Users\I551610\IdeaProjects\ReserveLibrary\Intern_project--Library\Spring\target\demo-0.0.1-SNAPSHOT.jar
+    services:
+    - LibraryApp
+    - Library-xsuaa
