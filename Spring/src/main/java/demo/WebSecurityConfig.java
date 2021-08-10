@@ -2,7 +2,6 @@ package demo;
 
 import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -15,11 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import com.sap.cloud.security.xsuaa.token.TokenAuthenticationConverter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Collections;
 
 
 @ComponentScan(basePackages = "demo.*")
@@ -39,8 +33,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/books/*").permitAll()
-                .antMatchers("/admin/**").hasAuthority("Admin")
                 .antMatchers("/users/**").hasAuthority("User")
+                .antMatchers("/admin/**").hasAuthority("Admin")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer()
@@ -48,20 +42,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .jwtAuthenticationConverter(getJwtAuthenticationConverter());
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedMethods(Collections.singletonList("*"));
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
     Converter<Jwt, AbstractAuthenticationToken> getJwtAuthenticationConverter(){
         TokenAuthenticationConverter converter = new TokenAuthenticationConverter(xsuaaServiceConfiguration);
         converter.setLocalScopeAsAuthorities(true);
         return converter;
     }
-}
+
+    }
+
+
