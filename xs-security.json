@@ -1,0 +1,31 @@
+{
+  "xsappname": "Library-sec",
+  "description": "Roles for LibraryApp-xsuaa app",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.User",
+      "description": "User scope"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin scope"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "User",
+      "description": "Roles for people in a library to read, add, remove, lease and return books",
+      "scope-references": [
+        "$XSAPPNAME.User"
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": "Role for admin to create new books, delete existing ones ",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ]
+    }
+  ]
+}
