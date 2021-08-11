@@ -1,7 +1,8 @@
 {
+  "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/xsuaa",
+      "source": "^/",
       "target": "/",
       "destination": "Library"
     }
