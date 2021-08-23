@@ -18,7 +18,7 @@ public class getBookCommand {
     @Autowired
     private BookDTO bookDTO;
 
-    @GetMapping(value = "/book/{isbn}")
+    @GetMapping(value = "/books/{isbn}")
     public Books getBook(@Valid @PathVariable("isbn") String isbn){
         System.out.println(isbn);
         try{

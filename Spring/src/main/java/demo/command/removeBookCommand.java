@@ -19,7 +19,7 @@ public class removeBookCommand {
     @Autowired
     BookDTO bookDTO;
 
-    @DeleteMapping(value = "api/v1/book/{name}")
+    @DeleteMapping(value = "api/v1/books/{name}")
     public String execute(@PathVariable("name") String name){
         try{
             return bookDTO.deleteBook(name);

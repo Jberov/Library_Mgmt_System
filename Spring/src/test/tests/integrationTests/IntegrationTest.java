@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { LibraryApplication.class })
-@WebAppConfiguration(value = "src/main")
+@WebAppConfiguration(value = "src/main/java")
 public class IntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
