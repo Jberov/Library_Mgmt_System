@@ -5,7 +5,6 @@ import demo.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.LinkedList;
 
 @Service
@@ -16,47 +15,55 @@ public class BooksDAOImpl {
     public LinkedList<Books> getAllBooks() throws ResponseStatusException{
         return new LinkedList<>(bookRepository.findByExistence(true));
     }
-    public String addBookAdmin(int count, String name, String author, String description) throws ResponseStatusException{
-        Books book = new Books(count, name, author, description, true);
+
+    public String addBookAdmin(String isbn, int count, String name, String author, String description){
+        Books book = new Books(isbn, count, name, author, description, true);
         bookRepository.save(book);
         return "Success";
 
     }
 
-    public String deleteBookAdmin(String name){
+    public void deleteBookAdmin(String name){
         Books temp = bookRepository.findByName(name);
         temp.setExists(false);
         temp.setCount(0);
         bookRepository.save(temp);
-        return "Delete successful";
     }
-    public Books getBook(long isbn){
-        if(bookRepository.findById(isbn).isPresent() && bookRepository.findById(isbn).get().isExists()){
-            return bookRepository.findById(isbn).get();
+
+    public Books getBook(String isbn){
+        System.out.println(bookRepository.findByIsbn(isbn).isExists());
+        if(bookRepository.findByIsbn(isbn).isExists()){
+            return bookRepository.findByIsbn(isbn);
         }else{
             return null;
         }
     }
+
     public Books getBookByName(String name){
         return bookRepository.findByName(name);
     }
-    public boolean bookExistsByID(long isbn){
-        return bookRepository.findById(isbn).isPresent();
+
+    public boolean bookExistsByID(String isbn){
+        return bookRepository.findByIsbn(isbn).isExists();
     }
-    public boolean doesBookExist(String name){
-        return bookRepository.findByName(name) != null;
+
+    public boolean isNameFree(String name){
+        return ((bookRepository.findByName(name) == null) || (!bookRepository.findByName(name).isExists()));
     }
-    public void decreaseCount(long bookId){
-        Books temp = bookRepository.getById(bookId);
+
+    public void decreaseCount(String bookId){
+        Books temp = bookRepository.findByIsbn(bookId);
         temp.setCount(temp.getCount() - 1);
         bookRepository.save(temp);
     }
-    public void increaseCount(long bookId){
+
+    public void increaseCount(String bookId){
         Books temp = bookRepository.getById(bookId);
         temp.setCount(temp.getCount() + 1);
         bookRepository.save(temp);
     }
-    public int checkCount(long isbn){
+
+    public int checkCount(String isbn){
         return bookRepository.findById(isbn).get().getCount();
     }
 }

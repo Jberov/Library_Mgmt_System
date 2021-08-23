@@ -1,35 +1,30 @@
 package demo.command;
 
 import demo.dto.UserDTO;
-import demo.entities.Users;
+import demo.entities.Books;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.InputMismatchException;
-
+import java.util.LinkedList;
 
 @RestController
-public class GetUserCommand {
+public class userHistoryCommand {
     @Autowired
-    private UserDTO userDTO;
+    UserDTO userDTO;
 
-    @GetMapping("/admin/user/profile")
-    public Users getUser(@RequestParam String name){
+    @GetMapping(value = "api/v1/users/history/{username}")
+    public LinkedList<LinkedList<Books>> userHistory(@PathVariable("username") String username) throws ResponseStatusException{
         try{
-            if(userDTO.getUser(name) == null){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such user");
+            if(userDTO.userUsedBooks(username)==null){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books or no such user");
             }else{
-                return userDTO.getUser(name);
+                return userDTO.userUsedBooks(username);
             }
         }catch (JDBCConnectionException jdbc){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
@@ -39,11 +34,9 @@ public class GetUserCommand {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
         }catch(QueryTimeoutException qte){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
-        }catch (NullPointerException nullPointerException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No records for this user");
+        }catch (NullPointerException npte){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No such user ");
         }
-
-
     }
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public String handleMissingParams(MissingServletRequestParameterException ex) {
@@ -53,5 +46,4 @@ public class GetUserCommand {
     public String handleWeb(ResponseStatusException responseStatusException){
         return responseStatusException.getLocalizedMessage();
     }
-
 }

@@ -2,11 +2,9 @@ package demo.entities;
 
 import javax.persistence.*;
 
-@Entity(name = "ACTIVITY")
+@Entity
+@Table(name = "activity")
 public class BooksActivity {
-    public long getId() {
-        return id;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

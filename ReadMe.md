@@ -1,4 +1,4 @@
-# Library Application
+# demo Application
 
 Hello,
 this is the LibraryApp application. This is a small programme, which simulates a real-life library. This app has the following features:

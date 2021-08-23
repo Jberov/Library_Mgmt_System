@@ -1,13 +1,15 @@
 package demo.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
-@Entity(name = "BOOKS")
+@Entity
+@Table(name = "books")
 public class Books {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long isbn;
+    @Pattern(regexp = "[97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9]")
+    private String isbn;
 
     @Column
     private int count_books;
@@ -32,7 +34,8 @@ public class Books {
 
 
 
-    public Books( int count_books, String author, String name, String description, boolean existence) {
+    public Books(String isbn, int count_books, String author, String name, String description, boolean existence) {
+        this.isbn = isbn;
         this.count_books = count_books;
         this.author = author;
         this.name = name;
@@ -44,11 +47,11 @@ public class Books {
     }
 
 
-    public long getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(int isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 

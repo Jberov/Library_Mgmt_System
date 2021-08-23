@@ -26,18 +26,21 @@ public class UserDTO {
             return null;
         }
     }
-    public String leaseBook(long isbn, String username){
+
+    public String leaseBook(String isbn, String username){
         if(!booksDAO.bookExistsByID(isbn) || (!booksDAO.getBook(isbn).isExists() )){
             return "No such book";
         }else if(booksDAO.checkCount(isbn) <=0 ){
             return "No copies of this book";
-        }else if(userDAO.findUserByName(username) == null){
-            return "No such user";
+        }else if(userDAO.UserExists(username) == null){
+            userDAO.addUsers(username);
+            return bookRecordsDAO.leaseBook(isbn, username);
         }else{
             return bookRecordsDAO.leaseBook(isbn, username);
         }
     }
-    public String returnBook(long isbn, String username){
+
+    public String returnBook(String isbn, String username){
         if(userDAO.findUserByName(username) == null){
             return "No such user";
         }else if(!bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)){
@@ -48,6 +51,7 @@ public class UserDTO {
             return bookRecordsDAO.returnBook(isbn, username);
         }
     }
+
     public LinkedList<LinkedList<Books>> userUsedBooks(String username){
         if(userDAO.findUserByName(username) == null){
             return null;
@@ -60,7 +64,8 @@ public class UserDTO {
         }
 
     }
-    public LinkedList<String> getUsersByBook(long isbn){
+
+    public LinkedList<String> getUsersByBook(String isbn){
         if(booksDAO.bookExistsByID(isbn)){
             return bookRecordsDAO.getUsersByBook(isbn);
         }else{
@@ -68,3 +73,5 @@ public class UserDTO {
         }
     }
 }
+
+

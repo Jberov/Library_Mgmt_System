@@ -1,36 +1,31 @@
 package demo.command;
 
 import demo.dto.UserDTO;
-import demo.entities.Books;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 
 
 @RestController
-public class UserBooksCommand {
+public class getBookUsedAtTheMomentCommand {
     @Autowired
-    UserDTO userDTO;
-
-    @GetMapping("users/history")
-    public LinkedList<LinkedList<Books>> userHistory(@RequestParam String username){
+    private UserDTO userDTO;
+    @GetMapping(value = "/api/v1/users/byBook/{isbn}")
+    public LinkedList<String> getUsersOfBook(@PathVariable("isbn") String isbn){
         try{
-            if(userDTO.userUsedBooks(username)==null){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No books or no such user");
+            if((userDTO.getUsersByBook(isbn) !=null) && (!userDTO.getUsersByBook(isbn).isEmpty())){
+                return userDTO.getUsersByBook(isbn);
+            }else if(userDTO.getUsersByBook(isbn).isEmpty()){
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No users have taken this book");
             }else{
-                return userDTO.userUsedBooks(username);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such book");
             }
         }catch (JDBCConnectionException jdbc){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
@@ -41,8 +36,9 @@ public class UserBooksCommand {
         }catch(QueryTimeoutException qte){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
         }catch (NullPointerException npte){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No such user ");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database connection error");
         }
+
     }
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public String handleMissingParams(MissingServletRequestParameterException ex) {

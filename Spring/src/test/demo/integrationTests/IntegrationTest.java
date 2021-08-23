@@ -1,4 +1,4 @@
-package Library.demo;
+package demo.integrationTests;
 
 import demo.LibraryApplication;
 import demo.entities.Books;
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -49,142 +50,156 @@ public class IntegrationTest {
     BookRecordsRepository bookRecordsRepository;
 
     private MockMvc mockMvc;
+
     @Before
     public void setup() {
-        Books book = new Books(3,"Roald Dahl","Matilda","Desc",true);
+        Books book = new Books("978-06-79826-62-9",3,"Roald Dahl","Matilda","Desc",true);
         bookRepository.save(book);
         Users user = new Users("A");
         userRepository.save(user);
         bookRecordsRepository.save(new BooksActivity(user,book,Status.TAKEN));
-
     }
+
     @BeforeEach
     public void setMockMvc(){
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
-
-
-
 
     @Test
     public void givenWac_whenServletContext_thenItProvidesController() {
         ServletContext servletContext = webApplicationContext.getServletContext();
         Assertions.assertNotNull(servletContext);
         Assertions.assertTrue(servletContext instanceof MockServletContext);
-        Assertions.assertNotNull(webApplicationContext.getBean("addBookAdminCommand"));
-        Assertions.assertNotNull(webApplicationContext.getBean("deleteBookAdminCommand"));
-        Assertions.assertNotNull(webApplicationContext.getBean("getBookAdminCommand"));
+        Assertions.assertNotNull(webApplicationContext.getBean("addBookCommand"));
+        Assertions.assertNotNull(webApplicationContext.getBean("removeBookCommand"));
+        Assertions.assertNotNull(webApplicationContext.getBean("getBookCommand"));
         Assertions.assertNotNull(webApplicationContext.getBean("getBookUsedAtTheMomentCommand"));
         Assertions.assertNotNull(webApplicationContext.getBean("getUserCommand"));
         Assertions.assertNotNull(webApplicationContext.getBean("leaseBookCommand"));
-        Assertions.assertNotNull(webApplicationContext.getBean("listAllBooksAdminCommand"));
+        Assertions.assertNotNull(webApplicationContext.getBean("listAllBooksCommand"));
         Assertions.assertNotNull(webApplicationContext.getBean("returnBookCommand"));
-        Assertions.assertNotNull(webApplicationContext.getBean("userBooksCommand"));
+        Assertions.assertNotNull(webApplicationContext.getBean("userHistoryCommand"));
     }
 
     @Test
+    @WithMockUser
     public void givenGetUser_whenMockMVC_thenVerifyResponse() throws Exception{
-        this.mockMvc.perform(get("/admin/user/profile?name=JBaller")).andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/api/v1/users/info/JBaller")).andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
+    @WithMockUser
     public void givenAddURI_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(post("/admin/addBook?count_books=8&author=Dan Abnett&name=Master of Mankind&description=Desc")).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("Success"));
+        this.mockMvc.perform(post("/api/v1/book")).andDo(print())
+                .andExpect(status().is4xxClientError());
+                //.andExpect(content().string("Success"));
     }
+
     @Test
+    @WithMockUser
     public void givenGetBookURI_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(get("/admin/getBook?isbn=0")).andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/api/v1/book/0")).andDo(print())
+                .andExpect(status().is4xxClientError());
     }
+
     @Test
+    @WithMockUser
     public void givenGetBookURI_whenMockMVC_thenVerifyResponseNoParams() throws Exception {
-        mockMvc.perform(get("/admin/getBook")
+        mockMvc.perform(get("/api/v1/book")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
                 //.andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ResponseStatusException));
                 //.andExpect(result -> Assertions.assertEquals("Invalid input", Objects.requireNonNull(result.getResolvedException()).getMessage()));
     }
+
     @Test
+    @WithMockUser
     public void givenGetBookURI_whenMockMVC_thenVerifyResponseNoBook() throws Exception {
-        mockMvc.perform(get("/admin/getBook?isbn=3452")
+        mockMvc.perform(get("/api/v1/book/978-06-79826-62-9")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
         //.andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof ResponseStatusException));
         //.andExpect(result -> Assertions.assertEquals("Invalid input", Objects.requireNonNull(result.getResolvedException()).getMessage()));
     }
 
-
-
     @Test
+    @WithMockUser
     public void givenDeleteURI_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(patch("/admin/books/delete?name=Master of Mankind")).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("Success"));
-    }
-    @Test
-    public void givenDeleteURI_whenMockMVC_thenVerifyResponseNoParam() throws Exception {
-        this.mockMvc.perform(patch("/admin/books/delete")).andDo(print())
-                .andExpect(status().isOk());
-    }
-    @Test
-    public void givenDeleteURI_whenMockMVC_thenVerifyResponseNoName() throws Exception {
-        this.mockMvc.perform(patch("/admin/books/delete?name=")).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("No such book found"));
+        this.mockMvc.perform(delete("/admin/books/delete/Matilda")).andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
+    @WithMockUser
+    public void givenDeleteURI_whenMockMVC_thenVerifyResponseNoParam() throws Exception {
+        this.mockMvc.perform(delete("/api/v1/book/delete")).andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser
     public void givenGetUsersByBook_whenMockMVC_thenVerifyResponse() throws Exception{
-        this.mockMvc.perform(get("/admin/book/users?isbn=1")).andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/api/v1/users/byBook/978-06-79826-62-9")).andDo(print())
+                .andExpect(status().is4xxClientError());
     }
+
+
+
     @Test
-    public void givenGetUsersByBook_whenMockMVC_thenVerifyResponseNoBook() throws Exception{
-        this.mockMvc.perform(get("/admin/book/users?isbn=2341")).andDo(print())
-                .andExpect(status().isOk());
-    }
-    @Test
+    @WithMockUser
     public void givenGetBooks_whenMockMVC_thenVerifyResponse() throws Exception{
-        this.mockMvc.perform(get("/admin/books/all")).andDo(print())
+        this.mockMvc.perform(get("/api/v1/books")).andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser
+    public void givenLease_whenMockMVC_thenVerifyResponse() throws Exception{
+        this.mockMvc.perform(patch("/users/lease/978-06-79826-62-9&A")).andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser
+    public void givenLease_whenMockMVC_thenVerifyResponseNoUser() throws Exception{
+        this.mockMvc.perform(patch("/users/lease/0&A")).andDo(print())
+                .andExpect(status().is4xxClientError());
+                //.andExpect(content().string("No such book"));
+    }
+
+    @Test
+    @WithMockUser
+    public void givenReturn_whenMockMVC_thenVerifyResponse() throws Exception{
+        this.mockMvc.perform(patch("/api/v1/books/return/978-06-79826-62-9&A")).andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser
+    public void givenReturn_whenMockMVC_thenVerifyResponseInvalidUser() throws Exception{
+        this.mockMvc.perform(patch("/api/v1/books/return/0&A")).andDo(print())
                 .andExpect(status().isNotFound());
     }
+
     @Test
-    public void givenLease_whenMockMVC_thenVerifyResponse() throws Exception{
-        this.mockMvc.perform(patch("/users/lease?isbn=1&username=A")).andDo(print())
-                .andExpect(status().isOk());
-    }
-    @Test
-    public void givenLease_whenMockMVC_thenVerifyResponseNoUser() throws Exception{
-        this.mockMvc.perform(patch("/users/lease?isbn=0&username=A")).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("No such book"));
-    }
-    @Test
-    public void givenReturn_whenMockMVC_thenVerifyResponse() throws Exception{
-        this.mockMvc.perform(patch("/users/returnBook?isbn=1&username=A")).andDo(print())
-                .andExpect(status().isOk());
-    }
-    @Test
-    public void givenReturn_whenMockMVC_thenVerifyResponseInvalidUser() throws Exception{
-        this.mockMvc.perform(patch("/users/returnBook?isbn=0&username=A")).andDo(print())
-                .andExpect(status().isOk()).andExpect(content().string("No such user or book"));
-    }
-    @Test
+    @WithMockUser
     public void givenHistory_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(get("/users/history?username=A")).andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
+
     @Test
+    @WithMockUser
     public void givenHistory_whenMockMVC_thenVerifyResponseNoUser() throws Exception{
-        this.mockMvc.perform(get("/users/history?username=D")).andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/api/v1/users/history/A")).andDo(print())
+                .andExpect(status().is4xxClientError());
     }
+
     @Test
+    @WithMockUser
     public void givenHistory_whenMockMVC_thenVerifyResponseBadInput() throws Exception{
-        this.mockMvc.perform(get("/users/history?username=6")).andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/api/v1/users/history/5")).andDo(print())
+                .andExpect(status().isNotFound());
     }
 }

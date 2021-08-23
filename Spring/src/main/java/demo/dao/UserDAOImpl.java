@@ -6,6 +6,7 @@ import demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.LinkedList;
 
 @Service
@@ -20,9 +21,14 @@ public class UserDAOImpl {
         user.setUserHistory(usageHistory(name));
         return user;
     }
+    public void addUsers(String username){
+        userRepository.save(new Users(username));
+    }
+    public Users UserExists(String username){
+        return userRepository.findByName(username);
+    }
+
     private LinkedList<LinkedList<Books>> usageHistory(String name){
         return  bookRecordsDAO.booksUsedByUser(name);
     }
-
-
 }

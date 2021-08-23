@@ -1,4 +1,4 @@
-package Library.demo;
+package demo.unitTests;
 
 import demo.repositories.BookRepository;
 import demo.entities.Books;
@@ -12,8 +12,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@DataJpaTest()
 public class BookEntityTest {
+
     @Autowired
     private TestEntityManager entityManager;
 
@@ -22,10 +23,9 @@ public class BookEntityTest {
 
     @Test
     public void whenFoundByNameReturnBook(){
-        Books book = new Books(3, "Roald Dahl", "Matilda", "Genius girl",true);
-        entityManager.persist(book);
-        entityManager.flush();
 
+        Books book = new Books("978-06-79826-62-9",3, "Roald Dahl", "Matilda", "Genius girl",true);
+        entityManager.persistAndFlush(book);
         Books found = bookRepository.findByName(book.getName());
 
         AssertionsForClassTypes.assertThat(found.getAuthor())

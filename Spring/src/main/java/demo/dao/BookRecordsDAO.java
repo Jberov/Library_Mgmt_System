@@ -21,21 +21,18 @@ public class BookRecordsDAO {
     @Autowired
     private UserRepository userRepository;
 
-    public String leaseBook(long bookId, String userName){
+    public String leaseBook(String bookId, String userName){
         if(books.getBook(bookId).isExists()){
             BooksActivity activity = new BooksActivity(user.findUserByName(userName),books.getBook(bookId), Status.TAKEN);
             books.decreaseCount(bookId);
             bookRecordsRepository.save(activity);
-            System.out.println(bookRecordsRepository.findByUserId(user.findUserByName(userName).getId()).get(0).getBook().getName());
             return "Book successfully leased";
         }else{
             return "Book no longer exists";
         }
-
-
-
     }
-    public boolean checkIfUserHasTakenBook(long isbn, String username){
+
+    public boolean checkIfUserHasTakenBook(String isbn, String username){
         for(String i: getUsersByBook(isbn)){
             if(i.equals(username)){
                 return true;
@@ -43,10 +40,12 @@ public class BookRecordsDAO {
         }
         return false;
     }
-    public boolean userHistoryExists(long isbn){
+
+    public boolean userHistoryExists(String isbn){
         return bookRecordsRepository.existsByBooksIsbnAndStatus(isbn, Status.TAKEN);
     }
-    public String returnBook(long bookId, String username){
+
+    public String returnBook(String bookId, String username){
 
         new BooksActivity();
         BooksActivity temp;
@@ -56,6 +55,7 @@ public class BookRecordsDAO {
         bookRecordsRepository.save(temp);
         return "Book successfully returned";
     }
+
     public LinkedList<LinkedList<Books>> booksUsedByUser(String username){
         LinkedList<LinkedList<Books>> books = new LinkedList<>();
         LinkedList<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
@@ -72,7 +72,8 @@ public class BookRecordsDAO {
         }
         return books;
     }
-    public LinkedList<String> getUsersByBook(long bookId) {
+
+    public LinkedList<String> getUsersByBook(String bookId) {
         if(books.getBook(bookId).isExists()){
             LinkedList<String> usernames = new LinkedList<>();
             LinkedList<BooksActivity> records = bookRecordsRepository.findByBooksIsbnAndStatus(books.getBook(bookId).getIsbn(), Status.TAKEN);
@@ -83,7 +84,6 @@ public class BookRecordsDAO {
         }else{
             return null;
         }
-
     }
 }
 
