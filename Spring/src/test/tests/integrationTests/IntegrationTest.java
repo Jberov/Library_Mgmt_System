@@ -1,4 +1,4 @@
-package demo.integrationTests;
+package tests.integrationTests;
 
 import demo.LibraryApplication;
 import demo.entities.Books;
@@ -82,14 +82,12 @@ public class IntegrationTest {
     }
 
     @Test
-    @WithMockUser
     public void givenGetUser_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/info/JBaller")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithMockUser
     public void givenAddURI_whenMockMVC_thenVerifyResponse() throws Exception {
         this.mockMvc.perform(post("/api/v1/book")).andDo(print())
                 .andExpect(status().is4xxClientError());
@@ -97,14 +95,12 @@ public class IntegrationTest {
     }
 
     @Test
-    @WithMockUser
     public void givenGetBookURI_whenMockMVC_thenVerifyResponse() throws Exception {
         this.mockMvc.perform(get("/api/v1/book/0")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithMockUser
     public void givenGetBookURI_whenMockMVC_thenVerifyResponseNoParams() throws Exception {
         mockMvc.perform(get("/api/v1/book")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -114,7 +110,6 @@ public class IntegrationTest {
     }
 
     @Test
-    @WithMockUser
     public void givenGetBookURI_whenMockMVC_thenVerifyResponseNoBook() throws Exception {
         mockMvc.perform(get("/api/v1/book/978-06-79826-62-9")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -124,21 +119,18 @@ public class IntegrationTest {
     }
 
     @Test
-    @WithMockUser
     public void givenDeleteURI_whenMockMVC_thenVerifyResponse() throws Exception {
         this.mockMvc.perform(delete("/admin/books/delete/Matilda")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithMockUser
     public void givenDeleteURI_whenMockMVC_thenVerifyResponseNoParam() throws Exception {
         this.mockMvc.perform(delete("/api/v1/book/delete")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithMockUser
     public void givenGetUsersByBook_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/byBook/978-06-79826-62-9")).andDo(print())
                 .andExpect(status().is4xxClientError());
@@ -147,21 +139,18 @@ public class IntegrationTest {
 
 
     @Test
-    @WithMockUser
     public void givenGetBooks_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(get("/api/v1/books")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithMockUser
     public void givenLease_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(patch("/users/lease/978-06-79826-62-9&A")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithMockUser
     public void givenLease_whenMockMVC_thenVerifyResponseNoUser() throws Exception{
         this.mockMvc.perform(patch("/users/lease/0&A")).andDo(print())
                 .andExpect(status().is4xxClientError());
@@ -169,7 +158,6 @@ public class IntegrationTest {
     }
 
     @Test
-    @WithMockUser
     public void givenReturn_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(patch("/api/v1/books/return/978-06-79826-62-9&A")).andDo(print())
                 .andExpect(status().is4xxClientError());
@@ -183,21 +171,18 @@ public class IntegrationTest {
     }
 
     @Test
-    @WithMockUser
     public void givenHistory_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(get("/users/history?username=A")).andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser
     public void givenHistory_whenMockMVC_thenVerifyResponseNoUser() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/history/A")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithMockUser
     public void givenHistory_whenMockMVC_thenVerifyResponseBadInput() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/history/5")).andDo(print())
                 .andExpect(status().isNotFound());

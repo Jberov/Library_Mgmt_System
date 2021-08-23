@@ -1,4 +1,4 @@
-package demo.unitTests;
+package tests.unitTests;
 
 import demo.dao.BookRecordsDAO;
 import demo.dao.UserDAOImpl;
@@ -13,13 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.LinkedList;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserDTO.class)
@@ -42,7 +40,6 @@ public class UsersDTOTests {
 
 
     @Test
-    @WithMockUser
 
     public void getUserTest() throws Exception{
         Users user = new Users("JBaller");
@@ -54,7 +51,6 @@ public class UsersDTOTests {
 
     }
     @Test
-    @WithMockUser
 
     public void leaseBook() throws Exception{
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);
@@ -67,7 +63,6 @@ public class UsersDTOTests {
 
     }
     @Test
-    @WithMockUser
 
     public void returnBook() throws Exception{
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);
@@ -80,7 +75,6 @@ public class UsersDTOTests {
 
     }
     @Test
-    @WithMockUser
 
     public void userUsedBooksTest() throws Exception{
         LinkedList<Books> takenList  = new LinkedList<>();
@@ -97,7 +91,6 @@ public class UsersDTOTests {
     }
 
     @Test
-    @WithMockUser
 
     public void getUsersByBookTest() throws Exception{
         LinkedList<String> userList  = new LinkedList<>();

@@ -1,4 +1,4 @@
-package demo.unitTests;
+package tests.unitTests;
 
 import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
@@ -45,7 +45,6 @@ public class BooksDAOUnitTests {
     private BookRecordsDAO bookRecordsDAO;
 
     @Test
-    @WithMockUser
     public void addBook() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/api/v1/book")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -53,7 +52,6 @@ public class BooksDAOUnitTests {
     }
 
     @Test
-    @WithMockUser(authorities = "Admin")
     public void getAllBooks() throws Exception {
         Books book = new Books("978-06-79826-62-9",3, "Иван Вазов", "Под Игото", "В малко градче пристига странник и им показва значението на свободата",true);
         LinkedList<Books> books = new LinkedList<>();
@@ -69,14 +67,12 @@ public class BooksDAOUnitTests {
 
 
     @Test
-    @WithMockUser(roles = {"Admin"})
     public void deleteBook() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/api/v1/book/Под Игото")
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
     }
 
     @Test
-    @WithMockUser(authorities = "Admin")
     public void getBookById() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/admin/getBook/978-06-79826-62-9")
                         .contentType(MediaType.APPLICATION_JSON))

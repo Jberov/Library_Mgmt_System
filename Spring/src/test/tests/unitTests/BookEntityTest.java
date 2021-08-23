@@ -1,4 +1,4 @@
-package demo.unitTests;
+package tests.unitTests;
 
 import demo.repositories.BookRepository;
 import demo.entities.Books;

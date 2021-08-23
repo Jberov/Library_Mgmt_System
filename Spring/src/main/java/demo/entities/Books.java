@@ -1,5 +1,7 @@
 package demo.entities;
 
+import org.checkerframework.common.aliasing.qual.Unique;
+
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
@@ -15,7 +17,7 @@ public class Books {
     private int count_books;
     @Column
     private String author;
-    @Column
+    @Column(unique = true)
     private String name;
     @Column
     private String description;

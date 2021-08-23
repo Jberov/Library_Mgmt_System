@@ -27,6 +27,7 @@ public class listAllBooksCommand {
             if(bookDTO.getAllBooks().isEmpty()){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No books ");
             }else{
+                System.out.println("books");
                 return bookDTO.getAllBooks();
             }
         }catch (JDBCConnectionException jdbc){
