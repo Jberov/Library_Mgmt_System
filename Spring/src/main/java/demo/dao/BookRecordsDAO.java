@@ -49,9 +49,9 @@ public class BookRecordsDAO {
 
         new BooksActivity();
         BooksActivity temp;
-        temp = bookRecordsRepository.findByBooksIsbnAndStatusAndUserId(books.getBook(bookId).getIsbn(),Status.TAKEN,user.findUserByName(username).getId());
+        temp = bookRecordsRepository.findFirstByBooksIsbnAndStatusAndUserId(books.getBook(bookId).getIsbn(),Status.TAKEN,user.findUserByName(username).getId());
         temp.setStatus(Status.RETURNED);
-        books.increaseCount(bookId);
+        books.increaseCountBy1(bookId);
         bookRecordsRepository.save(temp);
         return "Book successfully returned";
     }

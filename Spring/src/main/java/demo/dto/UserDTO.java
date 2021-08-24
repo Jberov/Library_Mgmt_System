@@ -35,6 +35,10 @@ public class UserDTO {
         }else if(userDAO.UserExists(username) == null){
             userDAO.addUsers(username);
             return bookRecordsDAO.leaseBook(isbn, username);
+        }else if(bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)){
+            booksDAO.decreaseCount(isbn);
+            bookRecordsDAO.leaseBook(isbn, username);
+            return "Another copy successfully fetched";
         }else{
             return bookRecordsDAO.leaseBook(isbn, username);
         }

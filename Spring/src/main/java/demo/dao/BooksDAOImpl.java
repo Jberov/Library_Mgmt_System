@@ -17,22 +17,22 @@ public class BooksDAOImpl {
     }
 
     public String addBookAdmin(String isbn, int count, String name, String author, String description){
+        System.out.println("Almost there");
         Books book = new Books(isbn, count, name, author, description, true);
         bookRepository.save(book);
         return "Success";
 
     }
 
-    public void deleteBookAdmin(String name){
-        Books temp = bookRepository.findByName(name);
+    public void deleteBookAdmin(String isbn){
+        Books temp = bookRepository.findByIsbn(isbn);
         temp.setExists(false);
         temp.setCount(0);
         bookRepository.save(temp);
     }
 
     public Books getBook(String isbn){
-        System.out.println(bookRepository.findByIsbn(isbn).isExists());
-        if(bookRepository.findByIsbn(isbn).isExists()){
+        if(bookRepository.findByIsbn(isbn) != null){
             return bookRepository.findByIsbn(isbn);
         }else{
             return null;
@@ -47,8 +47,8 @@ public class BooksDAOImpl {
         return bookRepository.findByIsbn(isbn).isExists();
     }
 
-    public boolean isNameFree(String name){
-        return ((bookRepository.findByName(name) == null) || (!bookRepository.findByName(name).isExists()));
+    public boolean isNameTaken(String name){
+        return (bookRepository.findByName(name).isExists());
     }
 
     public void decreaseCount(String bookId){
@@ -57,9 +57,14 @@ public class BooksDAOImpl {
         bookRepository.save(temp);
     }
 
-    public void increaseCount(String bookId){
+    public void increaseCountBy1(String bookId){
         Books temp = bookRepository.getById(bookId);
         temp.setCount(temp.getCount() + 1);
+        bookRepository.save(temp);
+    }
+    public void increaseCount(String bookId, int count){
+        Books temp = bookRepository.getById(bookId);
+        temp.setCount(temp.getCount() + count);
         bookRepository.save(temp);
     }
 

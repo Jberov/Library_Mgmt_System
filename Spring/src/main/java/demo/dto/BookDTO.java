@@ -21,19 +21,24 @@ public class BookDTO {
     }
 
     public String addBookAdmin(String isbn, int count, String name, String author, String description){
-        if (booksDAO.isNameFree(name)) {
+        if (booksDAO.getBook(isbn) == null) {
             return booksDAO.addBookAdmin(isbn, count, name, author, description);
         } else {
-            return "Such book already exists";
+            if(!booksDAO.getBook(isbn).getIsbn().equals(name)){
+                return "Wrong isbn! Book with such isbn already exists";
+            }else{
+                booksDAO.increaseCount(isbn,count);
+                return "Such book already exists. Count increased with amount specified in the request";
+            }
         }
     }
-    public String deleteBook(String name){
-        if(booksDAO.isNameFree(name)){
+    public String deleteBook(String isbn){
+        if(!booksDAO.bookExistsByID(isbn)){
             return "No such book found";
-        }else if(bookRecordsDAO.userHistoryExists(booksDAO.getBookByName(name).getIsbn())){
+        }else if(bookRecordsDAO.userHistoryExists(isbn)){
             return "Not all users have returned this book yet. Please, acquire all copies before removing it from the library";
         }else{
-            booksDAO.deleteBookAdmin(name);
+            booksDAO.deleteBookAdmin(isbn);
             return "Success";
         }
     }

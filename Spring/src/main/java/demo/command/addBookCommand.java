@@ -8,10 +8,15 @@ import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
 import java.util.InputMismatchException;
+import java.util.MissingResourceException;
 
 @RestController
 public class addBookCommand {
@@ -19,31 +24,27 @@ public class addBookCommand {
     private BookDTO bookDTO;
 
     @PostMapping(value = "/api/v1/books",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String execute(@RequestBody Books book) {
-
-        System.out.println(book.getIsbn());
+    public ResponseEntity<String> execute(@RequestBody @Valid  Books book) {
         try {
-            return bookDTO.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription());
+            return ResponseEntity.ok().body(bookDTO.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
         }
         catch (JDBCConnectionException jdbc) {
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
+           return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
         } catch (InputMismatchException ime) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
         } catch (DataException dataException) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
         } catch (QueryTimeoutException qte) {
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
         }catch (Exception e){
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
         }
     }
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public String handleMissingParams(MissingServletRequestParameterException ex) {
-        return ex.getParameterName() + " parameter is missing";
-    }
-    @ExceptionHandler(ResponseStatusException.class)
-    public String handleWeb(ResponseStatusException responseStatusException){
-        return responseStatusException.getLocalizedMessage();
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
     }
 }

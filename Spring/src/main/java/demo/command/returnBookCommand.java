@@ -6,12 +6,15 @@ import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 
 
 @RestController
@@ -20,35 +23,27 @@ public class returnBookCommand {
     private UserDTO userDTO;
 
     @PatchMapping(value = "api/v1/books/return/{isbn}&{username}")
-    public String returnBook(@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username){
+    public ResponseEntity<String> returnBook(@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username){
         try{
-            return userDTO.returnBook(isbn, username);
-        }catch (JDBCConnectionException jdbc){
-            System.out.println(jdbc.getMessage());
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
-        }catch (InputMismatchException ime){
-            System.out.println(ime.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
-        }catch(DataException dataException){
-            System.out.println(dataException.getMessage());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
-        }catch(QueryTimeoutException qte){
-            System.out.println(qte.getMessage());
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
-        }catch(NullPointerException nullPointerException){
-            System.out.println(nullPointerException.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No records for this user or book");
+            return ResponseEntity.status(HttpStatus.OK).body(userDTO.returnBook(isbn, username));
+        } catch (JDBCConnectionException jdbc) {
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
+        } catch (InputMismatchException ime) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+        } catch (DataException dataException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
+        } catch (QueryTimeoutException qte) {
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
+        }catch (NoSuchElementException nsee){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body( "No records for book with such isbn");
         }catch (Exception e){
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
         }
     }
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public String handleMissingParams(MissingServletRequestParameterException ex) {
-        return ex.getParameterName() + " parameter is missing";
-    }
-    @ExceptionHandler(ResponseStatusException.class)
-    public String handleWeb(ResponseStatusException responseStatusException){
-        return responseStatusException.getLocalizedMessage();
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
     }
 }

@@ -7,6 +7,7 @@ import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,6 +38,8 @@ public class getUserCommand {
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
         }catch (NullPointerException nullPointerException){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No records for this user");
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error");
         }
 
 
@@ -49,5 +52,6 @@ public class getUserCommand {
     public String handleWeb(ResponseStatusException responseStatusException){
         return responseStatusException.getLocalizedMessage();
     }
+
 
 }

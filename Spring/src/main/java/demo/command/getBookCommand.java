@@ -7,6 +7,8 @@ import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
@@ -19,13 +21,12 @@ public class getBookCommand {
     private BookDTO bookDTO;
 
     @GetMapping(value = "/books/{isbn}")
-    public Books getBook(@Valid @PathVariable("isbn") String isbn){
-        System.out.println(isbn);
+    public ResponseEntity<?> getBook( @PathVariable("isbn") @Valid String isbn) throws ResponseStatusException{
         try{
             if(bookDTO.getBookById(isbn) != null){
-                return bookDTO.getBookById(isbn);
+                return ResponseEntity.status(HttpStatus.FOUND).body(bookDTO.getBookById(isbn));
             }else{
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No such book");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No such book");
             }
         }catch (JDBCConnectionException jdbc){
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
@@ -38,11 +39,16 @@ public class getBookCommand {
             throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
         }catch (NullPointerException npte){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No such book");
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error");
         }
     }
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public String handleWeb(ResponseStatusException responseStatusException){
-        return responseStatusException.getLocalizedMessage();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
     }
 }
+

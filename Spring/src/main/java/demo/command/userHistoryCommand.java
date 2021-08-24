@@ -42,8 +42,5 @@ public class userHistoryCommand {
     public String handleMissingParams(MissingServletRequestParameterException ex) {
         return ex.getParameterName() + " parameter is missing";
     }
-    @ExceptionHandler(ResponseStatusException.class)
-    public String handleWeb(ResponseStatusException responseStatusException){
-        return responseStatusException.getLocalizedMessage();
-    }
+
 }
