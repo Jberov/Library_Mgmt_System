@@ -54,10 +54,6 @@ public class getBookUsedAtTheMomentCommand {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public String handleMissingParams(MissingServletRequestParameterException ex) {
-        return ex.getParameterName() + " parameter is missing";
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

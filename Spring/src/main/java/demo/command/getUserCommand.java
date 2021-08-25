@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 
 @RequestMapping("/api/v1/users")
 @RestController
@@ -21,15 +22,15 @@ public class getUserCommand {
     private UserDTO userDTO;
 
     @GetMapping(value = "/info/{name}")
-    public ResponseEntity<Object> getUser(@PathVariable("name") String name){
+    public ResponseEntity<JSONObject> getUser(@PathVariable("name") String name){
         JSONObject result = new JSONObject();
         try{
             if(userDTO.getUser(name) == null){
                 result.put("error","No such user");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such user");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }else{
                 result.put("user",userDTO.getUser(name));
-                return ResponseEntity.status(HttpStatus.OK).body(userDTO.getUser(name));
+                return ResponseEntity.status(HttpStatus.OK).body(result);
             }
         }catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
@@ -43,11 +44,11 @@ public class getUserCommand {
         } catch (QueryTimeoutException qte) {
             result.put("error","Database connection error");
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
-        }catch(NullPointerException npe){
-            result.put("error","No such book");
+        }catch (NoSuchElementException nsee){
+            result.put("error","No records for book with such isbn");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }catch (Exception e){
-            result.put("error","Error");
+            result.put("error","Unknown error");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
 
