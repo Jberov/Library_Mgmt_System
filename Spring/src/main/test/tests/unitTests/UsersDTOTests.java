@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -55,7 +56,7 @@ public class UsersDTOTests {
     public void leaseBook() throws Exception{
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);
         Users user = new Users("JBaller");
-        BDDMockito.given(userDTO.leaseBook(books.getIsbn(), user.getName())).willReturn("Book successfully leased");
+        BDDMockito.given(userDTO.leaseBook(books.getIsbn(), user.getName())).willReturn(ResponseEntity.ok("Success"));
         mvc.perform(MockMvcRequestBuilders.patch("/api/v1/books/rental/978-17-82065-33-9&JBaller").contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is4xxClientError());
                 //.andExpect(content().string("Book successfully leased"));
@@ -67,7 +68,7 @@ public class UsersDTOTests {
     public void returnBook() throws Exception{
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);
         Users user = new Users("JBaller");
-        BDDMockito.given(userDTO.returnBook(books.getIsbn(), user.getName())).willReturn("Book successfully returned");
+        BDDMockito.given(userDTO.returnBook(books.getIsbn(), user.getName())).willReturn(ResponseEntity.ok("Success"));
         mvc.perform(MockMvcRequestBuilders.patch("/api/v1/books/return/978-06-79866-68-8&JBaller").contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is4xxClientError());
                 //.andExpect(content().string("Book successfully returned"));

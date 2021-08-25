@@ -30,7 +30,7 @@ public class getBookCommand {
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else{
                 result.put("error","No such book found");
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
         }catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");

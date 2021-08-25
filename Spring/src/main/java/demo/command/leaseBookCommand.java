@@ -24,7 +24,7 @@ public class leaseBookCommand {
     @PatchMapping(value = "api/v1/books/rental/{isbn}&{username}")
     public ResponseEntity<String> leaseBook(@PathVariable ("isbn") @Valid String isbn, @PathVariable("username") String username){
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(userDTO.leaseBook(isbn, username));
+            return userDTO.leaseBook(isbn, username);
         } catch (JDBCConnectionException jdbc) {
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
         } catch (InputMismatchException ime) {
@@ -34,9 +34,9 @@ public class leaseBookCommand {
         } catch (QueryTimeoutException qte) {
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
         }catch (NoSuchElementException nsee){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body( "No records for book with such isbn");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( "No records for book with such isbn");
         }catch (NullPointerException nptr){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No records for this user");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No records for this user");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
         }

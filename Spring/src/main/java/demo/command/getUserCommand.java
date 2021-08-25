@@ -26,10 +26,10 @@ public class getUserCommand {
         try{
             if(userDTO.getUser(name) == null){
                 result.put("error","No such user");
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No such user");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such user");
             }else{
                 result.put("user",userDTO.getUser(name));
-                return ResponseEntity.status(HttpStatus.FOUND).body(userDTO.getUser(name));
+                return ResponseEntity.status(HttpStatus.OK).body(userDTO.getUser(name));
             }
         }catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
@@ -45,7 +45,7 @@ public class getUserCommand {
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         }catch(NullPointerException npe){
             result.put("error","No such book");
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }catch (Exception e){
             result.put("error","Error");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

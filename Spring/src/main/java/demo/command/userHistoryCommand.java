@@ -23,7 +23,7 @@ public class userHistoryCommand {
         try{
             if(userDTO.userUsedBooks(username)==null){
                 result.put("error", "No books or no such user");
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }else{
                 result.put(username + "'s history", userDTO.userUsedBooks(username));
                 return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -42,7 +42,7 @@ public class userHistoryCommand {
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         }catch(NullPointerException npe){
             result.put("error","No such user");
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }catch (Exception e){
             result.put("error","Error");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

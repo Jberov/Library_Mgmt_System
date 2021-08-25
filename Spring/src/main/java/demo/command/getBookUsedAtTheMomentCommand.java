@@ -29,7 +29,7 @@ public class getBookUsedAtTheMomentCommand {
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else if(userDTO.getUsersByBook(isbn).isEmpty()){
                 result.put("error","No users have taken this book");
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }else{
                 result.put("error","No such book");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

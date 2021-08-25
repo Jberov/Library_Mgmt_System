@@ -33,7 +33,7 @@ public class returnBookCommand {
         } catch (QueryTimeoutException qte) {
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
         }catch (NoSuchElementException nsee){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body( "No records for book with such isbn");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( "No records for book with such isbn");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
         }
