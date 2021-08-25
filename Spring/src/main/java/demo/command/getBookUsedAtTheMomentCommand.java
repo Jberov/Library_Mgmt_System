@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,7 +47,7 @@ public class getBookUsedAtTheMomentCommand {
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         }catch(NullPointerException npe){
             result.put("error","No such book");
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }catch (Exception e){
             result.put("error","Error");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

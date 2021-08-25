@@ -46,7 +46,7 @@ public class getBookCommand {
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         }catch(NullPointerException npe){
             result.put("error","No such book");
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }catch (Exception e){
             result.put("error","Error");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
