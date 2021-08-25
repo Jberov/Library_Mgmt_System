@@ -25,7 +25,7 @@ public class getBookUsedAtTheMomentCommand {
         JSONObject result = new JSONObject();
         try{
             if((userDTO.getUsersByBook(isbn) !=null) && (!userDTO.getUsersByBook(isbn).isEmpty())){
-                result.put("book",userDTO.getUsersByBook(isbn));
+                result.put("users",userDTO.getUsersByBook(isbn));
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }else if(userDTO.getUsersByBook(isbn).isEmpty()){
                 result.put("error","No users have taken this book");

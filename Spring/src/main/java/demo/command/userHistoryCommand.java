@@ -41,7 +41,7 @@ public class userHistoryCommand {
             result.put("error","Database connection error");
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         }catch(NullPointerException npe){
-            result.put("error","No such book");
+            result.put("error","No such user");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
         }catch (Exception e){
             result.put("error","Error");
