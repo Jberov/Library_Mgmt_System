@@ -7,6 +7,7 @@ import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,24 +23,23 @@ public class listAllBooksCommand {
     private BookDTO bookDTO;
 
     @GetMapping(value = "api/v1/books")
-    public LinkedList<Books> execute() {
+    public ResponseEntity<?> execute() {
         try{
             if(bookDTO.getAllBooks().isEmpty()){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No books ");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No books found");
             }else{
-                System.out.println("books");
-                return bookDTO.getAllBooks();
+                return ResponseEntity.status(HttpStatus.FOUND).body(bookDTO.getAllBooks());
             }
-        }catch (JDBCConnectionException jdbc){
-            System.out.println(jdbc.getMessage());
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
-        }catch (InputMismatchException ime){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
-        }catch(DataException dataException){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
-        }catch(QueryTimeoutException qte){
-            System.out.println(qte.getMessage());
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
+        }catch (JDBCConnectionException jdbc) {
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
+        } catch (InputMismatchException ime) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+        } catch (DataException dataException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
+        } catch (QueryTimeoutException qte) {
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
         }
     }
     @ExceptionHandler(MissingServletRequestParameterException.class)

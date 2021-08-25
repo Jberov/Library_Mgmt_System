@@ -28,19 +28,18 @@ public class getBookCommand {
             }else{
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No such book");
             }
-        }catch (JDBCConnectionException jdbc){
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
-        }catch (InputMismatchException ime){
-            System.out.println(ime.getLocalizedMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
-        }catch(DataException dataException){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
-        }catch(QueryTimeoutException qte){
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
-        }catch (NullPointerException npte){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No such book");
+        }catch (JDBCConnectionException jdbc) {
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
+        } catch (InputMismatchException ime) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+        } catch (DataException dataException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
+        } catch (QueryTimeoutException qte) {
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
+        }catch(NullPointerException npe){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No such book");
         }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
         }
     }
 

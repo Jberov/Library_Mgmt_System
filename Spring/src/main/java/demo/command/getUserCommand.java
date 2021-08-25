@@ -7,6 +7,7 @@ import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
@@ -21,25 +22,25 @@ public class getUserCommand {
     private UserDTO userDTO;
 
     @GetMapping(value = "/info/{name}")
-    public Users getUser(@PathVariable("name") String name){
+    public ResponseEntity<?> getUser(@PathVariable("name") String name){
         try{
             if(userDTO.getUser(name) == null){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such user");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No such user");
             }else{
-                return userDTO.getUser(name);
+                return ResponseEntity.status(HttpStatus.FOUND).body(userDTO.getUser(name));
             }
-        }catch (JDBCConnectionException jdbc){
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Error connecting to database");
-        }catch (InputMismatchException ime){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid input");
-        }catch(DataException dataException){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Data error");
-        }catch(QueryTimeoutException qte){
-            throw new ResponseStatusException(HttpStatus.GATEWAY_TIMEOUT, "Database connection error");
-        }catch (NullPointerException nullPointerException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No records for this user");
+        }catch (JDBCConnectionException jdbc) {
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
+        } catch (InputMismatchException ime) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+        } catch (DataException dataException) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
+        } catch (QueryTimeoutException qte) {
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
+        }catch(NullPointerException npe){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No such user");
         }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
         }
 
 
