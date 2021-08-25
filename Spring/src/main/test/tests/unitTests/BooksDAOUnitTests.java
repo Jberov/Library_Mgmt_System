@@ -1,5 +1,6 @@
 package tests.unitTests;
 
+import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,6 +35,9 @@ public class BooksDAOUnitTests {
     private MockMvc mvc;
 
     @MockBean
+    private XsuaaServiceConfiguration xsuaaServiceConfiguration;
+
+    @MockBean
     private BookDTO bookDTO;
 
     @MockBean
@@ -43,6 +48,7 @@ public class BooksDAOUnitTests {
 
     @MockBean
     private BookRecordsDAO bookRecordsDAO;
+
 
     @Test
     public void addBook() throws Exception {

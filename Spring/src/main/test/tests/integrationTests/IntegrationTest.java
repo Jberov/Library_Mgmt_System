@@ -84,7 +84,7 @@ public class IntegrationTest {
     @Test
     public void givenGetUser_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/info/JBaller")).andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class IntegrationTest {
     @Test
     public void givenGetBooks_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(get("/api/v1/books")).andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -179,12 +179,12 @@ public class IntegrationTest {
     @Test
     public void givenHistory_whenMockMVC_thenVerifyResponseNoUser() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/history/A")).andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
-    public void givenHistory_whenMockMVC_thenVerifyResponseBadInput() throws Exception{
+    public void givenHistory_whenMockMVC_thenVerifyResponseNewUser() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/history/5")).andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().is2xxSuccessful());
     }
 }

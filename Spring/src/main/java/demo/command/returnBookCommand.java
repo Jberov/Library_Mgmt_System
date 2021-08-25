@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.InputMismatchException;
@@ -23,7 +21,7 @@ public class returnBookCommand {
     private UserDTO userDTO;
 
     @PatchMapping(value = "api/v1/books/return/{isbn}&{username}")
-    public ResponseEntity<String> returnBook(@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username){
+    public ResponseEntity<Object> returnBook(@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username){
         try{
             return ResponseEntity.status(HttpStatus.OK).body(userDTO.returnBook(isbn, username));
         } catch (JDBCConnectionException jdbc) {

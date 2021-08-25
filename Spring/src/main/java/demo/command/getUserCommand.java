@@ -1,14 +1,13 @@
 package demo.command;
 
 import demo.dto.UserDTO;
-import demo.entities.Users;
+import net.minidev.json.JSONObject;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,36 +21,45 @@ public class getUserCommand {
     private UserDTO userDTO;
 
     @GetMapping(value = "/info/{name}")
-    public ResponseEntity<?> getUser(@PathVariable("name") String name){
+    public ResponseEntity<Object> getUser(@PathVariable("name") String name){
+        JSONObject result = new JSONObject();
         try{
             if(userDTO.getUser(name) == null){
+                result.put("error","No such user");
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No such user");
             }else{
+                result.put("user",userDTO.getUser(name));
                 return ResponseEntity.status(HttpStatus.FOUND).body(userDTO.getUser(name));
             }
         }catch (JDBCConnectionException jdbc) {
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
+            result.put("error","Error connecting to database");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         } catch (InputMismatchException ime) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+            result.put("error","Invalid input");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (DataException dataException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
+            result.put("error","Data error");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         } catch (QueryTimeoutException qte) {
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
+            result.put("error","Database connection error");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         }catch(NullPointerException npe){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No such user");
+            result.put("error","No such book");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
+            result.put("error","Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
 
 
     }
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public String handleMissingParams(MissingServletRequestParameterException ex) {
-        return ex.getParameterName() + " parameter is missing";
+    public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing parameter(s): " + ex.getParameterName());
     }
     @ExceptionHandler(ResponseStatusException.class)
-    public String handleWeb(ResponseStatusException responseStatusException){
-        return responseStatusException.getLocalizedMessage();
+    public ResponseEntity<String> handleWeb(ResponseStatusException responseStatusException){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseStatusException.getMessage());
     }
 
 

@@ -1,6 +1,7 @@
 package demo.command;
 
 import demo.dto.UserDTO;
+import net.minidev.json.JSONObject;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
@@ -10,11 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.InputMismatchException;
-import java.util.LinkedList;
 
 
 @RestController
@@ -22,25 +21,37 @@ public class getBookUsedAtTheMomentCommand {
     @Autowired
     private UserDTO userDTO;
     @GetMapping(value = "/api/v1/users/byBook/{isbn}")
-    public ResponseEntity<?> getUsersOfBook(@PathVariable ("isbn") @Valid String isbn){
+    public ResponseEntity<JSONObject> getUsersOfBook(@PathVariable ("isbn") @Valid String isbn){
+        JSONObject result = new JSONObject();
         try{
             if((userDTO.getUsersByBook(isbn) !=null) && (!userDTO.getUsersByBook(isbn).isEmpty())){
-                return ResponseEntity.status(HttpStatus.OK).body(userDTO.getUsersByBook(isbn));
+                result.put("book",userDTO.getUsersByBook(isbn));
+                return ResponseEntity.status(HttpStatus.OK).body(result);
             }else if(userDTO.getUsersByBook(isbn).isEmpty()){
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body( "No users have taken this book");
+                result.put("error","No users have taken this book");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
             }else{
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such book");
+                result.put("error","No such book");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
-        }catch (JDBCConnectionException jdbc){
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
-        }catch (InputMismatchException ime){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
-        }catch(DataException dataException){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
-        }catch(QueryTimeoutException qte){
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
+        }catch (JDBCConnectionException jdbc) {
+            result.put("error","Error connecting to database");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
+        } catch (InputMismatchException ime) {
+            result.put("error","Invalid input");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        } catch (DataException dataException) {
+            result.put("error","Data error");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+        } catch (QueryTimeoutException qte) {
+            result.put("error","Database connection error");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
+        }catch(NullPointerException npe){
+            result.put("error","No such book");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
+            result.put("error","Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
     @ExceptionHandler(MissingServletRequestParameterException.class)

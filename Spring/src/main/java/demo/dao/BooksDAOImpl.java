@@ -39,17 +39,11 @@ public class BooksDAOImpl {
         }
     }
 
-    public Books getBookByName(String name){
-        return bookRepository.findByName(name);
-    }
 
     public boolean bookExistsByID(String isbn){
         return bookRepository.findByIsbn(isbn).isExists();
     }
 
-    public boolean isNameTaken(String name){
-        return (bookRepository.findByName(name).isExists());
-    }
 
     public void decreaseCount(String bookId){
         Books temp = bookRepository.findByIsbn(bookId);

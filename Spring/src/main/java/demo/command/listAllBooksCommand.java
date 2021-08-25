@@ -1,7 +1,7 @@
 package demo.command;
 
 import demo.dto.BookDTO;
-import demo.entities.Books;
+import net.minidev.json.JSONObject;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.InputMismatchException;
-import java.util.LinkedList;
 
 
 @RestController
@@ -23,32 +22,43 @@ public class listAllBooksCommand {
     private BookDTO bookDTO;
 
     @GetMapping(value = "api/v1/books")
-    public ResponseEntity<?> execute() {
+    public ResponseEntity<JSONObject> execute(){
+        JSONObject result = new JSONObject();
         try{
             if(bookDTO.getAllBooks().isEmpty()){
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No books found");
+                result.put("error","No books found");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
             }else{
-                return ResponseEntity.status(HttpStatus.FOUND).body(bookDTO.getAllBooks());
+                result.put("books",bookDTO.getAllBooks());
+                return ResponseEntity.status(HttpStatus.OK).body(result);
             }
         }catch (JDBCConnectionException jdbc) {
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
+            result.put("error","Error connecting to database");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         } catch (InputMismatchException ime) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+            result.put("error","Invalid input");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (DataException dataException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
+            result.put("error","Data error");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         } catch (QueryTimeoutException qte) {
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
+            result.put("error","Database connection error");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
+        }catch(NullPointerException npe){
+            result.put("error","No such book");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
+            result.put("error","Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public String handleMissingParams(MissingServletRequestParameterException ex) {
-        return ex.getParameterName() + " parameter is missing";
+    public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing parameter(s): " + ex.getParameterName());
     }
     @ExceptionHandler(ResponseStatusException.class)
-    public String handleWeb(ResponseStatusException responseStatusException){
-        return responseStatusException.getLocalizedMessage();
+    public ResponseEntity<String> handleWeb(ResponseStatusException responseStatusException){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseStatusException.getMessage());
     }
 }
 
