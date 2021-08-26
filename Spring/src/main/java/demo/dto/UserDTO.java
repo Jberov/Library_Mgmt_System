@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 @Service
@@ -58,7 +59,7 @@ public class UserDTO {
         }
     }
 
-    public LinkedList<LinkedList<Books>> userUsedBooks(String username){
+    public HashMap<String,LinkedList<Books>> userUsedBooks(String username){
         if(userDAO.findUserByName(username) == null){
             return null;
         }else if(bookRecordsDAO.booksUsedByUser(username).isEmpty()){
@@ -70,7 +71,6 @@ public class UserDTO {
         }
 
     }
-
     public LinkedList<String> getUsersByBook(String isbn){
         if(booksDAO.bookExistsByID(isbn)){
             return bookRecordsDAO.getUsersByBook(isbn);

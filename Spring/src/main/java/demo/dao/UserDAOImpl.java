@@ -5,6 +5,8 @@ import demo.entities.Users;
 import demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.LinkedList;
 
 @Service
@@ -26,7 +28,7 @@ public class UserDAOImpl {
         return userRepository.findByName(username);
     }
 
-    private LinkedList<LinkedList<Books>> usageHistory(String name){
+    private HashMap<String,LinkedList<Books>> usageHistory(String name){
         return  bookRecordsDAO.booksUsedByUser(name);
     }
 }

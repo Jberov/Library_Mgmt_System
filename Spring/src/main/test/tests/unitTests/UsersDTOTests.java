@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.HashMap;
 import java.util.LinkedList;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -80,9 +82,9 @@ public class UsersDTOTests {
     public void userUsedBooksTest() throws Exception{
         LinkedList<Books> takenList  = new LinkedList<>();
         LinkedList<Books> returnedList  = new LinkedList<>();
-        LinkedList<LinkedList<Books>> booksList = new LinkedList<>();
-        booksList.add(takenList);
-        booksList.add(returnedList);
+        HashMap<String,LinkedList<Books>> booksList = new HashMap<>();
+        booksList.put("Currently taken books by user:", takenList);
+        booksList.put("Already returned books by user:", returnedList);
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);
         Users user = new Users("JBaller");
         takenList.add(books);

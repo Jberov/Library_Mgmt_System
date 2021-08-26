@@ -1,6 +1,7 @@
 package demo.entities;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 
@@ -28,16 +29,16 @@ public class Users {
     private String name;
 
 
-    public LinkedList<LinkedList<Books>> getUserHistory() {
+    public HashMap<String,LinkedList<Books>> getUserHistory() {
         return userHistory;
     }
 
-    public void setUserHistory(LinkedList<LinkedList<Books>> userHistory) {
+    public void setUserHistory(HashMap<String,LinkedList<Books>> userHistory) {
         this.userHistory = userHistory;
     }
 
     @Transient
-    private LinkedList<LinkedList<Books>> userHistory;
+    private HashMap<String,LinkedList<Books>> userHistory;
 
 
     public String getName() {

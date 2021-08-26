@@ -8,6 +8,7 @@ import demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 @Service
@@ -23,6 +24,7 @@ public class BookRecordsDAO {
 
     public String leaseBook(String bookId, String userName){
         if(books.getBook(bookId).isExists()){
+
             BooksActivity activity = new BooksActivity(user.findUserByName(userName),books.getBook(bookId), Status.TAKEN);
             books.decreaseCount(bookId);
             bookRecordsRepository.save(activity);
@@ -56,18 +58,18 @@ public class BookRecordsDAO {
         return "Book successfully returned";
     }
 
-    public LinkedList<LinkedList<Books>> booksUsedByUser(String username){
-        LinkedList<LinkedList<Books>> books = new LinkedList<>();
+    public HashMap<String,LinkedList<Books>> booksUsedByUser(String username){
+        HashMap<String,LinkedList<Books>> books = new HashMap<>();
         LinkedList<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
         LinkedList<Books> takenBooks = new LinkedList<>();
         LinkedList<Books> returnedBooks = new LinkedList<>();
-        books.add(takenBooks);
-        books.add(returnedBooks);
+        books.put("Currently taken books by user:",takenBooks);
+        books.put("Already returned books by user:",returnedBooks);
         for(BooksActivity i : records){
             if(i.getStatus().equals(Status.TAKEN)){
-                books.get(0).add(i.getBook());
+                books.get("Currently taken books by user:").add(i.getBook());
             }else{
-                books.get(1).add(i.getBook());
+                books.get("Already returned books by user:").add(i.getBook());
             }
         }
         return books;

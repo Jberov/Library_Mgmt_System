@@ -2,9 +2,11 @@ package demo.command;
 
 
 import demo.dto.BookDTO;
+import net.minidev.json.JSONObject;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,21 +24,29 @@ public class removeBookCommand {
     BookDTO bookDTO;
 
     @DeleteMapping(value = "api/v1/books/{isbn}")
-    public ResponseEntity<String> execute(@Valid @PathVariable("isbn") String isbn){
+    public ResponseEntity<JSONObject> execute(@Valid @PathVariable("isbn") String isbn){
+    JSONObject result = new JSONObject();
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(bookDTO.deleteBook(isbn));
+            result.put("response",bookDTO.deleteBook(isbn));
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (JDBCConnectionException jdbc) {
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
+            result.put("error","Error connecting to database");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         } catch (InputMismatchException ime) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+            result.put("error","Invalid input");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (DataException dataException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
+            result.put("error","Data error");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         } catch (QueryTimeoutException qte) {
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
-        }catch (NoSuchElementException nsee){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( "No records for book with such isbn");
+            result.put("error","Database connection error");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
+        }catch(NullPointerException npe){
+            result.put("error","No such book");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
+            result.put("error","Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
 

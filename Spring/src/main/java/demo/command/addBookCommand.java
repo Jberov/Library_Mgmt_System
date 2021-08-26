@@ -2,6 +2,7 @@ package demo.command;
 
 import demo.dto.BookDTO;
 import demo.entities.Books;
+import net.minidev.json.JSONObject;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
@@ -21,20 +22,31 @@ public class addBookCommand {
     private BookDTO bookDTO;
 
     @PostMapping(value = "/api/v1/books",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> execute(@RequestBody @Valid  Books book) {
+    public ResponseEntity<JSONObject> execute(@RequestBody @Valid  Books book) {
+
+        JSONObject result = new JSONObject();
         try {
-            return ResponseEntity.ok().body(bookDTO.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
+            result.put("response",bookDTO.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
+            return ResponseEntity.ok().body(result);
         }
         catch (JDBCConnectionException jdbc) {
-           return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Error connecting to database");
+            result.put("error","Error connecting to database");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         } catch (InputMismatchException ime) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+            result.put("error","Invalid input");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (DataException dataException) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Data error");
+            result.put("error","Data error");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         } catch (QueryTimeoutException qte) {
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("Database connection error");
+            result.put("error","Database connection error");
+            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
+        }catch(NullPointerException npe){
+            result.put("error","No such book");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error");
+            result.put("error","Error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
 
