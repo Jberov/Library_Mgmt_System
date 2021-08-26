@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 public class Books {
 
     @Id
-    @Pattern(regexp = "[97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9]")
+    @Pattern(regexp = "([97(8)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9]) | ([0-9]{13})")
     private String isbn;
 
     @Column
