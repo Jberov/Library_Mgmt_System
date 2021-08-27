@@ -4,6 +4,8 @@ import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.entities.Books;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -32,14 +34,14 @@ public class BookDTO {
             }
         }
     }
-    public String deleteBook(String isbn){
+    public ResponseEntity<String> deleteBook(String isbn){
         if(!booksDAO.bookExistsByID(isbn)){
-            return "No such book found";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such book found");
         }else if(bookRecordsDAO.userHistoryExists(isbn)){
-            return "Not all users have returned this book yet. Please, acquire all copies before removing it from the library";
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Not all users have returned this book yet. Please, acquire all copies before removing it from the library");
         }else{
             booksDAO.deleteBookAdmin(isbn);
-            return "Success";
+            return ResponseEntity.status(HttpStatus.OK).body("Book successfully deleted");
         }
     }
 

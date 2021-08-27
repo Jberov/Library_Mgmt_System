@@ -44,6 +44,9 @@ public class removeBookCommand {
         }catch(NullPointerException npe){
             result.put("error","No such book");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }catch(NoSuchElementException nsee){
+            result.put("error","No book");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }catch (Exception e){
             result.put("error","Error");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

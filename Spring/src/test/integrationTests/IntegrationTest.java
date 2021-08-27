@@ -1,6 +1,7 @@
-package tests.integrationTests;
+package integrationTests;
 
-import demo.LibraryApplication;
+import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
+import demo.*;
 import demo.entities.Books;
 import demo.entities.BooksActivity;
 import demo.entities.Status;
@@ -13,13 +14,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -34,8 +36,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { LibraryApplication.class })
-@WebAppConfiguration(value = "src/main/java")
+@SpringBootTest(classes = {
+        LibraryApplication.class,
+        XsuaaServiceConfiguration.class})
+
 public class IntegrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -83,8 +87,8 @@ public class IntegrationTest {
 
     @Test
     public void givenGetUser_whenMockMVC_thenVerifyResponse() throws Exception{
-        this.mockMvc.perform(get("/api/v1/users/info/JBaller")).andDo(print())
-                .andExpect(status().is2xxSuccessful());
+        this.mockMvc.perform(get("/api/v1/users/info/A")).andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -141,7 +145,7 @@ public class IntegrationTest {
     @Test
     public void givenGetBooks_whenMockMVC_thenVerifyResponse() throws Exception{
         this.mockMvc.perform(get("/api/v1/books")).andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -179,12 +183,12 @@ public class IntegrationTest {
     @Test
     public void givenHistory_whenMockMVC_thenVerifyResponseNoUser() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/history/A")).andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenHistory_whenMockMVC_thenVerifyResponseNewUser() throws Exception{
         this.mockMvc.perform(get("/api/v1/users/history/5")).andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is4xxClientError());
     }
 }

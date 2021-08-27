@@ -1,7 +1,6 @@
 package demo.command;
 
 import demo.dto.BookDTO;
-
 import net.minidev.json.JSONObject;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.exception.DataException;

@@ -37,11 +37,13 @@ public class UserDTO {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No copies of this book");
         }else if(userDAO.UserExists(username) == null){
             userDAO.addUsers(username);
+            booksDAO.decreaseCount(isbn);
+            bookRecordsDAO.leaseBook(isbn, username);
             return ResponseEntity.status(HttpStatus.CREATED).body("User created. Lease successful");
         }else if(bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)){
             booksDAO.decreaseCount(isbn);
             bookRecordsDAO.leaseBook(isbn, username);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( "Another copy successfully fetched");
+            return ResponseEntity.status(HttpStatus.OK).body( "Another copy successfully fetched");
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(bookRecordsDAO.leaseBook(isbn, username));
         }

@@ -1,35 +1,30 @@
-package tests.unitTests;
+package unitTests;
 
+import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
+import demo.LibraryApplication;
 import demo.repositories.BookRepository;
-import demo.entities.Books;
-
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
+import  demo.entities.Books;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@SpringBootTest(classes = {
+        LibraryApplication.class,
+        XsuaaServiceConfiguration.class})
 public class BookEntityTest {
-
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
-    private BookRepository bookRepository;
-
+    BookRepository bookRepository;
     @Test
-    public void whenFoundByNameReturnBook(){
-        Books book = new Books("978-06-79826-62-9",3, "Roald Dahl", "Matilda", "Genius girl",true);
-        entityManager.persistAndFlush(book);
+    public void whenFoundByNameReturnBook() {
+        Books book = new Books("9780141301068",3, "Roald Dahl", "Matilda", "Genius girl",true);
+        bookRepository.save(book);
         Books found = bookRepository.findByName(book.getName());
-
         AssertionsForClassTypes.assertThat(found.getAuthor())
                 .isEqualTo(book.getAuthor());
     }
-
 }
