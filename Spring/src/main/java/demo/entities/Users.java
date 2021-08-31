@@ -12,14 +12,14 @@ public class Users {
         this.name = name;
     }
 
-    public Users() {
+    public Users () {
     }
 
-    public long getId() {
+    public long getId () {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId (long id) {
         this.id = id;
     }
     @Id
@@ -29,11 +29,11 @@ public class Users {
     private String name;
 
 
-    public HashMap<String,LinkedList<Books>> getUserHistory() {
+    public HashMap<String,LinkedList<Books>> getUserHistory () {
         return userHistory;
     }
 
-    public void setUserHistory(HashMap<String,LinkedList<Books>> userHistory) {
+    public void setUserHistory (HashMap<String,LinkedList<Books>> userHistory) {
         this.userHistory = userHistory;
     }
 
@@ -41,11 +41,11 @@ public class Users {
     private HashMap<String,LinkedList<Books>> userHistory;
 
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName (String name) {
         this.name = name;
     }
 

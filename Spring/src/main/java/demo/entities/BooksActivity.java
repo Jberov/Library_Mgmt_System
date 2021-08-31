@@ -19,37 +19,37 @@ public class BooksActivity {
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 
-    public BooksActivity() {
+    public BooksActivity () {
     }
 
-    public BooksActivity(Users user, Books book, Status status) {
+    public BooksActivity (Users user, Books book, Status status) {
         this.user = user;
         this.books = book;
         this.status = status;
     }
 
 
-    public Users getUser() {
+    public Users getUser () {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser (Users user) {
         this.user = user;
     }
 
-    public Books getBook() {
+    public Books getBook () {
         return books;
     }
 
-    public void setBook(Books book) {
+    public void setBook (Books book) {
         this.books = book;
     }
 
-    public Status getStatus() {
+    public Status getStatus () {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus (Status status) {
         this.status = status;
     }
 }

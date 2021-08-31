@@ -16,39 +16,30 @@ import java.util.InputMismatchException;
 
 
 @RestController
-public class getBookUsedAtTheMomentCommand {
+public class GetBookUsedAtTheMomentCommand {
     @Autowired
     private UserDTO userDTO;
     @GetMapping(value = "/api/v1/users/byBook/{isbn}")
-    public ResponseEntity<JSONObject> getUsersOfBook(@PathVariable ("isbn") @Valid String isbn){
+    public ResponseEntity<JSONObject> getUsersOfBook (@PathVariable ("isbn") @Valid String isbn) {
         JSONObject result = new JSONObject();
         try{
-            if((userDTO.getUsersByBook(isbn) !=null) && (!userDTO.getUsersByBook(isbn).isEmpty())){
+            if ((userDTO.getUsersByBook(isbn) != null) && (!userDTO.getUsersByBook(isbn).isEmpty())) {
                 result.put("users",userDTO.getUsersByBook(isbn));
                 return ResponseEntity.status(HttpStatus.OK).body(result);
-            }else if(userDTO.getUsersByBook(isbn).isEmpty()){
+            } else if (userDTO.getUsersByBook(isbn).isEmpty()) {
                 result.put("error","No users have taken this book");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-            }else{
+            } else {
                 result.put("error","No such book");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
-        }catch (JDBCConnectionException jdbc) {
+        } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         } catch (InputMismatchException ime) {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        } catch (DataException dataException) {
-            result.put("error","Data error");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-        } catch (QueryTimeoutException qte) {
-            result.put("error","Database connection error");
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
-        }catch(NullPointerException npe){
-            result.put("error","No such book");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-        }catch (Exception e){
+        } catch (Exception e){
             result.put("error","Error");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
@@ -57,7 +48,7 @@ public class getBookUsedAtTheMomentCommand {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
+    public ResponseEntity<String> validationError (MethodArgumentNotValidException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
     }
 

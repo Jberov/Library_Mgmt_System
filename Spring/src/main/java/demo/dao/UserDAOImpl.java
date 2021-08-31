@@ -16,19 +16,19 @@ public class UserDAOImpl {
     @Autowired
     private BookRecordsDAO bookRecordsDAO;
 
-    public Users findUserByName(String name){
+    public Users findUserByName (String name) {
         Users user =  userRepository.findByName(name);
         user.setUserHistory(usageHistory(name));
         return user;
     }
-    public void addUsers(String username){
+    public void addUsers (String username) {
         userRepository.save(new Users(username));
     }
-    public Users UserExists(String username){
+    public Users UserExists (String username) {
         return userRepository.findByName(username);
     }
 
-    private HashMap<String,LinkedList<Books>> usageHistory(String name){
+    private HashMap<String,LinkedList<Books>> usageHistory (String name) {
         return  bookRecordsDAO.booksUsedByUser(name);
     }
 }

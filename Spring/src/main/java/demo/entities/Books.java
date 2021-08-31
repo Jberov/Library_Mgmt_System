@@ -15,7 +15,7 @@ public class Books {
     private int count_books;
     @Column
     private String author;
-    @Column(unique = true)
+    @Column (unique = true)
     private String name;
     @Column
     private String description;
@@ -24,17 +24,17 @@ public class Books {
     private boolean existence;
 
 
-    public boolean isExists() {
+    public boolean isExists () {
         return existence;
     }
 
-    public void setExists(boolean exists) {
+    public void setExists (boolean exists) {
         this.existence = exists;
     }
 
 
 
-    public Books(String isbn, int count_books, String author, String name, String description, boolean existence) {
+    public Books (String isbn, int count_books, String author, String name, String description, boolean existence) {
         this.isbn = isbn;
         this.count_books = count_books;
         this.author = author;
@@ -43,47 +43,47 @@ public class Books {
         this.existence = existence;
     }
 
-    public Books() {
+    public Books () {
     }
 
 
-    public String getIsbn() {
+    public String getIsbn () {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
+    public void setIsbn (String isbn) {
         this.isbn = isbn;
     }
 
-    public int getCount() {
+    public int getCount () {
         return count_books;
     }
 
-    public void setCount(int count) {
+    public void setCount (int count) {
         this.count_books = count;
     }
 
-    public String getAuthor() {
+    public String getAuthor () {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor (String author) {
         this.author = author;
     }
 
-    public String getName() {
+    public String getName () {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName (String name) {
         this.name = name;
     }
 
-    public String getDescription() {
+    public String getDescription () {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription (String description) {
         this.description = description;
     }
 }

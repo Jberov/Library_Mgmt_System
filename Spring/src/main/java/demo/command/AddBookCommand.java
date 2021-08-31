@@ -17,43 +17,33 @@ import javax.validation.Valid;
 import java.util.InputMismatchException;
 
 @RestController
-public class addBookCommand {
+public class AddBookCommand {
     @Autowired
     private BookDTO bookDTO;
 
     @PostMapping(value = "/api/v1/books",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JSONObject> execute(@RequestBody @Valid  Books book) {
+    public ResponseEntity<JSONObject> execute (@RequestBody @Valid  Books book) {
 
         JSONObject result = new JSONObject();
         try {
             result.put("response",bookDTO.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
             return ResponseEntity.ok().body(result);
-        }
-        catch (JDBCConnectionException jdbc) {
+        } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
         } catch (InputMismatchException ime) {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        } catch (DataException dataException) {
-            result.put("error","Data error");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-        } catch (QueryTimeoutException qte) {
-            result.put("error","Database connection error");
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
-        }catch(NullPointerException npe){
-            result.put("error","No such book");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-        }catch (Exception e){
+        } catch (Exception e){
             result.put("error","Error");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler (MethodArgumentNotValidException.class)
+    @ResponseStatus (HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
+    public ResponseEntity<String> validationError (MethodArgumentNotValidException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
     }
 }

@@ -22,63 +22,61 @@ public class UserDTO {
     @Autowired
     private BookRecordsDAO bookRecordsDAO;
 
-    public Users getUser(String name){
-        if(userDAO.findUserByName(name) != null){
+    public Users getUser(String name) {
+        if (userDAO.findUserByName(name) != null) {
             return userDAO.findUserByName(name);
-        }else{
-            return null;
         }
+        return null;
     }
 
-    public ResponseEntity<String> leaseBook(String isbn, String username){
-        if(!booksDAO.bookExistsByID(isbn) || (!booksDAO.getBook(isbn).isExists() )){
+    public ResponseEntity<String> leaseBook (String isbn, String username) {
+        if (!booksDAO.bookExistsByID(isbn) || (!booksDAO.getBook(isbn).isExists() )) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such book");
-        }else if(booksDAO.checkCount(isbn) <=0 ){
+        } else if (booksDAO.checkCount(isbn) <=0 ) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No copies of this book");
-        }else if(userDAO.UserExists(username) == null){
+        } else if(userDAO.UserExists(username) == null) {
             userDAO.addUsers(username);
             booksDAO.decreaseCount(isbn);
             bookRecordsDAO.leaseBook(isbn, username);
             return ResponseEntity.status(HttpStatus.CREATED).body("User created. Lease successful");
-        }else if(bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)){
+        } else if(bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) {
             booksDAO.decreaseCount(isbn);
             bookRecordsDAO.leaseBook(isbn, username);
             return ResponseEntity.status(HttpStatus.OK).body( "Another copy successfully fetched");
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.OK).body(bookRecordsDAO.leaseBook(isbn, username));
         }
     }
 
-    public ResponseEntity<String> returnBook(String isbn, String username){
-        if(userDAO.findUserByName(username) == null){
+    public ResponseEntity<String> returnBook (String isbn, String username) {
+        if (userDAO.findUserByName(username) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such user");
-        }else if(!bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)){
+        } else if (!bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You have not taken this book!");
-        }else if(!booksDAO.bookExistsByID(isbn) || !booksDAO.getBook(isbn).isExists()){
+        } else if (!booksDAO.bookExistsByID(isbn) || !booksDAO.getBook(isbn).isExists()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such book exists");
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.OK).body(bookRecordsDAO.returnBook(isbn, username));
         }
     }
 
-    public HashMap<String,LinkedList<Books>> userUsedBooks(String username){
-        if(userDAO.findUserByName(username) == null){
+    public HashMap<String,LinkedList<Books>> userUsedBooks (String username) {
+        if (userDAO.findUserByName(username) == null) {
             return null;
-        }else if(bookRecordsDAO.booksUsedByUser(username).isEmpty()){
+        } else if (bookRecordsDAO.booksUsedByUser(username).isEmpty()) {
             return null;
-        }else if(userDAO.findUserByName(username) == null){
+        } else if (userDAO.findUserByName(username) == null) {
             return null;
-        }else{
+        } else {
             return bookRecordsDAO.booksUsedByUser(username);
         }
 
     }
-    public LinkedList<String> getUsersByBook(String isbn){
-        if(booksDAO.bookExistsByID(isbn)){
+    public LinkedList<String> getUsersByBook (String isbn) {
+        if (booksDAO.bookExistsByID(isbn)) {
             return bookRecordsDAO.getUsersByBook(isbn);
-        }else{
-            return null;
         }
+        return null;
     }
 }
 

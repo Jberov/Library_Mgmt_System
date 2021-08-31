@@ -17,47 +17,35 @@ import java.util.InputMismatchException;
 
 
 @RestController
-public class listAllBooksCommand {
+public class ListAllBooksCommand {
     @Autowired
     private BookDTO bookDTO;
 
     @GetMapping(value = "api/v1/books")
-    public ResponseEntity<JSONObject> execute(){
+    public ResponseEntity<JSONObject> execute() {
         JSONObject result = new JSONObject();
         try{
-            if(bookDTO.getAllBooks().isEmpty()){
+            if (bookDTO.getAllBooks().isEmpty()) {
                 result.put("error","No books found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }else{
                 result.put("books",bookDTO.getAllBooks());
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }
-        }catch (JDBCConnectionException jdbc) {
+        } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
-        } catch (InputMismatchException ime) {
-            result.put("error","Invalid input");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        } catch (DataException dataException) {
-            result.put("error","Data error");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-        } catch (QueryTimeoutException qte) {
-            result.put("error","Database connection error");
-            return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
-        }catch(NullPointerException npe){
-            result.put("error","No such book");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-        }catch (Exception e){
-            result.put("error","Error");
+        } catch (Exception e){
+            result.put("error","Error, service is currently unavailable");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
     }
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) {
+    public ResponseEntity<String> handleMissingParams (MissingServletRequestParameterException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing parameter(s): " + ex.getParameterName());
     }
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<String> handleWeb(ResponseStatusException responseStatusException){
+    public ResponseEntity<String> handleWeb (ResponseStatusException responseStatusException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseStatusException.getMessage());
     }
 }
