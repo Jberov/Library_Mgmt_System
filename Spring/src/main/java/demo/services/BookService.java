@@ -3,11 +3,8 @@ package demo.services;
 import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dto.BookDTO;
-import demo.entities.Books;
 import demo.mappers.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -28,27 +25,23 @@ public class BookService {
         return bookMapper.linkedListToDTO(booksDAO.getAllBooks());
     }
 
-    public String addBookAdmin (String isbn, int count, String name, String author, String description) {
-        if (booksDAO.getBook(isbn) == null) {
-            return booksDAO.addBookAdmin(isbn, count, name, author, description);
-        } else {
-            if (!booksDAO.getBook(isbn).getIsbn().equals(name)) {
-                return "Wrong isbn! Book with such isbn already exists";
+    public BookDTO addBook (BookDTO bookDTO) {
+        if (booksDAO.getBook(bookDTO.getIsbn()) != null) {
+            if (!booksDAO.getBook(bookDTO.getIsbn()).getIsbn().equals(bookDTO.getName())) {
+                return null;
             }
-            booksDAO.increaseCount(isbn,count);
-            return "Such book already exists. Count increased with amount specified in the request";
+            booksDAO.increaseCount(bookDTO.getIsbn(), bookDTO.getCount());
         }
+        return bookMapper.bookToDTO(booksDAO.addBook(bookMapper.bookToEntity(bookDTO)));
     }
 
-    public String deleteBook (String isbn) {
+    public BookDTO deleteBook (String isbn) {
         if (!booksDAO.bookExistsByID(isbn)) {
-            return "No such book found";
+            return null;
         } else if (bookRecordsDAO.userHistoryExists(isbn)) {
-            return "Not all users have returned this book yet. Please, acquire all copies before removing it from the library";
+            return null;
         }
-        booksDAO.deleteBookAdmin(isbn);
-        return "Book successfully deleted";
-
+        return  bookMapper.bookToDTO(booksDAO.deleteBookAdmin(isbn));
     }
 
     public BookDTO getBookById (String isbn) {

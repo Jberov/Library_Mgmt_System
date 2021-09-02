@@ -24,14 +24,7 @@ public class UserMapper {
         userDTO.setName(user.getName());
         return userDTO;
     }
-    /*public Users userDtoToEntity(UserDTO userDTO){
-        if (userDTO == null) {
-            return null;
-        }
-        Users users = new Users();
-        users.setName(userDTO.getName());
-        return users;
-    }*/
+
     public HashMap<String, LinkedList<BookDTO>> convertMapToDTO(HashMap<String, LinkedList<Books>> map){
         HashMap<String, LinkedList<BookDTO>> mapDTO  = new HashMap<>();
         LinkedList<BookDTO> list = new LinkedList<>();
@@ -45,19 +38,5 @@ public class UserMapper {
         }
         mapDTO.put("Already returned books by user:",list);
         return mapDTO;
-    }
-    public HashMap<String, LinkedList<Books>> convertDtoMapToEntityMap(HashMap<String, LinkedList<BookDTO>> mapDto){
-        HashMap<String, LinkedList<Books>> map  = new HashMap<>();
-        LinkedList<Books> list = new LinkedList<>();
-        for(BookDTO i : mapDto.get("Currently taken books by user:")){
-            list.add(bookMapper.bookToEntity(i));
-        }
-        map.put("Currently taken books by user:",list);
-        list.clear();
-        for(BookDTO i : mapDto.get("Already returned books by user:")){
-            list.add(bookMapper.bookToEntity(i));
-        }
-        map.put("Already returned books by user:",list);
-        return map;
     }
 }

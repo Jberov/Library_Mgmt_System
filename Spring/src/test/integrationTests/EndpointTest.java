@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
 
-public class IntegrationTest {
+public class EndpointTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 

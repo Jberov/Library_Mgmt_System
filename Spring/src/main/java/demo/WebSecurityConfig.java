@@ -53,15 +53,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(getJwtAuthenticationConverter());
-
-
-
     }
+
     Converter<Jwt, AbstractAuthenticationToken> getJwtAuthenticationConverter(){
         TokenAuthenticationConverter converter = new TokenAuthenticationConverter(xsuaaServiceConfiguration);
         converter.setLocalScopeAsAuthorities(true);
         return converter;
     }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

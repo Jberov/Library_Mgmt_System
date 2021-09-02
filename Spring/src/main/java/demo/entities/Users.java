@@ -28,7 +28,6 @@ public class Users {
     @Column(unique = true)
     private String name;
 
-
     public HashMap<String,LinkedList<Books>> getUserHistory () {
         return userHistory;
     }
@@ -39,7 +38,6 @@ public class Users {
 
     @Transient
     private HashMap<String,LinkedList<Books>> userHistory;
-
 
     public String getName () {
         return name;

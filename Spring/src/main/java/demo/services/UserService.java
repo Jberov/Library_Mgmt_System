@@ -5,15 +5,10 @@ import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
 import demo.dto.BookDTO;
 import demo.dto.UserDTO;
-import demo.entities.Books;
-import demo.entities.Users;
 import demo.mappers.BookMapper;
 import demo.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -29,38 +24,39 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private BookMapper bookMapper;
+
     public UserDTO getUser(String name) {
         return userMapper.userToDTO(userDAO.findUserByName(name));
     }
 
-    public String leaseBook (String isbn, String username) {
-        if (!booksDAO.bookExistsByID(isbn) || (!booksDAO.getBook(isbn).isExists() )) {
-            return "No such book";
-        } else if (booksDAO.checkCount(isbn) <= 0 ) {
-            return "No copies of this book";
+    public BookDTO leaseBook (String isbn, String username) {
+        if (!booksDAO.bookExistsByID(isbn) || (!booksDAO.getBook(isbn).isExists()) || booksDAO.checkCount(isbn) <= 0 ) {
+            return null;
         } else if(userDAO.UserExists(username) == null) {
             userDAO.addUsers(username);
             booksDAO.decreaseCount(isbn);
             bookRecordsDAO.leaseBook(isbn, username);
-            return "User created. Lease successful";
+            return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
         } else if(bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) {
             booksDAO.decreaseCount(isbn);
             bookRecordsDAO.leaseBook(isbn, username);
-            return "Another copy successfully fetched";
+            return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
         }
-        return bookRecordsDAO.leaseBook(isbn, username);
+        return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
 
     }
 
-    public String returnBook (String isbn, String username) {
+    public BookDTO returnBook (String isbn, String username) {
         if (userDAO.findUserByName(username) == null) {
-            return "No such user";
+            return null;
         } else if (!bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) {
-            return "You have not taken this book!";
+            return null;
         } else if (!booksDAO.bookExistsByID(isbn) || !booksDAO.getBook(isbn).isExists()) {
-            return "No such book exists";
+            return null;
         }
-        return bookRecordsDAO.returnBook(isbn, username);
+        return bookMapper.bookToDTO(bookRecordsDAO.returnBook(isbn, username));
     }
 
     public HashMap<String,LinkedList<BookDTO>> userUsedBooks (String username) {
@@ -69,6 +65,7 @@ public class UserService {
         }
         return userMapper.convertMapToDTO(bookRecordsDAO.booksUsedByUser(username));
     }
+
     public LinkedList<String> getUsersByBook (String isbn) {
         if (booksDAO.bookExistsByID(isbn)) {
             return bookRecordsDAO.getUsersByBook(isbn);

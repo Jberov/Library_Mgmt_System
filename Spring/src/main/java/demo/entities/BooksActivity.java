@@ -30,7 +30,6 @@ public class BooksActivity {
         this.status = status;
     }
 
-
     public Users getUser () {
         return user;
     }

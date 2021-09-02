@@ -20,9 +20,7 @@ public class UserHistoryCommand {
     @GetMapping(value = "api/v1/users/history")
     public ResponseEntity<JSONObject> userHistory () {
         JSONObject result = new JSONObject();
-
-        try{
-
+        try {
             if (userService.userUsedBooks("JBaller") == null) {
                 result.put("error", "No books or no such user");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

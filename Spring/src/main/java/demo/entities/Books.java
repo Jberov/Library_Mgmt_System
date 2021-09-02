@@ -27,7 +27,6 @@ public class Books {
     @Column
     private boolean existence;
 
-
     public boolean isExists () {
         return existence;
     }
@@ -35,8 +34,6 @@ public class Books {
     public void setExists (boolean exists) {
         this.existence = exists;
     }
-
-
 
     public Books (String isbn, int count_books, String author, String name, String description, boolean existence) {
         this.isbn = isbn;
@@ -49,7 +46,6 @@ public class Books {
 
     public Books () {
     }
-
 
     public String getIsbn () {
         return isbn;

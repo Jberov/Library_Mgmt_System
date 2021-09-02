@@ -23,13 +23,13 @@ public class BookRecordsDAO {
     @Autowired
     private UserRepository userRepository;
 
-    public String leaseBook (String bookId, String userName) {
+    public Books leaseBook (String bookId, String userName) {
         if (books.getBook(bookId).isExists()) {
             BooksActivity activity = new BooksActivity(user.findUserByName(userName),books.getBook(bookId), Status.TAKEN);
             books.decreaseCount(bookId);
             bookRecordsRepository.save(activity);
         }
-        return "Book successfully leased";
+        return books.getBook(bookId);
     }
 
     public boolean checkIfUserHasTakenBook (String isbn, String username) {
@@ -45,7 +45,7 @@ public class BookRecordsDAO {
         return bookRecordsRepository.existsByBooksIsbnAndStatus(isbn, Status.TAKEN);
     }
 
-    public String returnBook (String bookId, String username) {
+    public Books returnBook (String bookId, String username) {
 
         new BooksActivity();
         BooksActivity temp;
@@ -53,7 +53,7 @@ public class BookRecordsDAO {
         temp.setStatus(Status.RETURNED);
         books.increaseCountBy1(bookId);
         bookRecordsRepository.save(temp);
-        return "Book successfully returned";
+        return books.getBook(bookId);
     }
 
     public HashMap<String,LinkedList<Books>> booksUsedByUser (String username) {

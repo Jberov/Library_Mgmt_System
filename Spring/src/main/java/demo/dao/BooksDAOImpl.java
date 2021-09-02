@@ -17,17 +17,17 @@ public class BooksDAOImpl {
         return new LinkedList<>(bookRepository.findByExistence(true));
     }
 
-    public String addBookAdmin (String isbn, int count, String name, String author, String description) {
-        Books book = new Books(isbn, count, name, author, description, true);
+    public Books addBook (Books book) {
         bookRepository.save(book);
-        return "Success";
+        return bookRepository.findByIsbn(book.getIsbn());
     }
 
-    public void deleteBookAdmin (String isbn) {
+    public Books deleteBookAdmin (String isbn) {
         Books temp = bookRepository.findByIsbn(isbn);
         temp.setExists(false);
         temp.setCount(0);
         bookRepository.save(temp);
+        return temp;
     }
 
     public Books getBook (String isbn) {

@@ -1,5 +1,6 @@
 package demo.command;
 
+import demo.dto.BookDTO;
 import demo.services.UserService;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
@@ -23,20 +24,15 @@ public class LeaseBookCommand {
     public ResponseEntity<JSONObject> leaseBook (@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username){
         JSONObject result = new JSONObject();
         try{
-            switch (userService.leaseBook(isbn, username)){
-                case ("No such book"):
-                    result.put("response", userService.leaseBook(isbn, username));
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-                case ("No copies of this book"):
-                    result.put("response", userService.leaseBook(isbn, username));
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-                case ("User created. Lease successful"):
-                case ("Another copy successfully fetched"):
-                case ("Book successfully leased"):
-                    result.put("response", userService.leaseBook(isbn, username));
-                    return ResponseEntity.status(HttpStatus.OK).body(result);
+        BookDTO leased = userService.leaseBook(isbn, username);
+            if(leased == null) {
+                result.put("response", "Book does not exist or is not available");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
-            return ResponseEntity.ok(result);
+            result.put("message", "Successful lease of the book.");
+            result.put("response", leased);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);

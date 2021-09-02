@@ -1,7 +1,7 @@
 package demo.command;
 
+import demo.dto.BookDTO;
 import demo.services.BookService;
-import demo.entities.Books;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +20,18 @@ public class AddBookCommand {
     private BookService bookService;
 
     @PostMapping(value = "/api/v1/books",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JSONObject> execute (@RequestBody @Valid  Books book) {
+    public ResponseEntity<JSONObject> execute (@RequestBody @Valid BookDTO book) {
 
         JSONObject result = new JSONObject();
         try {
-            switch (bookService.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription())){
-                case "Success":
-                    result.put("response",bookService.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
-                    return ResponseEntity.status(HttpStatus.CREATED).body(result);
-                case ("Wrong isbn! Book with such isbn already exists"):
-                    result.put("response",bookService.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
-                    return ResponseEntity.badRequest().body(result);
-                case ("Such book already exists. Count increased with amount specified in the request"):
-                    result.put("response",bookService.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
-                    return ResponseEntity.ok().body(result);
+            BookDTO confirmation = bookService.addBook(book);
+            if(confirmation == null){
+                result.put("response","You have entered the isbn of an existing book, yet the name does not match. Request denied");
+                return ResponseEntity.badRequest().body(result);
             }
-            return ResponseEntity.ok(result);
+            result.put("message","Success. Here is the newly added book");
+            result.put("response",confirmation);
+            return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);

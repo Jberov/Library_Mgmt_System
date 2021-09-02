@@ -1,5 +1,6 @@
 package demo.command;
 
+import demo.dto.BookDTO;
 import demo.services.UserService;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
@@ -21,17 +22,14 @@ public class ReturnBookCommand {
     @PatchMapping(value = "api/v1/books/return/{isbn}&{username}")
     public ResponseEntity<JSONObject> returnBook (@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username) {
         JSONObject result = new JSONObject();
-        try{
-            switch (userService.returnBook(isbn, username)){
-                case ("No such user"):
-                case ("You have not taken this book!"):
-                case ("No such book exists"):
-                    result.put("response", userService.returnBook(isbn, username));
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-                case ("Book successfully returned"):
-                    result.put("response", userService.returnBook(isbn, username));
-                    return ResponseEntity.status(HttpStatus.OK).body(result);
+        try {
+            BookDTO returned = userService.returnBook(isbn, username);
+            if (returned == null) {
+                result.put("message", "No such book exists or has been taken by you");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
+            result.put("message", "Book successfully returned");
+            result.put("response", returned);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");

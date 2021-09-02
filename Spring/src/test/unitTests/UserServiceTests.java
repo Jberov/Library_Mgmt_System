@@ -19,13 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -80,7 +78,7 @@ public class UserServiceTests {
     public void leaseBook() throws Exception{
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);
         Users user = new Users("JBaller");
-        BDDMockito.given(userService.leaseBook(books.getIsbn(), user.getName())).willReturn("Success");
+        BDDMockito.given(userService.leaseBook(books.getIsbn(), user.getName())).willReturn(bookMapper.bookToDTO(books));
         mvc.perform(MockMvcRequestBuilders.patch("/api/v1/books/rental/978-17-82065-33-9&JBaller").contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is2xxSuccessful());
                 //.andExpect(content().string("Book successfully leased"));
@@ -92,7 +90,7 @@ public class UserServiceTests {
     public void returnBook() throws Exception{
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);
         Users user = new Users("JBaller");
-        BDDMockito.given(userService.returnBook(books.getIsbn(), user.getName())).willReturn("Success");
+        BDDMockito.given(userService.returnBook(books.getIsbn(), user.getName())).willReturn(bookMapper.bookToDTO(books));
         mvc.perform(MockMvcRequestBuilders.patch("/api/v1/books/return/978-06-79866-68-8&JBaller").contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is2xxSuccessful());
                 //.andExpect(content().string("Book successfully returned"));

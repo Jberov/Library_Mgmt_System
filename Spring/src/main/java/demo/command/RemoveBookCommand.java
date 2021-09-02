@@ -1,6 +1,7 @@
 package demo.command;
 
 
+import demo.dto.BookDTO;
 import demo.services.BookService;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
@@ -24,7 +25,12 @@ public class RemoveBookCommand {
     public ResponseEntity<JSONObject> execute(@Valid @PathVariable("isbn") String isbn){
     JSONObject result = new JSONObject();
         try{
-            result.put("response", bookService.deleteBook(isbn));
+            BookDTO deleted = bookService.deleteBook(isbn);
+            if(deleted == null){
+                result.put("error", "No such book exists or not all users have returned it yet.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            }
+            result.put("response", deleted);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");

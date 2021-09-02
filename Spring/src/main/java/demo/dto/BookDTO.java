@@ -1,10 +1,6 @@
 package demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.json.JSONPropertyName;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
