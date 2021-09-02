@@ -1,5 +1,7 @@
 package demo.entities;
 
+import demo.status.Status;
+
 import javax.persistence.*;
 
 @Entity

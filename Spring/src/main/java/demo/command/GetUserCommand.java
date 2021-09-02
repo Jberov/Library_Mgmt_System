@@ -1,9 +1,7 @@
 package demo.command;
 
-import demo.dto.UserDTO;
+import demo.services.UserService;
 import net.minidev.json.JSONObject;
-import org.hibernate.QueryTimeoutException;
-import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,23 +11,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 
 @RequestMapping("/api/v1/users")
 @RestController
 public class GetUserCommand {
     @Autowired
-    private UserDTO userDTO;
+    private UserService userService;
 
     @GetMapping(value = "/info/{name}")
     public ResponseEntity<JSONObject> getUser (@PathVariable("name") String name){
         JSONObject result = new JSONObject();
         try{
-            if (userDTO.getUser(name) == null) {
+            if (userService.getUser(name) == null) {
                 result.put("error","No such user");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
-            result.put("user",userDTO.getUser(name));
+            result.put("user", userService.getUser(name));
             return ResponseEntity.status(HttpStatus.OK).body(result);
 
         } catch (JDBCConnectionException jdbc) {
@@ -39,8 +36,9 @@ public class GetUserCommand {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (Exception e){
-            result.put("error","Unknown error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            System.out.println(e.getMessage());
+            result.put("error","Error, service is currently unavailable");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
         }
 
 

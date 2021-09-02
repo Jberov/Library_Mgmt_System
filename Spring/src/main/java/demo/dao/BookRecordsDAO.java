@@ -2,7 +2,7 @@ package demo.dao;
 
 import demo.entities.Books;
 import demo.entities.BooksActivity;
-import demo.entities.Status;
+import demo.status.Status;
 import demo.repositories.BookRecordsRepository;
 import demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ public class BookRecordsDAO {
     }
 
     public boolean checkIfUserHasTakenBook (String isbn, String username) {
-        for (String i: getUsersByBook(isbn)) {
-            if (i.equals(username)) {
+        for (String name: getUsersByBook(isbn)) {
+            if (name.equals(username)) {
                 return true;
             }
         }
@@ -63,11 +63,11 @@ public class BookRecordsDAO {
         LinkedList<Books> returnedBooks = new LinkedList<>();
         books.put("Currently taken books by user:",takenBooks);
         books.put("Already returned books by user:",returnedBooks);
-        for (BooksActivity i : records) {
-            if (i.getStatus().equals(Status.TAKEN)) {
-                books.get("Currently taken books by user:").add(i.getBook());
+        for (BooksActivity record : records) {
+            if (record.getStatus().equals(Status.TAKEN)) {
+                books.get("Currently taken books by user:").add(record.getBook());
             } else {
-                books.get("Already returned books by user:").add(i.getBook());
+                books.get("Already returned books by user:").add(record.getBook());
             }
         }
         return books;
@@ -77,13 +77,12 @@ public class BookRecordsDAO {
         if (books.getBook(bookId).isExists()) {
             LinkedList<String> usernames = new LinkedList<>();
             LinkedList<BooksActivity> records = bookRecordsRepository.findByBooksIsbnAndStatus(books.getBook(bookId).getIsbn(), Status.TAKEN);
-            for (BooksActivity i : records) {
-                usernames.add(i.getUser().getName());
+            for (BooksActivity record : records) {
+                usernames.add(record.getUser().getName());
             }
             return usernames;
-        } else {
-            return null;
         }
+        return null;
     }
 }
 

@@ -1,9 +1,7 @@
 package demo.command;
 
-import demo.dto.UserDTO;
+import demo.services.UserService;
 import net.minidev.json.JSONObject;
-import org.hibernate.QueryTimeoutException;
-import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,19 +11,27 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 
 
 @RestController
 public class ReturnBookCommand {
     @Autowired
-    private UserDTO userDTO;
+    private UserService userService;
 
     @PatchMapping(value = "api/v1/books/return/{isbn}&{username}")
     public ResponseEntity<JSONObject> returnBook (@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username) {
         JSONObject result = new JSONObject();
         try{
-            result.put("response",userDTO.returnBook(isbn, username));
+            switch (userService.returnBook(isbn, username)){
+                case ("No such user"):
+                case ("You have not taken this book!"):
+                case ("No such book exists"):
+                    result.put("response", userService.returnBook(isbn, username));
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+                case ("Book successfully returned"):
+                    result.put("response", userService.returnBook(isbn, username));
+                    return ResponseEntity.status(HttpStatus.OK).body(result);
+            }
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
@@ -34,8 +40,9 @@ public class ReturnBookCommand {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (Exception e){
-            result.put("error","Unknown error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            System.out.println(e.getMessage());
+            result.put("error","Error, service is currently unavailable");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
         }
     }
 

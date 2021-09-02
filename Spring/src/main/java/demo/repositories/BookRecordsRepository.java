@@ -1,7 +1,7 @@
 package demo.repositories;
 
 import demo.entities.BooksActivity;
-import demo.entities.Status;
+import demo.status.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.LinkedList;

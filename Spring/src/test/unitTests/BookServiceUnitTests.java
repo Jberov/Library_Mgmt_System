@@ -5,7 +5,7 @@ import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
-import demo.dto.BookDTO;
+import demo.services.BookService;
 import demo.entities.Books;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,10 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
-public class BooksDAOUnitTests {
+public class BookServiceUnitTests {
     private MockMvc mvc;
     @MockBean
-    private BookDTO bookDTO;
+    private BookService bookService;
     @MockBean
     private BooksDAOImpl booksDAO;
     @MockBean

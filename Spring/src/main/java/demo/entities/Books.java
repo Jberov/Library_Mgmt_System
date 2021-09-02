@@ -2,21 +2,25 @@ package demo.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "books")
 public class Books {
 
     @Id
-    @Pattern(regexp = "([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})")
     private String isbn;
 
     @Column
+    @PositiveOrZero
     private int count_books;
+
     @Column
     private String author;
+
     @Column (unique = true)
     private String name;
+
     @Column
     private String description;
 

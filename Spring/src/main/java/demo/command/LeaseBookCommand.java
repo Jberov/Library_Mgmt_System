@@ -1,9 +1,7 @@
 package demo.command;
 
-import demo.dto.UserDTO;
+import demo.services.UserService;
 import net.minidev.json.JSONObject;
-import org.hibernate.QueryTimeoutException;
-import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +16,26 @@ import java.util.InputMismatchException;
 @RestController
 public class LeaseBookCommand {
     @Autowired
-    private UserDTO userDTO;
+    private UserService userService;
 
 
-    @PatchMapping(value = "api/v1/books/rental/{isbn}&{username}")
+    @PatchMapping(value = "api/v1/books/rental/{isbn}")
     public ResponseEntity<JSONObject> leaseBook (@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username){
         JSONObject result = new JSONObject();
         try{
-            result.put("response",userDTO.leaseBook(isbn, username));
+            switch (userService.leaseBook(isbn, username)){
+                case ("No such book"):
+                    result.put("response", userService.leaseBook(isbn, username));
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+                case ("No copies of this book"):
+                    result.put("response", userService.leaseBook(isbn, username));
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+                case ("User created. Lease successful"):
+                case ("Another copy successfully fetched"):
+                case ("Book successfully leased"):
+                    result.put("response", userService.leaseBook(isbn, username));
+                    return ResponseEntity.status(HttpStatus.OK).body(result);
+            }
             return ResponseEntity.ok(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
@@ -34,8 +44,9 @@ public class LeaseBookCommand {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (Exception e){
-            result.put("error","Error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            System.out.println(e.getMessage());
+            result.put("error","Error, service is currently unavailable");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
         }
     }
 

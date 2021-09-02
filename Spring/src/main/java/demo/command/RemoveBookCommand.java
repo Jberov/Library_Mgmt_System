@@ -1,10 +1,8 @@
 package demo.command;
 
 
-import demo.dto.BookDTO;
+import demo.services.BookService;
 import net.minidev.json.JSONObject;
-import org.hibernate.QueryTimeoutException;
-import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +13,18 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 
 
 @RestController
 public class RemoveBookCommand {
     @Autowired
-    BookDTO bookDTO;
+    BookService bookService;
 
     @DeleteMapping(value = "api/v1/books/{isbn}")
     public ResponseEntity<JSONObject> execute(@Valid @PathVariable("isbn") String isbn){
     JSONObject result = new JSONObject();
         try{
-            result.put("response",bookDTO.deleteBook(isbn));
+            result.put("response", bookService.deleteBook(isbn));
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
@@ -36,8 +33,9 @@ public class RemoveBookCommand {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (Exception e){
-            result.put("error","Error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            System.out.println(e.getMessage());
+            result.put("error","Error, service is currently unavailable");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
         }
     }
 

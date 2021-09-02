@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/v1/books").authenticated()
                 .antMatchers(HttpMethod.DELETE,"/api/v1/books/*").hasAuthority("Admin")
                 .antMatchers(HttpMethod.PATCH,"/api/v1/books/return/*").hasAuthority("User")
-                .antMatchers(HttpMethod.GET,"/api/v1/users/history/*").hasAuthority("User")
+                .antMatchers(HttpMethod.GET,"/api/v1/users/history").hasAuthority("User")
                 .anyRequest().permitAll()
                 .and()
                 .oauth2ResourceServer()

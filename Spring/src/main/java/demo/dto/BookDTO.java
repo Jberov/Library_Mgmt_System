@@ -1,55 +1,101 @@
 package demo.dto;
 
-import demo.dao.BookRecordsDAO;
-import demo.dao.BooksDAOImpl;
-import demo.entities.Books;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.json.JSONPropertyName;
 
-import java.util.LinkedList;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 
-@Service
 public class BookDTO {
 
-    @Autowired
-    private BooksDAOImpl booksDAO;
-    @Autowired
-    private BookRecordsDAO bookRecordsDAO;
 
-    public LinkedList<Books> getAllBooks () {
-        return booksDAO.getAllBooks();
-    }
+        @Pattern(regexp = "([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})")
+        @NotNull
+        private String isbn;
 
-    public String addBookAdmin (String isbn, int count, String name, String author, String description) {
-        if (booksDAO.getBook(isbn) == null) {
-            return booksDAO.addBookAdmin(isbn, count, name, author, description);
-        } else {
-            if (!booksDAO.getBook(isbn).getIsbn().equals(name)) {
-                return "Wrong isbn! Book with such isbn already exists";
-            }
-            booksDAO.increaseCount(isbn,count);
-            return "Such book already exists. Count increased with amount specified in the request";
-        }
-    }
-    public ResponseEntity<String> deleteBook (String isbn) {
-        if (!booksDAO.bookExistsByID(isbn)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such book found");
-        } else if (bookRecordsDAO.userHistoryExists(isbn)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Not all users have returned this book yet. Please, acquire all copies before removing it from the library");
-        } else {
-            booksDAO.deleteBookAdmin(isbn);
-            return ResponseEntity.status(HttpStatus.OK).body("Book successfully deleted");
-        }
-    }
+        @PositiveOrZero
+        private int count_books;
 
-    public Books getBookById (String isbn) {
-        if (booksDAO.bookExistsByID(isbn)) {
-            return booksDAO.getBook(isbn);
-        } else {
-            return null;
+        @NotNull
+        private String author;
+
+        @NotNull
+        private String name;
+
+        @NotNull
+        private String description;
+
+        @NotNull
+        private boolean existence;
+
+
+        public boolean isExists () {
+            return existence;
         }
-    }
+
+        public void setExists (boolean exists) {
+            this.existence = exists;
+        }
+
+
+
+        public BookDTO (String isbn, int count_books, String author, String name, String description, boolean existence) {
+            this.isbn = isbn;
+            this.count_books = count_books;
+            this.author = author;
+            this.name = name;
+            this.description = description;
+            this.existence = existence;
+        }
+
+        public BookDTO () {
+        }
+
+        @JsonProperty("book_isbn")
+        public String getIsbn () {
+            return isbn;
+        }
+
+        public void setIsbn (String isbn) {
+            this.isbn = isbn;
+        }
+
+        @JsonProperty("book_count")
+        public int getCount () {
+            return count_books;
+        }
+
+        public void setCount (int count) {
+            this.count_books = count;
+        }
+
+        @JsonProperty("book_count")
+        public String getAuthor () {
+            return author;
+        }
+
+        public void setAuthor (String author) {
+            this.author = author;
+        }
+
+        @JsonProperty("book_name")
+        public String getName () {
+            return name;
+        }
+
+        public void setName (String name) {
+            this.name = name;
+        }
+
+        @JsonProperty("book_description")
+        public String getDescription () {
+            return description;
+        }
+
+        public void setDescription (String description) {
+            this.description = description;
+        }
 }
-

@@ -31,11 +31,7 @@ public class BooksDAOImpl {
     }
 
     public Books getBook (String isbn) {
-        if (bookRepository.findByIsbn(isbn) != null) {
-            return bookRepository.findByIsbn(isbn);
-        } else {
-            return null;
-        }
+        return bookRepository.findByIsbn(isbn);
     }
 
 

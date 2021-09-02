@@ -1,4 +1,4 @@
-package demo.entities;
+package demo.status;
 
 public enum Status {
     TAKEN,RETURNED

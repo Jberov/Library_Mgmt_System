@@ -1,10 +1,8 @@
 package demo.command;
 
-import demo.dto.BookDTO;
+import demo.services.BookService;
 import demo.entities.Books;
 import net.minidev.json.JSONObject;
-import org.hibernate.QueryTimeoutException;
-import org.hibernate.exception.DataException;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,15 +17,25 @@ import java.util.InputMismatchException;
 @RestController
 public class AddBookCommand {
     @Autowired
-    private BookDTO bookDTO;
+    private BookService bookService;
 
     @PostMapping(value = "/api/v1/books",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> execute (@RequestBody @Valid  Books book) {
 
         JSONObject result = new JSONObject();
         try {
-            result.put("response",bookDTO.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
-            return ResponseEntity.ok().body(result);
+            switch (bookService.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription())){
+                case "Success":
+                    result.put("response",bookService.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
+                    return ResponseEntity.status(HttpStatus.CREATED).body(result);
+                case ("Wrong isbn! Book with such isbn already exists"):
+                    result.put("response",bookService.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
+                    return ResponseEntity.badRequest().body(result);
+                case ("Such book already exists. Count increased with amount specified in the request"):
+                    result.put("response",bookService.addBookAdmin(book.getIsbn(), book.getCount(),book.getAuthor(),book.getName(),book.getDescription()));
+                    return ResponseEntity.ok().body(result);
+            }
+            return ResponseEntity.ok(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
             return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
@@ -35,8 +43,9 @@ public class AddBookCommand {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         } catch (Exception e){
-            result.put("error","Error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            System.out.println(e.getMessage());
+            result.put("error","Error, service is currently unavailable");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
         }
     }
 
