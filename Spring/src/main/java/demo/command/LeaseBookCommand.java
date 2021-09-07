@@ -1,5 +1,7 @@
 package demo.command;
 
+import com.sap.cloud.security.token.SecurityContext;
+import com.sap.cloud.security.xsuaa.token.SpringSecurityContext;
 import demo.dto.BookDTO;
 import demo.services.UserService;
 import net.minidev.json.JSONObject;
@@ -21,10 +23,11 @@ public class LeaseBookCommand {
 
 
     @PatchMapping(value = "api/v1/books/rental/{isbn}")
-    public ResponseEntity<JSONObject> leaseBook (@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username){
+    public ResponseEntity<JSONObject> leaseBook (@PathVariable("isbn") @Valid String isbn){
         JSONObject result = new JSONObject();
+
         try{
-        BookDTO leased = userService.leaseBook(isbn, username);
+        BookDTO leased = userService.leaseBook(isbn, SpringSecurityContext.getToken().getLogonName());
             if(leased == null) {
                 result.put("response", "Book does not exist or is not available");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

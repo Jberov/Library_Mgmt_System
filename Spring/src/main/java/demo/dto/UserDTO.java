@@ -18,7 +18,6 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    @JsonProperty("user_id")
     public long getId () {
         return id;
     }
@@ -35,7 +34,6 @@ public class UserDTO {
 
     private HashMap<String,LinkedList<Books>> userHistory;
 
-    @JsonProperty("user_history")
     public HashMap<String, LinkedList<Books>> getUserHistory () {
         return userHistory;
     }
@@ -44,7 +42,6 @@ public class UserDTO {
         this.userHistory = userHistory;
     }
 
-    @JsonProperty("username")
     public String getName () {
         return name;
     }

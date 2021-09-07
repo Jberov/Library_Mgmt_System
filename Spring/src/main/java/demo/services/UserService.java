@@ -36,12 +36,8 @@ public class UserService {
             return null;
         } else if(userDAO.UserExists(username) == null) {
             userDAO.addUsers(username);
-            booksDAO.decreaseCount(isbn);
-            bookRecordsDAO.leaseBook(isbn, username);
             return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
         } else if(bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) {
-            booksDAO.decreaseCount(isbn);
-            bookRecordsDAO.leaseBook(isbn, username);
             return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
         }
         return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
@@ -60,7 +56,7 @@ public class UserService {
     }
 
     public HashMap<String,LinkedList<BookDTO>> userUsedBooks (String username) {
-        if ((userDAO.findUserByName(username) == null) || (bookRecordsDAO.booksUsedByUser(username).isEmpty())) {
+        if ((userDAO.findUserByName(username) == null) || (bookRecordsDAO.booksUsedByUser(username) == null)) {
             return null;
         }
         return userMapper.convertMapToDTO(bookRecordsDAO.booksUsedByUser(username));

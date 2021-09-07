@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.util.InputMismatchException;
 
@@ -19,7 +18,7 @@ public class GetBookCommand {
     private BookService bookService;
 
     @GetMapping(value = "/books/{isbn}")
-    public ResponseEntity<JSONObject> getBook (@PathVariable("isbn") @Valid String isbn) throws ResponseStatusException{
+    public ResponseEntity<JSONObject> getBook (@PathVariable("isbn") @Valid String isbn) {
         JSONObject result = new JSONObject();
         try {
             if (bookService.getBookById(isbn) != null) {

@@ -30,6 +30,14 @@ public class BooksDAOImpl {
         return temp;
     }
 
+    public Books restoreBook(Books book){
+        Books temp = bookRepository.findByIsbn(book.getIsbn());
+        temp.setExists(true);
+        temp.setCount(book.getCount());
+        bookRepository.save(temp);
+        return temp;
+    }
+
     public Books getBook (String isbn) {
         return bookRepository.findByIsbn(isbn);
     }
@@ -58,7 +66,7 @@ public class BooksDAOImpl {
     }
 
     public int checkCount (String isbn) {
-        return bookRepository.findById(isbn).get().getCount();
+        return bookRepository.findByIsbn(isbn).getCount();
     }
 }
 

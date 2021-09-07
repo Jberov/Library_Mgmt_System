@@ -59,6 +59,9 @@ public class BookRecordsDAO {
     public HashMap<String,LinkedList<Books>> booksUsedByUser (String username) {
         HashMap<String,LinkedList<Books>> books = new HashMap<>();
         LinkedList<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
+        if(records == null){
+            return null;
+        }
         LinkedList<Books> takenBooks = new LinkedList<>();
         LinkedList<Books> returnedBooks = new LinkedList<>();
         books.put("Currently taken books by user:",takenBooks);

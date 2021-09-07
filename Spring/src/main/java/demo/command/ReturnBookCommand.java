@@ -1,5 +1,6 @@
 package demo.command;
 
+import com.sap.cloud.security.xsuaa.token.SpringSecurityContext;
 import demo.dto.BookDTO;
 import demo.services.UserService;
 import net.minidev.json.JSONObject;
@@ -19,11 +20,11 @@ public class ReturnBookCommand {
     @Autowired
     private UserService userService;
 
-    @PatchMapping(value = "api/v1/books/return/{isbn}&{username}")
-    public ResponseEntity<JSONObject> returnBook (@PathVariable("isbn") @Valid String isbn, @PathVariable("username") String username) {
+    @PatchMapping(value = "api/v1/books/return/{isbn}")
+    public ResponseEntity<JSONObject> returnBook (@PathVariable("isbn") @Valid String isbn) {
         JSONObject result = new JSONObject();
         try {
-            BookDTO returned = userService.returnBook(isbn, username);
+            BookDTO returned = userService.returnBook(isbn, SpringSecurityContext.getToken().getLogonName());
             if (returned == null) {
                 result.put("message", "No such book exists or has been taken by you");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

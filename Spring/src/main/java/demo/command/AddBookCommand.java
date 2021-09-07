@@ -24,13 +24,14 @@ public class AddBookCommand {
 
         JSONObject result = new JSONObject();
         try {
-            BookDTO confirmation = bookService.addBook(book);
-            if(confirmation == null){
+            System.out.println(book.getCount());
+            BookDTO addedBook = bookService.addBook(book);
+            if(addedBook == null){
                 result.put("response","You have entered the isbn of an existing book, yet the name does not match. Request denied");
                 return ResponseEntity.badRequest().body(result);
             }
             result.put("message","Success. Here is the newly added book");
-            result.put("response",confirmation);
+            result.put("response",addedBook);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");

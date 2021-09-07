@@ -39,6 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                /*
                 .antMatchers(HttpMethod.POST,"/api/v1/books").hasAuthority("Admin")
                 .antMatchers(HttpMethod.GET,"/api/v1/books/*").hasAuthority("Admin")
                 .antMatchers(HttpMethod.GET,"/api/v1/users/byBook/*").hasAuthority("Admin")
@@ -47,8 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/v1/books").authenticated()
                 .antMatchers(HttpMethod.DELETE,"/api/v1/books/*").hasAuthority("Admin")
                 .antMatchers(HttpMethod.PATCH,"/api/v1/books/return/*").hasAuthority("User")
-                .antMatchers(HttpMethod.GET,"/api/v1/users/history").hasAuthority("User")
-                .anyRequest().permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/users/history").hasAuthority("User")*/
+                .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer()
                 .jwt()

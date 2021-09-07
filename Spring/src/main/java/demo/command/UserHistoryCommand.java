@@ -1,12 +1,12 @@
 package demo.command;
 
+import com.sap.cloud.security.xsuaa.token.SpringSecurityContext;
 import demo.services.UserService;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import java.util.InputMismatchException;
@@ -21,11 +21,11 @@ public class UserHistoryCommand {
     public ResponseEntity<JSONObject> userHistory () {
         JSONObject result = new JSONObject();
         try {
-            if (userService.userUsedBooks("JBaller") == null) {
+            if (userService.userUsedBooks(SpringSecurityContext.getToken().getLogonName()) == null) {
                 result.put("error", "No books or no such user");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
-            result.put(SecurityContextHolder.getContext().getAuthentication().getName().intern() + "'s history", userService.userUsedBooks("JBaller"));
+            result.put(SpringSecurityContext.getToken().getLogonName() + "'s history", userService.userUsedBooks(SpringSecurityContext.getToken().getLogonName()));
             return ResponseEntity.status(HttpStatus.OK).body(result);
 
         } catch (JDBCConnectionException jdbc) {

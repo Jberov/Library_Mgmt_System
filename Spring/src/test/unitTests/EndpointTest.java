@@ -1,4 +1,4 @@
-package integrationTests;
+package unitTests;
 
 import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.*;

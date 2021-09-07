@@ -28,7 +28,7 @@ public class BookMapper {
         }
         Books books = new Books();
         books.setIsbn(bookDTO.getIsbn());
-        books.setCount(books.getCount());
+        books.setCount(bookDTO.getCount());
         books.setAuthor(bookDTO.getAuthor());
         books.setName(bookDTO.getName());
         books.setDescription(bookDTO.getDescription());

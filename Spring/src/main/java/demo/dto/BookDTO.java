@@ -1,12 +1,10 @@
 package demo.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 
 public class BookDTO {
-
 
         @Pattern(regexp = "([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})")
         @NotNull
@@ -36,8 +34,6 @@ public class BookDTO {
             this.existence = exists;
         }
 
-
-
         public BookDTO (String isbn, int count_books, String author, String name, String description, boolean existence) {
             this.isbn = isbn;
             this.count_books = count_books;
@@ -50,7 +46,6 @@ public class BookDTO {
         public BookDTO () {
         }
 
-        @JsonProperty("book_isbn")
         public String getIsbn () {
             return isbn;
         }
@@ -59,7 +54,6 @@ public class BookDTO {
             this.isbn = isbn;
         }
 
-        @JsonProperty("book_count")
         public int getCount () {
             return count_books;
         }
@@ -68,7 +62,6 @@ public class BookDTO {
             this.count_books = count;
         }
 
-        @JsonProperty("book_count")
         public String getAuthor () {
             return author;
         }
@@ -77,7 +70,6 @@ public class BookDTO {
             this.author = author;
         }
 
-        @JsonProperty("book_name")
         public String getName () {
             return name;
         }
@@ -86,7 +78,6 @@ public class BookDTO {
             this.name = name;
         }
 
-        @JsonProperty("book_description")
         public String getDescription () {
             return description;
         }

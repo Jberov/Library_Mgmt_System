@@ -25,12 +25,13 @@ public class RemoveBookCommand {
     public ResponseEntity<JSONObject> execute(@Valid @PathVariable("isbn") String isbn){
     JSONObject result = new JSONObject();
         try{
-            BookDTO deleted = bookService.deleteBook(isbn);
-            if(deleted == null){
+            BookDTO deletedBook = bookService.deleteBook(isbn);
+            if(deletedBook == null){
                 result.put("error", "No such book exists or not all users have returned it yet.");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
-            result.put("response", deleted);
+            result.put("Message", "Book successfully deleted");
+            result.put("response", deletedBook);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (JDBCConnectionException jdbc) {
             result.put("error","Error connecting to database");
