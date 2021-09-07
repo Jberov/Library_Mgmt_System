@@ -82,8 +82,6 @@ public class UserServiceTests {
         mvc.perform(MockMvcRequestBuilders.patch("/api/v1/books/rental/978-17-82065-33-9&JBaller").contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is2xxSuccessful());
                 //.andExpect(content().string("Book successfully leased"));
-
-
     }
 
     @Test
@@ -114,7 +112,6 @@ public class UserServiceTests {
     }
 
     @Test
-
     public void getUsersByBookTest() throws Exception{
         LinkedList<String> userList  = new LinkedList<>();
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);

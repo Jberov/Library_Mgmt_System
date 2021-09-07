@@ -25,7 +25,6 @@ public class BookDTO {
         @NotNull
         private boolean existence;
 
-
         public boolean isExists () {
             return existence;
         }
