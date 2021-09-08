@@ -22,21 +22,23 @@ public class UserMapper {
         }
         UserDTO userDTO = new UserDTO();
         userDTO.setName(user.getName());
+        userDTO.setUserHistory(convertMapToDTO(user.getUserHistory()));
         return userDTO;
     }
 
     public HashMap<String, LinkedList<BookDTO>> convertMapToDTO(HashMap<String, LinkedList<Books>> map){
         HashMap<String, LinkedList<BookDTO>> mapDTO  = new HashMap<>();
-        LinkedList<BookDTO> list = new LinkedList<>();
+        LinkedList<BookDTO> takenBooks = new LinkedList<>();
+        LinkedList<BookDTO> returnedBooks = new LinkedList<>();
         for(Books i : map.get("Currently taken books by user:")){
-            list.add(bookMapper.bookToDTO(i));
+            takenBooks.add(bookMapper.bookToDTO(i));
         }
-        mapDTO.put("Currently taken books by user:",list);
-        list.clear();
+        mapDTO.put("Currently taken books by user:",takenBooks);
+
         for(Books i : map.get("Already returned books by user:")){
-            list.add(bookMapper.bookToDTO(i));
+            returnedBooks.add(bookMapper.bookToDTO(i));
         }
-        mapDTO.put("Already returned books by user:",list);
+        mapDTO.put("Already returned books by user:",returnedBooks);
         return mapDTO;
     }
 }

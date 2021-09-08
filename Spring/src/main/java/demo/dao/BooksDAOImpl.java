@@ -18,6 +18,7 @@ public class BooksDAOImpl {
     }
 
     public Books addBook (Books book) {
+        book.setExists(true);
         bookRepository.save(book);
         return bookRepository.findByIsbn(book.getIsbn());
     }
@@ -59,10 +60,11 @@ public class BooksDAOImpl {
         temp.setCount(temp.getCount() + 1);
         bookRepository.save(temp);
     }
-    public void increaseCount (String bookId, int count) {
+    public Books increaseCount (String bookId, int count) {
         Books temp = bookRepository.getById(bookId);
         temp.setCount(temp.getCount() + count);
         bookRepository.save(temp);
+        return temp;
     }
 
     public int checkCount (String isbn) {

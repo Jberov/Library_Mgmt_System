@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-
 @Entity
 @Table(name = "users")
 public class Users {
@@ -46,5 +45,4 @@ public class Users {
     public void setName (String name) {
         this.name = name;
     }
-
 }

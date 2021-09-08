@@ -1,9 +1,5 @@
 package demo.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import demo.entities.Books;
-
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.HashMap;
@@ -32,13 +28,13 @@ public class UserDTO {
     @NotNull
     private String name;
 
-    private HashMap<String,LinkedList<Books>> userHistory;
+    private HashMap<String,LinkedList<BookDTO>> userHistory;
 
-    public HashMap<String, LinkedList<Books>> getUserHistory () {
+    public HashMap<String, LinkedList<BookDTO>> getUserHistory () {
         return userHistory;
     }
 
-    public void setUserHistory (HashMap<String,LinkedList<Books>> userHistory) {
+    public void setUserHistory (HashMap<String,LinkedList<BookDTO>> userHistory) {
         this.userHistory = userHistory;
     }
 

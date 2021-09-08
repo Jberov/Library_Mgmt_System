@@ -21,7 +21,7 @@ public class GetUserCommand {
     @GetMapping(value = "/info/{name}")
     public ResponseEntity<JSONObject> getUser (@PathVariable("name") String name){
         JSONObject result = new JSONObject();
-        try{
+        try {
             if (userService.getUser(name) == null) {
                 result.put("error","No such user");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
@@ -40,17 +40,10 @@ public class GetUserCommand {
             result.put("error","Error, service is currently unavailable");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
         }
-
-
     }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingParams (MissingServletRequestParameterException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing parameter(s): " + ex.getParameterName());
     }
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<String> handleWeb (ResponseStatusException responseStatusException) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseStatusException.getMessage());
-    }
-
-
 }

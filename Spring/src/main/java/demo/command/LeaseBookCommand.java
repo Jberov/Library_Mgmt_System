@@ -1,6 +1,5 @@
 package demo.command;
 
-import com.sap.cloud.security.token.SecurityContext;
 import com.sap.cloud.security.xsuaa.token.SpringSecurityContext;
 import demo.dto.BookDTO;
 import demo.services.UserService;

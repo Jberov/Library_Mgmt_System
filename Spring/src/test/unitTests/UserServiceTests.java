@@ -106,7 +106,7 @@ public class UserServiceTests {
         Books books = new Books("978-17-82065-33-9",3,"Author","Name","Desc",true);
         Users user = new Users("JBaller");
         takenList.add(bookMapper.bookToDTO(books));
-        BDDMockito.given(userService.userUsedBooks( user.getName())).willReturn(booksList);
+        //BDDMockito.given(userService.userUsedBooks( user.getName())).willReturn(booksList);
         mvc.perform(MockMvcRequestBuilders.get("/api/v1/users/history/JBaller").contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is2xxSuccessful());
     }

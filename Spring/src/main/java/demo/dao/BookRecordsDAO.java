@@ -24,15 +24,19 @@ public class BookRecordsDAO {
     private UserRepository userRepository;
 
     public Books leaseBook (String bookId, String userName) {
-        if (books.getBook(bookId).isExists()) {
+        if (books.getBook(bookId) != null) {
             BooksActivity activity = new BooksActivity(user.findUserByName(userName),books.getBook(bookId), Status.TAKEN);
             books.decreaseCount(bookId);
             bookRecordsRepository.save(activity);
+            return books.getBook(bookId);
         }
-        return books.getBook(bookId);
+        return null;
     }
 
     public boolean checkIfUserHasTakenBook (String isbn, String username) {
+        if(getUsersByBook(isbn) == null){
+            return false;
+        }
         for (String name: getUsersByBook(isbn)) {
             if (name.equals(username)) {
                 return true;
@@ -46,7 +50,6 @@ public class BookRecordsDAO {
     }
 
     public Books returnBook (String bookId, String username) {
-
         new BooksActivity();
         BooksActivity temp;
         temp = bookRecordsRepository.findFirstByBooksIsbnAndStatusAndUserId(books.getBook(bookId).getIsbn(),Status.TAKEN,user.findUserByName(username).getId());
@@ -77,7 +80,7 @@ public class BookRecordsDAO {
     }
 
     public LinkedList<String> getUsersByBook (String bookId) {
-        if (books.getBook(bookId).isExists()) {
+        if (books.getBook(bookId) != null) {
             LinkedList<String> usernames = new LinkedList<>();
             LinkedList<BooksActivity> records = bookRecordsRepository.findByBooksIsbnAndStatus(books.getBook(bookId).getIsbn(), Status.TAKEN);
             for (BooksActivity record : records) {

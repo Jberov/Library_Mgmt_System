@@ -24,7 +24,6 @@ public class AddBookCommand {
 
         JSONObject result = new JSONObject();
         try {
-            System.out.println(book.getCount());
             BookDTO addedBook = bookService.addBook(book);
             if(addedBook == null){
                 result.put("response","You have entered the isbn of an existing book, yet the name does not match. Request denied");
