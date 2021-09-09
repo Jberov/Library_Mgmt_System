@@ -28,11 +28,17 @@ public class UserService {
     private BookMapper bookMapper;
 
     public UserDTO getUser(String name) {
+        if(userDAO.findUserByName(name) == null){
+            return null;
+        }
         return userMapper.userToDTO(userDAO.findUserByName(name));
     }
 
     public BookDTO leaseBook (String isbn, String username) {
-        if (!booksDAO.bookExistsByID(isbn) || (!booksDAO.getBook(isbn).isExists()) || booksDAO.checkCount(isbn) <= 0 ) {
+
+        if(booksDAO.getBook(isbn) == null) {
+            return null;
+        } else if (!booksDAO.bookExistsByID(isbn) || (!booksDAO.getBook(isbn).isExists()) || booksDAO.checkCount(isbn) <= 0 ) {
             return null;
         } else if(userDAO.UserExists(username) == null) {
             userDAO.addUsers(username);

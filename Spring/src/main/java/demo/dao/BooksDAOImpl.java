@@ -45,6 +45,9 @@ public class BooksDAOImpl {
 
 
     public boolean bookExistsByID (String isbn) {
+        if(bookRepository.findByIsbn(isbn) == null){
+            return false;
+        }
         return bookRepository.findByIsbn(isbn).isExists();
     }
 

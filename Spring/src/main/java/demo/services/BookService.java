@@ -38,7 +38,7 @@ public class BookService {
     }
 
     public BookDTO deleteBook (String isbn) {
-        if (!booksDAO.bookExistsByID(isbn)) {
+        if (booksDAO.getBook(isbn) == null) {
             return null;
         } else if (bookRecordsDAO.userHistoryExists(isbn)) {
             return null;

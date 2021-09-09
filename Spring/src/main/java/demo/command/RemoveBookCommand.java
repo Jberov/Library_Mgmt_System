@@ -26,7 +26,7 @@ public class RemoveBookCommand {
     JSONObject result = new JSONObject();
         try{
             BookDTO deletedBook = bookService.deleteBook(isbn);
-            if(deletedBook == null){
+            if(deletedBook == null) {
                 result.put("error", "No such book exists or not all users have returned it yet.");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
@@ -39,7 +39,7 @@ public class RemoveBookCommand {
         } catch (InputMismatchException ime) {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             result.put("error","Error, service is currently unavailable");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);

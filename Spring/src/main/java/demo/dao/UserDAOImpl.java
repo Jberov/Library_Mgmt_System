@@ -18,6 +18,9 @@ public class UserDAOImpl {
 
     public Users findUserByName (String name) {
         Users user =  userRepository.findByName(name);
+        if(user == null){
+            return null;
+        }
         user.setUserHistory(usageHistory(name));
         return user;
     }

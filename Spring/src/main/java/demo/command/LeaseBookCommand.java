@@ -41,11 +41,11 @@ public class LeaseBookCommand {
         } catch (InputMismatchException ime) {
             result.put("error","Invalid input");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        } catch (Exception e){
+        } /*catch (Exception e){
             System.out.println(e.getMessage());
             result.put("error","Error, service is currently unavailable");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
+        }*/
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

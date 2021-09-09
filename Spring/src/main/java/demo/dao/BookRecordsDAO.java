@@ -60,6 +60,9 @@ public class BookRecordsDAO {
     }
 
     public HashMap<String,LinkedList<Books>> booksUsedByUser (String username) {
+        if(userRepository.findByName(username) == null){
+            return null;
+        }
         HashMap<String,LinkedList<Books>> books = new HashMap<>();
         LinkedList<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
         if(records == null){

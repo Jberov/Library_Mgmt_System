@@ -24,11 +24,13 @@ public class GetBookUsedAtTheMomentCommand {
             if ((userService.getUsersByBook(isbn) != null) && (!userService.getUsersByBook(isbn).isEmpty())) {
                 result.put("users", userService.getUsersByBook(isbn));
                 return ResponseEntity.status(HttpStatus.OK).body(result);
+            }else if (userService.getUsersByBook(isbn) == null ) {
+                result.put("error","No such book exists");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             } else if (userService.getUsersByBook(isbn).isEmpty()) {
                 result.put("error","No users have taken this book");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             } else {
-
                 result.put("error","No such book");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
             }
