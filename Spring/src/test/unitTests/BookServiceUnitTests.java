@@ -5,8 +5,8 @@ import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
+import demo.entities.Book;
 import demo.services.BookService;
-import demo.entities.Books;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +20,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 import java.util.LinkedList;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -51,23 +53,24 @@ public class BookServiceUnitTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
     }
+
     @Test
     public void getAllBooks() throws Exception {
-        Books book = null;
-        LinkedList<Books> books = new LinkedList<>();
+        Book book = new Book("9780141301068", 3, "Roald Dahl", "Matilda", "Genius girl", true);
+        LinkedList<Book> books = new LinkedList<>();
         books.add(book);
         BDDMockito.given(booksDAO.getAllBooks()).willReturn(books);
         mvc.perform(MockMvcRequestBuilders.get("/api/v1/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
-        //.andExpect(jsonPath("$", hasSize(1)))
-        //.andExpect(jsonPath("$[0].author", is(book.getAuthor())));
     }
+
     @Test
     public void deleteBook() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/api/v1/book/Под Игото")
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
     }
+
     @Test
     public void getBookById() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/admin/getBook/978-06-79826-62-9")
