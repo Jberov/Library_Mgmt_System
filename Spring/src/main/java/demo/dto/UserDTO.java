@@ -2,8 +2,8 @@ package demo.dto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class UserDTO {
 	
@@ -13,8 +13,6 @@ public class UserDTO {
 	@NotNull
 	private String name;
 	
-	private HashMap<String, LinkedList<BookDTO>> userHistory;
-	
 	public UserDTO(String name) {
 		this.name = name;
 	}
@@ -22,20 +20,7 @@ public class UserDTO {
 	public UserDTO() {
 	}
 	
-	public long getId() {
-		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
-	}
-	
-	public HashMap<String, LinkedList<BookDTO>> getUserHistory() {
-		return userHistory;
-	}
-	
-	public void setUserHistory(HashMap<String, LinkedList<BookDTO>> userHistory) {
-		this.userHistory = userHistory;
+	public void setUserHistory(Map<String, List<BookDTO>> userHistory) {
 	}
 	
 	public String getName() {

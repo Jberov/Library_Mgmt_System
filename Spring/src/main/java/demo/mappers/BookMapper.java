@@ -13,6 +13,7 @@ public class BookMapper {
 		if (book == null) {
 			return null;
 		}
+		
 		BookDTO bookDTO = new BookDTO();
 		bookDTO.setIsbn(book.getIsbn());
 		bookDTO.setCount(book.getCount());
@@ -27,6 +28,7 @@ public class BookMapper {
 		if (bookDTO == null) {
 			return null;
 		}
+		
 		Book book = new Book();
 		book.setIsbn(bookDTO.getIsbn());
 		book.setCount(bookDTO.getCount());

@@ -9,12 +9,10 @@ import java.util.LinkedList;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, String> {
-	
 	Book findByName(String name);
 	
 	LinkedList<Book> findByExistence(boolean status);
 	
 	Book findByIsbn(String isbn);
-	
 }
 

@@ -17,8 +17,12 @@ import java.util.InputMismatchException;
 
 @RestController
 public class LeaseBookCommand {
+	private final UserService userService;
+	
 	@Autowired
-	private UserService userService;
+	public LeaseBookCommand(UserService userService) {
+		this.userService = userService;
+	}
 	
 	
 	@PatchMapping(value = "api/v1/books/rental/{isbn}")

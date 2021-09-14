@@ -37,16 +37,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         XsuaaServiceConfiguration.class})
 
 public class EndpointTest {
-    @Autowired
-    BookRepository bookRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    BookRecordsRepository bookRecordsRepository;
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    private final BookRepository bookRepository;
+    private final UserRepository userRepository;
+    private final BookRecordsRepository bookRecordsRepository;
+    private final WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
-
+    private static final String urlBase = "api/v1/books";
+    private static String userURL;
+    
+    @Autowired
+    public EndpointTest(BookRepository bookRepository, UserRepository userRepository, BookRecordsRepository bookRecordsRepository, WebApplicationContext webApplicationContext) {
+        this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
+        this.bookRecordsRepository = bookRecordsRepository;
+        this.webApplicationContext = webApplicationContext;
+    }
+    
     @Before
     public void setup() {
         Book book = new Book("978-06-79826-62-9", 3, "Roald Dahl", "Matilda", "Desc", true);
@@ -79,25 +85,26 @@ public class EndpointTest {
 
     @Test
     public void givenGetUser_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(get("/api/v1/users/info/A")).andDo(print())
+        userURL = "/api/v1/users/info/A";
+        this.mockMvc.perform(get(userURL)).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenAddURI_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(post("/api/v1/book")).andDo(print())
+        this.mockMvc.perform(post(urlBase)).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenGetBookURI_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(get("/api/v1/book/0")).andDo(print())
+        this.mockMvc.perform(get(urlBase + "/978-06-79826-62-9")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenGetBookURI_whenMockMVC_thenVerifyResponseNoParams() throws Exception {
-        mockMvc.perform(get("/api/v1/book")
+        mockMvc.perform(get(urlBase)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
 
@@ -105,77 +112,65 @@ public class EndpointTest {
 
     @Test
     public void givenGetBookURI_whenMockMVC_thenVerifyResponseNoBook() throws Exception {
-        mockMvc.perform(get("/api/v1/book/978-06-79826-62-9")
+        mockMvc.perform(get(urlBase + "/979-06-79826-62-9")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenDeleteURI_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(delete("/admin/books/delete/Matilda")).andDo(print())
+        this.mockMvc.perform(delete(urlBase + "/978-06-79826-62-9")).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenDeleteURI_whenMockMVC_thenVerifyResponseNoParam() throws Exception {
-        this.mockMvc.perform(delete("/api/v1/book/delete")).andDo(print())
+        this.mockMvc.perform(delete(urlBase)).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenGetUsersByBook_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(get("/api/v1/users/byBook/978-06-79826-62-9")).andDo(print())
+       userURL = "/api/v1/users/byBook/978-06-79826-62-9";
+        this.mockMvc.perform(get(userURL)).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
 
     @Test
     public void givenGetBooks_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(get("/api/v1/books")).andDo(print())
+        this.mockMvc.perform(get(urlBase)).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenLease_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(patch("/users/lease/978-06-79826-62-9&A")).andDo(print())
+        userURL = "/users/lease/978-06-79826-62-9";
+        this.mockMvc.perform(patch(userURL)).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenLease_whenMockMVC_thenVerifyResponseNoUser() throws Exception {
-        this.mockMvc.perform(patch("/users/lease/0&A")).andDo(print())
+        userURL = "/users/lease/0";
+        this.mockMvc.perform(patch(userURL)).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     @WithUserDetails(value = "A")
     public void givenReturn_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(patch("/api/v1/books/return/978-06-79826-62-9")).andDo(print())
+        userURL = "/api/v1/books/return/978-06-79826-62-9";
+        this.mockMvc.perform(patch(userURL)).andDo(print())
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     @WithMockUser
-    public void givenReturn_whenMockMVC_thenVerifyResponseInvalidUser() throws Exception {
-        this.mockMvc.perform(patch("/api/v1/books/return/978-06-79826-62-9")).andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     public void givenHistory_whenMockMVC_thenVerifyResponse() throws Exception {
-        this.mockMvc.perform(get("/users/history")).andDo(print())
+        userURL = "/users/history";
+        this.mockMvc.perform(get(userURL)).andDo(print())
                 .andExpect(status().isNotFound());
     }
-
-    @Test
-    public void givenHistory_whenMockMVC_thenVerifyResponseNoUser() throws Exception {
-        this.mockMvc.perform(get("/api/v1/users/history")).andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    public void givenHistory_whenMockMVC_thenVerifyResponseNewUser() throws Exception {
-        this.mockMvc.perform(get("/api/v1/users/history")).andDo(print())
-                .andExpect(status().is4xxClientError());
-    }
+    
 }

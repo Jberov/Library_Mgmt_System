@@ -15,8 +15,13 @@ import java.util.InputMismatchException;
 
 @RestController
 public class RemoveBookCommand {
+	
+	private final BookService bookService;
+	
 	@Autowired
-	BookService bookService;
+	public RemoveBookCommand(BookService bookService) {
+		this.bookService = bookService;
+	}
 	
 	@DeleteMapping(value = "api/v1/books/{isbn}")
 	public ResponseEntity<JSONObject> execute(@Valid @PathVariable("isbn") String isbn) {

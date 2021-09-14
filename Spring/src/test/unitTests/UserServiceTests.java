@@ -6,6 +6,7 @@ import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
 import demo.dto.BookDTO;
+import demo.dto.UserDTO;
 import demo.entities.Book;
 import demo.entities.User;
 import demo.mappers.BookMapper;
@@ -24,9 +25,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,31 +38,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
 public class UserServiceTests {
-
+    private static final String username = "";
+    private static String url;
     private MockMvc mvc;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
+    private final WebApplicationContext webApplicationContext;
     @MockBean
     private UserService userService;
-
     @MockBean
     private BooksDAOImpl booksDAO;
-
     @MockBean
     private UserDAOImpl userDAO;
-
     @MockBean
     private BookRecordsDAO bookRecordsDAO;
-
     @MockBean
     private BookMapper bookMapper;
-
     @MockBean
     private UserMapper userMapper;
-
-
+    
+    @Autowired
+    public UserServiceTests(WebApplicationContext webApplicationContext) {
+        this.webApplicationContext = webApplicationContext;
+    }
+    
     @Before
     public void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -68,19 +67,20 @@ public class UserServiceTests {
 
     @Test
     public void getUserTest() throws Exception {
-        User user = new User("yordan.berov@sap.com");
-        BDDMockito.given(userService.getUser("yordan.berov@sap.com")).willReturn(userMapper.userToDTO(user));
-        mvc.perform(MockMvcRequestBuilders.get("/api/v1/users/info").contentType(MediaType.APPLICATION_JSON))
+        url = "/api/v1/users/info";
+        User user = new User(username);
+        BDDMockito.given(userService.getUser(username)).willReturn(userMapper.userToDTO(user));
+        mvc.perform(MockMvcRequestBuilders.get(url).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful());
-
     }
 
     @Test
     public void leaseBook() throws Exception {
         Book book = new Book("978-17-82065-33-9", 3, "Author", "Name", "Desc", true);
-        User user = new User("yordan.berov@sap.com");
+        User user = new User(username);
+        url = "/api/v1/books/rental/978-17-82065-33-9";
         BDDMockito.given(userService.leaseBook(book.getIsbn(), user.getName())).willReturn(bookMapper.bookToDTO(book));
-        mvc.perform(MockMvcRequestBuilders.patch("/api/v1/books/rental/978-17-82065-33-9").contentType(MediaType.TEXT_PLAIN_VALUE))
+        mvc.perform(MockMvcRequestBuilders.patch(url).contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -88,27 +88,26 @@ public class UserServiceTests {
     @Test
     public void returnBook() throws Exception {
         Book book = new Book("978-17-82065-33-9", 3, "Author", "Name", "Desc", true);
-        User user = new User("JBaller");
+        User user = new User(username);
+        url = "/api/v1/books/return/978-06-79866-68-8";
         BDDMockito.given(userService.returnBook(book.getIsbn(), user.getName())).willReturn(bookMapper.bookToDTO(book));
-        mvc.perform(MockMvcRequestBuilders.patch("/api/v1/books/return/978-06-79866-68-8&JBaller").contentType(MediaType.TEXT_PLAIN_VALUE))
+        mvc.perform(MockMvcRequestBuilders.patch(url).contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is2xxSuccessful());
-        //.andExpect(content().string("Book successfully returned"));
-
-
     }
 
     @Test
     public void userUsedBooksTest() throws Exception {
-        LinkedList<BookDTO> takenList = new LinkedList<>();
-        LinkedList<BookDTO> returnedList = new LinkedList<>();
-        HashMap<String, LinkedList<BookDTO>> booksList = new HashMap<>();
+        List<BookDTO> takenList = new LinkedList<>();
+        List<BookDTO> returnedList = new LinkedList<>();
+        Map<String, List<BookDTO>> booksList = new HashMap<>();
         booksList.put("Currently taken books by user:", takenList);
         booksList.put("Already returned books by user:", returnedList);
         Book book = new Book("978-17-82065-33-9", 3, "Author", "Name", "Desc", true);
-        User user = new User("JBaller");
+        UserDTO user = new UserDTO(username);
         takenList.add(bookMapper.bookToDTO(book));
         BDDMockito.given(userService.userUsedBooks(user.getName())).willReturn(booksList);
-        mvc.perform(MockMvcRequestBuilders.get("/api/v1/users/history/JBaller").contentType(MediaType.TEXT_PLAIN_VALUE))
+        url = "/api/v1/users/history/JBaller";
+        mvc.perform(MockMvcRequestBuilders.get(url).contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is2xxSuccessful());
     }
 
@@ -116,10 +115,11 @@ public class UserServiceTests {
     public void getUsersByBookTest() throws Exception {
         LinkedList<String> userList = new LinkedList<>();
         Book book = new Book("978-17-82065-33-9", 3, "Author", "Name", "Desc", true);
-        User user = new User("JBaller");
+        User user = new User(username);
         userList.add(user.getName());
         BDDMockito.given(userService.getUsersByBook(book.getIsbn())).willReturn(userList);
-        mvc.perform(MockMvcRequestBuilders.get("/api/v1/users/byBook/978-17-82065-33-9").contentType(MediaType.TEXT_PLAIN_VALUE))
+        url = "/api/v1/users/byBook/978-17-82065-33-9";
+        mvc.perform(MockMvcRequestBuilders.get(url).contentType(MediaType.TEXT_PLAIN_VALUE))
                 .andExpect(status().is2xxSuccessful());
     }
 }

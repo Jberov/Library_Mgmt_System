@@ -5,21 +5,24 @@ import demo.dao.BooksDAOImpl;
 import demo.dto.BookDTO;
 import demo.mappers.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Component
 public class BookService {
+	private final BooksDAOImpl booksDAO;
+	private final BookRecordsDAO bookRecordsDAO;
+	private final BookMapper bookMapper;
 	
 	@Autowired
-	private BooksDAOImpl booksDAO;
-	
-	@Autowired
-	private BookRecordsDAO bookRecordsDAO;
-	
-	@Autowired
-	private BookMapper bookMapper;
+	public BookService(BooksDAOImpl booksDAO, BookRecordsDAO bookRecordsDAO, BookMapper bookMapper) {
+		this.booksDAO = booksDAO;
+		this.bookRecordsDAO = bookRecordsDAO;
+		this.bookMapper = bookMapper;
+	}
 	
 	public List<BookDTO> getAllBooks() {
 		return bookMapper.listToDTO(booksDAO.getAllBooks());

@@ -14,8 +14,12 @@ import java.util.InputMismatchException;
 @RequestMapping("/api/v1/users")
 @RestController
 public class GetUserCommand {
+	private final UserService userService;
+	
 	@Autowired
-	private UserService userService;
+	public GetUserCommand(UserService userService) {
+		this.userService = userService;
+	}
 	
 	@GetMapping(value = "/info/{name}")
 	public ResponseEntity<JSONObject> getUser(@PathVariable("name") String name) {
@@ -35,11 +39,11 @@ public class GetUserCommand {
 		} catch (InputMismatchException ime) {
 			result.put("error", "Invalid input");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-		} catch (Exception e) {
+		} /*catch (Exception e) {
 			System.out.println(e.getMessage());
 			result.put("error", "Error, service is currently unavailable");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-		}
+		}*/
 	}
 	
 	@ExceptionHandler(MissingServletRequestParameterException.class)

@@ -9,12 +9,17 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class UserMapper {
+	private final BookMapper bookMapper;
 	
 	@Autowired
-	private BookMapper bookMapper;
+	public UserMapper(BookMapper bookMapper) {
+		this.bookMapper = bookMapper;
+	}
 	
 	public UserDTO userToDTO(User user) {
 		if (user == null) {
@@ -23,18 +28,17 @@ public class UserMapper {
 		
 		UserDTO userDTO = new UserDTO();
 		userDTO.setName(user.getName());
-		userDTO.setUserHistory(convertMapToDTO(user.getUserHistory()));
 		
 		return userDTO;
 	}
 	
-	public HashMap<String, LinkedList<BookDTO>> convertMapToDTO(HashMap<String, LinkedList<Book>> map) {
+	public Map<String, List<BookDTO>> convertMapToDTO(Map<String, List<Book>> map) {
 		
-		HashMap<String, LinkedList<BookDTO>> mapDTO = new HashMap<>();
+		Map<String, List<BookDTO>> mapDTO = new HashMap<>();
 		
-		LinkedList<BookDTO> takenBooks = new LinkedList<>();
+		List<BookDTO> takenBooks = new LinkedList<>();
 		
-		LinkedList<BookDTO> returnedBooks = new LinkedList<>();
+		List<BookDTO> returnedBooks = new LinkedList<>();
 		
 		for (Book i : map.get("Currently taken books by user:")) {
 			takenBooks.add(bookMapper.bookToDTO(i));

@@ -30,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
 public class BookServiceUnitTests {
+    
+    
+    private static String url = "api/v1/books";
     private MockMvc mvc;
     @MockBean
     private BookService bookService;
@@ -39,9 +42,21 @@ public class BookServiceUnitTests {
     private UserDAOImpl userDAO;
     @MockBean
     private BookRecordsDAO bookRecordsDAO;
+    private final WebApplicationContext webApplicationContext;
+    
     @Autowired
-    private WebApplicationContext webApplicationContext;
-
+    public BookServiceUnitTests(WebApplicationContext webApplicationContext) {
+        this.webApplicationContext = webApplicationContext;
+    }
+    
+    public static String getUrl() {
+        return url;
+    }
+    
+    public static void setUrl(String url) {
+        BookServiceUnitTests.url = url;
+    }
+    
     @Before
     public void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -49,7 +64,7 @@ public class BookServiceUnitTests {
 
     @Test
     public void addBook() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/api/v1/book")
+        mvc.perform(MockMvcRequestBuilders.post(url)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
     }
@@ -60,20 +75,20 @@ public class BookServiceUnitTests {
         LinkedList<Book> books = new LinkedList<>();
         books.add(book);
         BDDMockito.given(booksDAO.getAllBooks()).willReturn(books);
-        mvc.perform(MockMvcRequestBuilders.get("/api/v1/books")
+        mvc.perform(MockMvcRequestBuilders.get(url)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void deleteBook() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.delete("/api/v1/book/Под Игото")
+        mvc.perform(MockMvcRequestBuilders.delete(url + "/9780141301068")
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
     }
 
     @Test
     public void getBookById() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/admin/getBook/978-06-79826-62-9")
+        mvc.perform(MockMvcRequestBuilders.get(url + "/9780141301068")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
     }

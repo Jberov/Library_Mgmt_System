@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.Collections;
 
 
@@ -37,15 +38,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 				.authorizeRequests()
-				.antMatchers(HttpMethod.POST,"/api/v1/books").hasAuthority("Admin")
-				.antMatchers(HttpMethod.GET,"/api/v1/books/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.GET,"/api/v1/users/byBook/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.GET,"/api/v1/users/info/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.PATCH,"/api/v1/books/rental/*").hasAuthority("User")
-				.antMatchers(HttpMethod.GET,"/api/v1/books").authenticated()
-				.antMatchers(HttpMethod.DELETE,"/api/v1/books/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.PATCH,"/api/v1/books/return/*").hasAuthority("User")
-				.antMatchers(HttpMethod.GET,"/api/v1/users/history").hasAuthority("User")
+				.antMatchers(HttpMethod.POST, "/api/v1/books").hasAuthority("Admin")
+				.antMatchers(HttpMethod.GET, "/api/v1/books/*").hasAuthority("Admin")
+				.antMatchers(HttpMethod.GET, "/api/v1/users/byBook/*").hasAuthority("Admin")
+				.antMatchers(HttpMethod.GET, "/api/v1/users/info/*").hasAuthority("Admin")
+				.antMatchers(HttpMethod.PATCH, "/api/v1/books/rental/*").hasAuthority("User")
+				.antMatchers(HttpMethod.GET, "/api/v1/books").authenticated()
+				.antMatchers(HttpMethod.DELETE, "/api/v1/books/*").hasAuthority("Admin")
+				.antMatchers(HttpMethod.PATCH, "/api/v1/books/return/*").hasAuthority("User")
+				.antMatchers(HttpMethod.GET, "/api/v1/users/history").hasAuthority("User")
 				.anyRequest().authenticated()
 				.and()
 				.oauth2ResourceServer()

@@ -16,9 +16,13 @@ import org.springframework.test.context.junit4.SpringRunner;
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
 public class BookEntityTest {
+    private final BookRepository bookRepository;
+    
     @Autowired
-    BookRepository bookRepository;
-
+    public BookEntityTest(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+    
     @Test
     public void whenFoundByNameReturnBook() {
         Book book = new Book("9780141301068", 3, "Roald Dahl", "Matilda", "Genius girl", true);

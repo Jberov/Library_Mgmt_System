@@ -16,8 +16,12 @@ import java.util.InputMismatchException;
 
 @RestController
 public class AddBookCommand {
+	private final BookService bookService;
+	
 	@Autowired
-	private BookService bookService;
+	public AddBookCommand(BookService bookService) {
+		this.bookService = bookService;
+	}
 	
 	@PostMapping(value = "/api/v1/books", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<JSONObject> execute(@RequestBody @Valid BookDTO book) {

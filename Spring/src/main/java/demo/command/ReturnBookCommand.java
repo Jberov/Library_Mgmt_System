@@ -17,8 +17,12 @@ import java.util.InputMismatchException;
 
 @RestController
 public class ReturnBookCommand {
+	private final UserService userService;
+	
 	@Autowired
-	private UserService userService;
+	public ReturnBookCommand(UserService userService) {
+		this.userService = userService;
+	}
 	
 	@PatchMapping(value = "api/v1/books/returns/{isbn}")
 	public ResponseEntity<JSONObject> returnBook(@PathVariable("isbn") @Valid String isbn) {

@@ -12,27 +12,33 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
-	@Autowired
-	private UserDAOImpl userDAO;
-	@Autowired
-	private BooksDAOImpl booksDAO;
-	@Autowired
-	private BookRecordsDAO bookRecordsDAO;
+	private final UserDAOImpl userDAO;
+	private final BooksDAOImpl booksDAO;
+	private final BookRecordsDAO bookRecordsDAO;
+	private final UserMapper userMapper;
+	private final BookMapper bookMapper;
 	
 	@Autowired
-	private UserMapper userMapper;
-	
-	@Autowired
-	private BookMapper bookMapper;
+	public UserService(UserDAOImpl userDAO, BooksDAOImpl booksDAO, BookRecordsDAO bookRecordsDAO, UserMapper userMapper, BookMapper bookMapper) {
+		this.userDAO = userDAO;
+		this.booksDAO = booksDAO;
+		this.bookRecordsDAO = bookRecordsDAO;
+		this.userMapper = userMapper;
+		this.bookMapper = bookMapper;
+	}
 	
 	public UserDTO getUser(String name) {
 		if (userDAO.findUserByName(name) == null) {
 			return null;
 		}
-		return userMapper.userToDTO(userDAO.findUserByName(name));
+		UserDTO userDTO = userMapper.userToDTO(userDAO.findUserByName(name));
+		userDTO.setUserHistory(userUsedBooks(name));
+		return userDTO;
 	}
 	
 	public BookDTO leaseBook(String isbn, String username) {
@@ -58,7 +64,7 @@ public class UserService {
 		return bookMapper.bookToDTO(bookRecordsDAO.returnBook(isbn, username));
 	}
 	
-	public HashMap<String, LinkedList<BookDTO>> userUsedBooks(String username) {
+	public Map<String, List<BookDTO>> userUsedBooks(String username) {
 		if ((userDAO.findUserByName(username) == null) || (bookRecordsDAO.booksUsedByUser(username) == null)) {
 			return null;
 		}

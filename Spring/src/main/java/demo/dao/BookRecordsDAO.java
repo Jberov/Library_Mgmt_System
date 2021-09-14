@@ -10,18 +10,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookRecordsDAO {
+	private final BookRecordsRepository bookRecordsRepository;
+	private final BooksDAOImpl books;
+	private final UserDAOImpl user;
+	private final UserRepository userRepository;
 	
 	@Autowired
-	private BookRecordsRepository bookRecordsRepository;
-	@Autowired
-	private BooksDAOImpl books;
-	@Autowired
-	private UserDAOImpl user;
-	@Autowired
-	private UserRepository userRepository;
+	public BookRecordsDAO(BookRecordsRepository bookRecordsRepository, BooksDAOImpl books, UserDAOImpl user, UserRepository userRepository) {
+		this.bookRecordsRepository = bookRecordsRepository;
+		this.books = books;
+		this.user = user;
+		this.userRepository = userRepository;
+	}
 	
 	public Book leaseBook(String bookId, String userName) {
 		if (books.getBook(bookId) != null) {
@@ -59,17 +64,17 @@ public class BookRecordsDAO {
 		return books.getBook(bookId);
 	}
 	
-	public HashMap<String, LinkedList<Book>> booksUsedByUser(String username) {
+	public Map<String, List<Book>> booksUsedByUser(String username) {
 		if (userRepository.findByName(username) == null) {
 			return null;
 		}
-		HashMap<String, LinkedList<Book>> books = new HashMap<>();
-		LinkedList<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
+		Map<String, List<Book>> books = new HashMap<>();
+		List<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
 		if (records == null) {
 			return null;
 		}
-		LinkedList<Book> takenBooks = new LinkedList<>();
-		LinkedList<Book> returnedBooks = new LinkedList<>();
+		List<Book> takenBooks = new LinkedList<>();
+		List<Book> returnedBooks = new LinkedList<>();
 		books.put("Currently taken books by user:", takenBooks);
 		books.put("Already returned books by user:", returnedBooks);
 		for (BooksActivity record : records) {

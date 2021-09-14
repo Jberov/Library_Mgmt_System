@@ -15,8 +15,13 @@ import java.util.InputMismatchException;
 @RequestMapping("/api/v1")
 @RestController
 public class GetBookCommand {
+	private final BookService bookService;
+	
 	@Autowired
-	private BookService bookService;
+	public GetBookCommand(BookService bookService) {
+		this.bookService = bookService;
+	}
+	
 	
 	@GetMapping(value = "/books/{isbn}")
 	public ResponseEntity<JSONObject> getBook(@PathVariable("isbn") @Valid String isbn) {

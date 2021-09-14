@@ -16,9 +16,12 @@ import java.util.InputMismatchException;
 
 @RestController
 public class UserHistoryCommand {
+	private final UserService userService;
 	
 	@Autowired
-	UserService userService;
+	public UserHistoryCommand(UserService userService) {
+		this.userService = userService;
+	}
 	
 	@GetMapping(value = "api/v1/users/history")
 	public ResponseEntity<JSONObject> userHistory() {

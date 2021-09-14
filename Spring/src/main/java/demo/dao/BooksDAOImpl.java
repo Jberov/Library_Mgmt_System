@@ -10,9 +10,12 @@ import java.util.LinkedList;
 
 @Service
 public class BooksDAOImpl {
+	private final BookRepository bookRepository;
 	
 	@Autowired
-	BookRepository bookRepository;
+	public BooksDAOImpl(BookRepository bookRepository) {
+		this.bookRepository = bookRepository;
+	}
 	
 	public LinkedList<Book> getAllBooks() throws ResponseStatusException {
 		return new LinkedList<>(bookRepository.findByExistence(true));

@@ -14,8 +14,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class ListAllBooksCommand {
+	
+	private final BookService bookService;
+	
 	@Autowired
-	private BookService bookService;
+	public ListAllBooksCommand(BookService bookService) {
+		this.bookService = bookService;
+	}
 	
 	@GetMapping(value = "api/v1/books")
 	public ResponseEntity<JSONObject> execute() {
