@@ -40,7 +40,6 @@ public class GetBookUsedAtTheMomentCommand {
 				result.put("error", "No such book");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
-			
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);

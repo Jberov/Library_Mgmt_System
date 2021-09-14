@@ -32,7 +32,6 @@ public class GetUserCommand {
 			
 			result.put("user", userService.getUser(name));
 			return ResponseEntity.status(HttpStatus.OK).body(result);
-			
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);

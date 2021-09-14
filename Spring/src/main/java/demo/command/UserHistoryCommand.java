@@ -35,7 +35,6 @@ public class UserHistoryCommand {
 			
 			result.put(SpringSecurityContext.getToken().getLogonName() + "'s history", userService.userUsedBooks(SpringSecurityContext.getToken().getLogonName()));
 			return ResponseEntity.status(HttpStatus.OK).body(result);
-			
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);

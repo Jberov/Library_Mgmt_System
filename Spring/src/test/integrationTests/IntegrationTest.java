@@ -5,15 +5,14 @@ import demo.command.RemoveBookCommand;
 import demo.dto.BookDTO;
 import net.minidev.json.JSONObject;
 import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.event.annotation.AfterTestClass;
 import org.springframework.test.context.event.annotation.BeforeTestClass;
-
 import java.util.Objects;
-
 
 public class IntegrationTest {
     private final TestRestTemplate restTemplate = new TestRestTemplate();
@@ -41,18 +40,18 @@ public class IntegrationTest {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         responseEntity = restTemplate.postForEntity(url, request, JSONObject.class);
         JSONObject response = responseEntity.getBody();
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCode().is2xxSuccessful()).isTrue();
-        AssertionsForClassTypes.assertThat(responseEntity.getBody()).isEqualTo(response);
+        Assertions.assertEquals(responseEntity.getStatusCode().value(), 201);
+        Assertions.assertEquals(responseEntity.getBody(),response);
         
         url = "https://library-app.cfapps.sap.hana.ondemand.com/api/v1/books";
         responseEntity = restTemplate.postForEntity(url, request, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCode().is2xxSuccessful()).isTrue();
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("\"count\":6");
+        Assertions.assertEquals(responseEntity.getStatusCode().value(), 201);
+        Assertions.assertTrue(Objects.requireNonNull(responseEntity.getBody()).toJSONString().contains("\"count\":6"));
     
         url = "https://library-app.cfapps.sap.hana.ondemand.com/api/v1/books/9780345342966";
         responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, request, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("Book successfully deleted");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(responseEntity.getBody()).toJSONString().contains("Book successfully deleted"));
     }
 
     @Test
@@ -64,8 +63,8 @@ public class IntegrationTest {
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.GET, result, JSONObject.class);
         JSONObject response = responseEntity.getBody();
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
-        AssertionsForClassTypes.assertThat(responseEntity.getBody()).isEqualTo(response);
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(),200);
+        Assertions.assertEquals(responseEntity.getBody(), response);
     }
 
     @Test
@@ -76,8 +75,8 @@ public class IntegrationTest {
         headers.setBearerAuth(accessToken);
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.GET, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("Марк Менсън");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(responseEntity.getBody()).toJSONString().contains("Марк Менсън"));
     }
 
     @Test
@@ -88,8 +87,8 @@ public class IntegrationTest {
         headers.setBearerAuth(accessToken);
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.GET, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("No such book");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(),404);
+        Assertions.assertTrue(Objects.requireNonNull(responseEntity.getBody()).toJSONString().contains("No such book"));
     }
 
     @Test
@@ -100,8 +99,8 @@ public class IntegrationTest {
         headers.setBearerAuth(accessToken);
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.GET, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("\"id\":0");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(responseEntity.getBody()).toJSONString().contains("\"id\":0"));
     }
 
     @Test
@@ -112,8 +111,8 @@ public class IntegrationTest {
         headers.setBearerAuth(accessToken);
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.GET, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("No such user");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 404);
+        Assertions.assertTrue(Objects.requireNonNull(responseEntity.getBody()).toJSONString().contains("No such user"));
     }
     
     @Test
@@ -129,33 +128,33 @@ public class IntegrationTest {
         url = "https://library-app.cfapps.sap.hana.ondemand.com/api/v1/books/rental/9780345342966";
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.PATCH, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("lease");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("lease"));
         
         url = "https://library-app.cfapps.sap.hana.ondemand.com/api/v1/users/byBook/9780345342966";
         responseEntity = restTemplate.exchange(url, HttpMethod.GET, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("users");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("users"));
     
         url = "https://library-app.cfapps.sap.hana.ondemand.com/api/v1/books/9780345342966";
         responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("not all users have returned");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("not all users have returned"));
     
         url = "https://library-app.cfapps.sap.hana.ondemand.com/api/v1/books/returns/9780345342966";
         responseEntity = restTemplate.exchange(url, HttpMethod.PATCH, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("returned");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("returned"));
     
         url = "https://library-app.cfapps.sap.hana.ondemand.com/api/v1/users/byBook/9780345342966";
         responseEntity = restTemplate.exchange(url, HttpMethod.GET, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("No users have taken this book");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("No users have taken this book"));
         
         url = "https://library-app.cfapps.sap.hana.ondemand.com/api/v1/books/9780345342966";
         responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
-        AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("Book successfully deleted");
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
+        Assertions.assertTrue(Objects.requireNonNull(responseEntity.getBody()).toJSONString().contains("Book successfully deleted"));
     }
     
     @Test
@@ -166,7 +165,7 @@ public class IntegrationTest {
         headers.setBearerAuth(accessToken);
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.PATCH, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 404);
         AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("Book does not exist");
     }
     
@@ -178,7 +177,7 @@ public class IntegrationTest {
         headers.setBearerAuth(accessToken);
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.GET, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 200);
         AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("Currently taken books by user:");
     }
 
@@ -190,7 +189,7 @@ public class IntegrationTest {
         headers.setBearerAuth(accessToken);
         HttpEntity<JSONObject> result = new HttpEntity<>(headers);
         responseEntity = restTemplate.exchange(url, HttpMethod.PATCH, result, JSONObject.class);
-        AssertionsForClassTypes.assertThat(responseEntity.getStatusCodeValue()).isEqualTo(404);
+        Assertions.assertEquals(responseEntity.getStatusCodeValue(), 404);
         AssertionsForClassTypes.assertThat(Objects.requireNonNull(responseEntity.getBody()).toJSONString()).contains("No such book");
     }
     

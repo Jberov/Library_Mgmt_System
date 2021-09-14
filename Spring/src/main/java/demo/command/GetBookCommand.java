@@ -22,7 +22,6 @@ public class GetBookCommand {
 		this.bookService = bookService;
 	}
 	
-	
 	@GetMapping(value = "/books/{isbn}")
 	public ResponseEntity<JSONObject> getBook(@PathVariable("isbn") @Valid String isbn) {
 		JSONObject result = new JSONObject();
@@ -35,7 +34,6 @@ public class GetBookCommand {
 			
 			result.put("error", "No such book found");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-			
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);

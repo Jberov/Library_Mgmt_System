@@ -24,7 +24,6 @@ public class LeaseBookCommand {
 		this.userService = userService;
 	}
 	
-	
 	@PatchMapping(value = "api/v1/books/rental/{isbn}")
 	public ResponseEntity<JSONObject> leaseBook(@PathVariable("isbn") @Valid String isbn) {
 		JSONObject result = new JSONObject();
@@ -40,7 +39,6 @@ public class LeaseBookCommand {
 			result.put("message", "Successful lease of the book.");
 			result.put("response", leased);
 			return ResponseEntity.status(HttpStatus.OK).body(result);
-			
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);

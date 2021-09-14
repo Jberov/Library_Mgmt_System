@@ -37,9 +37,7 @@ public class AddBookCommand {
 			
 			result.put("message", "Success. Here is the newly added book");
 			result.put("response", addedBook);
-			
 			return ResponseEntity.status(HttpStatus.CREATED).body(result);
-			
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
