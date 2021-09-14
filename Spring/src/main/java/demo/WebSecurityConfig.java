@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
-				.authorizeRequests()
+				.authorizeRequests()/*
 				.antMatchers(HttpMethod.POST, "/api/v1/books").hasAuthority("Admin")
 				.antMatchers(HttpMethod.GET, "/api/v1/books/*").hasAuthority("Admin")
 				.antMatchers(HttpMethod.GET, "/api/v1/users/byBook/*").hasAuthority("Admin")
@@ -46,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/api/v1/books").authenticated()
 				.antMatchers(HttpMethod.DELETE, "/api/v1/books/*").hasAuthority("Admin")
 				.antMatchers(HttpMethod.PATCH, "/api/v1/books/return/*").hasAuthority("User")
-				.antMatchers(HttpMethod.GET, "/api/v1/users/history").hasAuthority("User")
+				.antMatchers(HttpMethod.GET, "/api/v1/users/history").hasAuthority("User")*/
 				.anyRequest().authenticated()
 				.and()
 				.oauth2ResourceServer()

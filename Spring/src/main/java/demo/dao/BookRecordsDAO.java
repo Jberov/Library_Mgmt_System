@@ -87,10 +87,10 @@ public class BookRecordsDAO {
 		return books;
 	}
 	
-	public LinkedList<String> getUsersByBook(String bookId) {
+	public List<String> getUsersByBook(String bookId) {
 		if (books.getBook(bookId) != null) {
-			LinkedList<String> usernames = new LinkedList<>();
-			LinkedList<BooksActivity> records = bookRecordsRepository.findByBookIsbnAndStatus(books.getBook(bookId).getIsbn(), Status.TAKEN);
+			List<String> usernames = new LinkedList<>();
+			List<BooksActivity> records = bookRecordsRepository.findByBookIsbnAndStatus(books.getBook(bookId).getIsbn(), Status.TAKEN);
 			for (BooksActivity record : records) {
 				usernames.add(record.getUser().getName());
 			}

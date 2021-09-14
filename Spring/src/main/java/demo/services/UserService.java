@@ -10,8 +10,6 @@ import demo.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +69,7 @@ public class UserService {
 		return userMapper.convertMapToDTO(bookRecordsDAO.booksUsedByUser(username));
 	}
 	
-	public LinkedList<String> getUsersByBook(String isbn) {
+	public List<String> getUsersByBook(String isbn) {
 		if (booksDAO.bookExistsByID(isbn)) {
 			return bookRecordsDAO.getUsersByBook(isbn);
 		}

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class BooksDAOImpl {
@@ -17,7 +18,7 @@ public class BooksDAOImpl {
 		this.bookRepository = bookRepository;
 	}
 	
-	public LinkedList<Book> getAllBooks() throws ResponseStatusException {
+	public List<Book> getAllBooks() throws ResponseStatusException {
 		return new LinkedList<>(bookRepository.findByExistence(true));
 	}
 	
