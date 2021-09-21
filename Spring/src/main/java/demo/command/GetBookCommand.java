@@ -23,7 +23,7 @@ public class GetBookCommand {
 	}
 	
 	@GetMapping(value = "/books/{isbn}")
-	public ResponseEntity<JSONObject> getBook(@PathVariable("isbn") @Valid String isbn) {
+	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn) {
 		JSONObject result = new JSONObject();
 		
 		try {

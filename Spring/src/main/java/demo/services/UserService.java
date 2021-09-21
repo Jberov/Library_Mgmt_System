@@ -40,10 +40,9 @@ public class UserService {
 	}
 	
 	public BookDTO leaseBook(String isbn, String username) {
-		
 		if (booksDAO.getBook(isbn) == null) {
 			return null;
-		} else if (!booksDAO.bookExistsByID(isbn) || (!booksDAO.getBook(isbn).isExists()) || booksDAO.checkCount(isbn) <= 0) {
+		} else if (!booksDAO.bookExistsByID(isbn) || booksDAO.getCount(isbn) <= 0) {
 			return null;
 		} else if (userDAO.UserExists(username) == null) {
 			userDAO.addUsers(username);
@@ -56,17 +55,18 @@ public class UserService {
 	}
 	
 	public BookDTO returnBook(String isbn, String username) {
-		if ((userDAO.findUserByName(username) == null) || (!bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) || (!booksDAO.bookExistsByID(isbn) || !booksDAO.getBook(isbn).isExists())) {
+		if ((userDAO.findUserByName(username) == null) || (!bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) || (!booksDAO.bookExistsByID(isbn))) {
 			return null;
 		}
 		return bookMapper.bookToDTO(bookRecordsDAO.returnBook(isbn, username));
 	}
 	
-	public Map<String, List<BookDTO>> userUsedBooks(String username) {
-		if ((userDAO.findUserByName(username) == null) || (bookRecordsDAO.booksUsedByUser(username) == null)) {
+	public Map<String, List<String>> userUsedBooks(String username) {
+		Map<String, List<String>> history = bookRecordsDAO.booksUsedByUser(username);
+		if ((!userDAO.isUser(username)) || (history == null)) {
 			return null;
 		}
-		return userMapper.convertMapToDTO(bookRecordsDAO.booksUsedByUser(username));
+		return history;
 	}
 	
 	public List<String> getUsersByBook(String isbn) {

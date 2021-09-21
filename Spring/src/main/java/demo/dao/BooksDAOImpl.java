@@ -1,6 +1,8 @@
 package demo.dao;
 
 import demo.entities.Book;
+import demo.entities.BooksActivity;
+import demo.repositories.BookRecordsRepository;
 import demo.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,34 +15,38 @@ import java.util.List;
 public class BooksDAOImpl {
 	private final BookRepository bookRepository;
 	
+	private final BookRecordsRepository bookRecordsRepository;
+	
+	private final UserDAOImpl userDAO;
+	
+	
 	@Autowired
-	public BooksDAOImpl(BookRepository bookRepository) {
+	public BooksDAOImpl(BookRepository bookRepository, BookRecordsRepository bookRecordsRepository, UserDAOImpl userDAO) {
 		this.bookRepository = bookRepository;
+		this.bookRecordsRepository = bookRecordsRepository;
+		this.userDAO = userDAO;
 	}
 	
 	public List<Book> getAllBooks() throws ResponseStatusException {
-		return new LinkedList<>(bookRepository.findByExistence(true));
+		return new LinkedList<>(bookRepository.findAll());
 	}
 	
 	public Book addBook(Book book) {
-		book.setExists(true);
 		bookRepository.save(book);
-		return bookRepository.findByIsbn(book.getIsbn());
+		return book;
 	}
 	
 	public Book deleteBook(String isbn) {
-		Book temp = bookRepository.findByIsbn(isbn);
-		temp.setExists(false);
-		temp.setCount(0);
-		bookRepository.save(temp);
-		return temp;
-	}
-	
-	public Book restoreBook(Book book) {
-		Book temp = bookRepository.findByIsbn(book.getIsbn());
-		temp.setExists(true);
-		temp.setCount(book.getCount());
-		bookRepository.save(temp);
+		Book temp = getBook(isbn);
+		List<BooksActivity> records = bookRecordsRepository.findByBookIsbn(isbn);
+		String book;
+		for (BooksActivity record : records) {
+			System.out.println(record.getBook().getName());
+			book = record.getBook().getName() + ", " + record.getBook().getAuthor();
+			userDAO.saveBookToHistory(record.getUser(), book);
+			bookRecordsRepository.delete(record);
+		}
+		bookRepository.delete(temp);
 		return temp;
 	}
 	
@@ -50,10 +56,7 @@ public class BooksDAOImpl {
 	
 	
 	public boolean bookExistsByID(String isbn) {
-		if (bookRepository.findByIsbn(isbn) == null) {
-			return false;
-		}
-		return bookRepository.findByIsbn(isbn).isExists();
+		return bookRepository.findByIsbn(isbn) != null;
 	}
 	
 	
@@ -76,7 +79,7 @@ public class BooksDAOImpl {
 		return temp;
 	}
 	
-	public int checkCount(String isbn) {
+	public int getCount(String isbn) {
 		return bookRepository.findByIsbn(isbn).getCount();
 	}
 }

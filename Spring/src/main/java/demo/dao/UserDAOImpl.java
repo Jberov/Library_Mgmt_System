@@ -5,6 +5,8 @@ import demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserDAOImpl {
 	private final UserRepository userRepository;
@@ -16,6 +18,17 @@ public class UserDAOImpl {
 	
 	public User findUserByName(String name) {
 		return userRepository.findByName(name);
+	}
+	
+	public void saveBookToHistory(User user, String book) {
+		List<String> bookSanctuary = user.getUserHistoryOfDeletedBooks();
+		bookSanctuary.add(book);
+		user.setUserHistoryOfDeletedBooks(bookSanctuary);
+		userRepository.save(user);
+	}
+	
+	public boolean isUser(String username) {
+		return userRepository.existsByName(username);
 	}
 	
 	public void addUsers(String username) {

@@ -22,27 +22,15 @@ public class BookDTO {
 	@NotNull
 	private String description;
 	
-	@NotNull
-	private boolean existence;
-	
-	public BookDTO(String isbn, int count_books, String author, String name, String description, boolean existence) {
+	public BookDTO(String isbn, int count_books, String author, String name, String description) {
 		this.isbn = isbn;
 		this.count_books = count_books;
 		this.author = author;
 		this.name = name;
 		this.description = description;
-		this.existence = existence;
 	}
 	
 	public BookDTO() {
-	}
-	
-	public boolean isExists() {
-		return existence;
-	}
-	
-	public void setExists(boolean exists) {
-		this.existence = exists;
 	}
 	
 	public String getIsbn() {

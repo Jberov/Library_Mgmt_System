@@ -26,27 +26,15 @@ public class Book {
 	@Column
 	private String description;
 	
-	@Column
-	private boolean existence;
-	
-	public Book(String isbn, int countBooks, String author, String name, String description, boolean existence) {
+	public Book(String isbn, int countBooks, String author, String name, String description) {
 		this.isbn = isbn;
 		this.countBooks = countBooks;
 		this.author = author;
 		this.name = name;
 		this.description = description;
-		this.existence = existence;
 	}
 	
 	public Book() {
-	}
-	
-	public boolean isExists() {
-		return existence;
-	}
-	
-	public void setExists(boolean exists) {
-		this.existence = exists;
 	}
 	
 	public String getIsbn() {

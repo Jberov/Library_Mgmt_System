@@ -5,25 +5,18 @@ import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
-import demo.entities.Book;
+import demo.dto.BookDTO;
 import demo.services.BookService;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
 import java.util.LinkedList;
+import java.util.List;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -31,9 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         XsuaaServiceConfiguration.class})
 public class BookServiceUnitTests {
     
-    
-    private static String url = "api/v1/books";
-    private MockMvc mvc;
+    private static final BookDTO bookDTO = new BookDTO("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История");
     @MockBean
     private BookService bookService;
     @MockBean
@@ -42,54 +33,44 @@ public class BookServiceUnitTests {
     private UserDAOImpl userDAO;
     @MockBean
     private BookRecordsDAO bookRecordsDAO;
-    private final WebApplicationContext webApplicationContext;
-    
-    @Autowired
-    public BookServiceUnitTests(WebApplicationContext webApplicationContext) {
-        this.webApplicationContext = webApplicationContext;
-    }
-    
-    public static String getUrl() {
-        return url;
-    }
-    
-    public static void setUrl(String url) {
-        BookServiceUnitTests.url = url;
-    }
-    
-    @Before
-    public void setUp() {
-        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+    @Test
+    public void addBook() {
+        BDDMockito.given(bookService.addBook(bookDTO)).willReturn(bookDTO);
+        Assertions.assertEquals(bookDTO.getCount(), 7);
     }
 
     @Test
-    public void addBook() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post(url)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
+    public void getAllBooks() {
+        List<BookDTO> books = new LinkedList<>();
+        BDDMockito.given(bookService.getAllBooks()).willReturn(books);
+        Assertions.assertEquals(bookService.getAllBooks(), books);
     }
 
     @Test
-    public void getAllBooks() throws Exception {
-        Book book = new Book("9780141301068", 3, "Roald Dahl", "Matilda", "Genius girl", true);
-        LinkedList<Book> books = new LinkedList<>();
-        books.add(book);
-        BDDMockito.given(booksDAO.getAllBooks()).willReturn(books);
-        mvc.perform(MockMvcRequestBuilders.get(url)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
+    public void deleteBook() {
+        BDDMockito.given(bookService.deleteBook(bookDTO.getIsbn())).willReturn(bookDTO);
+        Assertions.assertEquals(bookDTO.getAuthor(),"Ювал Харари");
+        
+    }
+    
+    @Test
+    public void deleteNonExistingBook() {
+        BDDMockito.given(bookService.deleteBook("978-1-06-954008-8")).willReturn(bookDTO);
+        Assertions.assertNotNull(bookService.deleteBook("978-1-06-954008-8"),"No such book exists or not all users have returned it yet.");
+        
     }
 
     @Test
-    public void deleteBook() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.delete(url + "/9780141301068")
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
+    public void getBookById() {
+        BDDMockito.given(bookService.getBookById(bookDTO.getIsbn())).willReturn(bookDTO);
+        Assertions.assertEquals(bookDTO.getAuthor(),"Ювал Харари");
     }
-
+    
     @Test
-    public void getBookById() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get(url + "/9780141301068")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
+    public void getNonExistingBook() {
+        BDDMockito.given(bookService.getBookById("978-1-06-954008-8")).willReturn(bookDTO);
+        Assertions.assertNotNull(bookService.getBookById("978-1-06-954008-8"),"No such book found");
+        
     }
 }

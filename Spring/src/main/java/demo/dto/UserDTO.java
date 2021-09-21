@@ -12,7 +12,7 @@ public class UserDTO {
 	@NotNull
 	private String name;
 	
-	private Map<String, List<BookDTO>> userHistory;
+	private Map<String, List<String>> userHistory;
 	
 	public UserDTO(String name) {
 		this.name = name;
@@ -29,11 +29,11 @@ public class UserDTO {
 		this.id = id;
 	}
 	
-	public Map<String, List<BookDTO>> getUserHistory() {
+	public Map<String, List<String>> getUserHistory() {
 		return userHistory;
 	}
 	
-	public void setUserHistory(Map<String, List<BookDTO>> userHistory) {
+	public void setUserHistory(Map<String, List<String>> userHistory) {
 		this.userHistory = userHistory;
 	}
 	

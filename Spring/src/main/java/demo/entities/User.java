@@ -1,6 +1,7 @@
 package demo.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -13,11 +14,24 @@ public class User {
 	@Column(unique = true)
 	private String name;
 	
+	@ElementCollection
+	@Column
+	@GeneratedValue
+	private List<String> userHistoryOfDeletedBooks;
+	
 	public User(String name) {
 		this.name = name;
 	}
 	
 	public User() {
+	}
+	
+	public List<String> getUserHistoryOfDeletedBooks() {
+		return userHistoryOfDeletedBooks;
+	}
+	
+	public void setUserHistoryOfDeletedBooks(List<String> userHistoryOfDeletedBooks) {
+		this.userHistoryOfDeletedBooks = userHistoryOfDeletedBooks;
 	}
 	
 	public long getId() {

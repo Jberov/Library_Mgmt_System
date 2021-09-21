@@ -23,45 +23,45 @@ The following guides illustrate how to use some features concretely:
 
 # Project documentation - REST API Endpoints
 
-### POST /admin/addBook/{count_books}{author}{name}{description}
+### POST /api/v1/books
 
-Adds a new book to the database. Response : "Success", if operation was successful
+Adds a new book to the database, information is sent via a JSON object . Response : "Success", if operation was successful
 
-### DELETE /admin/book/delete{name}
+### DELETE /api/v1/books/{isbn}
 
-Deletes a book from the database, given its name Response : "Delete successful", if operation was successful
+Deletes a book from the database, given its isbn. Response : "Delete successful", if operation was successful
 
-### GET admin/getBook{isbn}
+### GET /api/v1/books/{isbn}
 
 Gets all information about a book, given its id. Response : Status 200 OK and a JSON object with the requested book
 information
 
-### GET /admin/book/users{isbn}
+### GET /admin/book/users/{isbn}
 
 Gets all users, who have loaned the book with the given id(isbn). Response : Status 200 OK and a JSON object with all
 users, if they exist
 
-### GET /admin/user/profile{username}
+### GET /api/v1/users/info/{name}
 
-Gets all all information about a user, given his/her username. Response : Status 200 OK and a JSON object with the user
+Gets all information about a user, given his/her username. Response : Status 200 OK and a JSON object with the user
 information, if he/she exists.
 
-### PATCH /users/lease{isbn}{username}
+### PATCH api/v1/books/rental/{isbn}
 
 Allows a user to lease a book from the library, if enough copies are available. Response : "Book successfully leased",
 if conditions are met, otherwise a custom message will show what went wrong.
 
-### PATCH /users/returnBook{isbn}{username}
+### PATCH "api/v1/books/returns/{isbn}"
 
 Allows a user to return a book from the library. Response : "Book successfully returned", if conditions are met,
 otherwise a custom message will show what went wrong.
 
-### GET /admin/book/all
+### GET api/v1/books
 
 Lists all book. Response : Status 200 OK and a JSON object with the book, if any are present.
 
-### GET /users/history{username}
+### GET "api/v1/users/history"
 
-Lists all book, which the user has ever used, given his/her username Response : Status 200 OK and a JSON object with the
+Lists all books, which the user has ever used, given his/her username Response : Status 200 OK and a JSON object with the
 book, if any are present.
 

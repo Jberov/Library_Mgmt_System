@@ -25,7 +25,7 @@ public class ReturnBookCommand {
 	}
 	
 	@PatchMapping(value = "api/v1/books/returns/{isbn}")
-	public ResponseEntity<JSONObject> returnBook(@PathVariable("isbn") @Valid String isbn) {
+	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn) {
 		
 		JSONObject result = new JSONObject();
 		
