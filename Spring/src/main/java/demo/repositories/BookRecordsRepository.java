@@ -15,5 +15,7 @@ public interface BookRecordsRepository extends JpaRepository<BooksActivity, Long
 	
 	List<BooksActivity> findByBookIsbnAndStatus(String isbn, Status status);
 	
+	List<BooksActivity> findByBookIsbn(String isbn);
+	
 	boolean existsByBookIsbnAndStatus(String isbn, Status status);
 }

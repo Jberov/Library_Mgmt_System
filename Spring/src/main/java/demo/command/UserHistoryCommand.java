@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserHistoryCommand {
@@ -24,16 +26,16 @@ public class UserHistoryCommand {
 	}
 	
 	@GetMapping(value = "api/v1/users/history")
-	public ResponseEntity<JSONObject> userHistory() {
+	public ResponseEntity<JSONObject> execute() {
 		JSONObject result = new JSONObject();
-		
+		Map<String, List<String>> history = userService.userUsedBooks(SpringSecurityContext.getToken().getLogonName());
 		try {
-			if (userService.userUsedBooks(SpringSecurityContext.getToken().getLogonName()) == null) {
+			if (history == null) {
 				result.put("error", "No such user");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
-			result.put(SpringSecurityContext.getToken().getLogonName() + "'s history", userService.userUsedBooks(SpringSecurityContext.getToken().getLogonName()));
+			result.put(SpringSecurityContext.getToken().getLogonName() + "'s history", history);
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");

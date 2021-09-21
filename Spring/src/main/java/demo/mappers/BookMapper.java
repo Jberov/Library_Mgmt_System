@@ -20,7 +20,6 @@ public class BookMapper {
 		bookDTO.setAuthor(book.getAuthor());
 		bookDTO.setName(book.getName());
 		bookDTO.setDescription(book.getDescription());
-		bookDTO.setExists(book.isExists());
 		return bookDTO;
 	}
 	
@@ -35,7 +34,6 @@ public class BookMapper {
 		book.setAuthor(bookDTO.getAuthor());
 		book.setName(bookDTO.getName());
 		book.setDescription(bookDTO.getDescription());
-		book.setExists(bookDTO.isExists());
 		return book;
 	}
 	

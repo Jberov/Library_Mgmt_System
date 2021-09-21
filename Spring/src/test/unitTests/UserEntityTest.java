@@ -2,8 +2,8 @@ package unitTests;
 
 import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
-import demo.entities.Book;
-import demo.repositories.BookRepository;
+import demo.entities.User;
+import demo.repositories.UserRepository;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,20 +15,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = {
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
-public class BookEntityTest {
-    private final BookRepository bookRepository;
+public class UserEntityTest {
     
     @Autowired
-    public BookEntityTest(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+    private UserRepository userRepository;
     
     @Test
     public void whenFoundByNameReturnBook() {
-        Book book = new Book("9780141301068", 3, "Roald Dahl", "Matilda", "Genius girl");
-        bookRepository.save(book);
-        Book found = bookRepository.findByName(book.getName());
-        AssertionsForClassTypes.assertThat(found.getAuthor())
-                .isEqualTo(book.getAuthor());
+        User user = new User("JBaller");
+        userRepository.save(user);
+        User found = userRepository.findByName(user.getName());
+        AssertionsForClassTypes.assertThat(found.getName())
+                .isEqualTo(user.getName());
     }
 }

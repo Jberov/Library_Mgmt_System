@@ -25,7 +25,7 @@ public class LeaseBookCommand {
 	}
 	
 	@PatchMapping(value = "api/v1/books/rental/{isbn}")
-	public ResponseEntity<JSONObject> leaseBook(@PathVariable("isbn") @Valid String isbn) {
+	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn) {
 		JSONObject result = new JSONObject();
 		
 		try {

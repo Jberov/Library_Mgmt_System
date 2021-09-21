@@ -8,10 +8,7 @@ import demo.status.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BookRecordsDAO {
@@ -64,24 +61,27 @@ public class BookRecordsDAO {
 		return books.getBook(bookId);
 	}
 	
-	public Map<String, List<Book>> booksUsedByUser(String username) {
+	public Map<String, List<String>> booksUsedByUser(String username) {
 		if (userRepository.findByName(username) == null) {
 			return null;
 		}
-		Map<String, List<Book>> books = new HashMap<>();
+		Map<String, List<String>> books = new HashMap<>();
 		List<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
 		if (records == null) {
 			return null;
 		}
-		List<Book> takenBooks = new LinkedList<>();
-		List<Book> returnedBooks = new LinkedList<>();
+		List<String> takenBooks = new ArrayList<>();
+		List<String> returnedBooks = loadHistory(username);
 		books.put("Currently taken books by user:", takenBooks);
 		books.put("Already returned books by user:", returnedBooks);
 		for (BooksActivity record : records) {
+			String bookHistory;
 			if (record.getStatus().equals(Status.TAKEN)) {
-				books.get("Currently taken books by user:").add(record.getBook());
+				bookHistory = record.getBook().getName() + ", " + record.getBook().getAuthor();
+				books.get("Currently taken books by user:").add(bookHistory);
 			} else {
-				books.get("Already returned books by user:").add(record.getBook());
+				bookHistory = record.getBook().getName() + ", " + record.getBook().getAuthor();
+				books.get("Already returned books by user:").add(bookHistory);
 			}
 		}
 		return books;
@@ -97,6 +97,10 @@ public class BookRecordsDAO {
 			return usernames;
 		}
 		return null;
+	}
+	
+	private List<String> loadHistory(String username) {
+		return userRepository.findByName(username).getUserHistoryOfDeletedBooks();
 	}
 }
 

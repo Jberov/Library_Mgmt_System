@@ -1,5 +1,6 @@
 package demo.command;
 
+import demo.dto.UserDTO;
 import demo.services.UserService;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
@@ -22,15 +23,16 @@ public class GetUserCommand {
 	}
 	
 	@GetMapping(value = "/info/{name}")
-	public ResponseEntity<JSONObject> getUser(@PathVariable("name") String name) {
+	public ResponseEntity<JSONObject> execute(@PathVariable("name") String name) {
 		JSONObject result = new JSONObject();
 		try {
-			if (userService.getUser(name) == null) {
+			UserDTO user = userService.getUser(name);
+			if (user == null) {
 				result.put("error", "No such user");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
-			result.put("user", userService.getUser(name));
+			result.put("user", user);
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
