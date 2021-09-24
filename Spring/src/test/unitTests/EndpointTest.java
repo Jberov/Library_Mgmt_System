@@ -2,14 +2,9 @@ package unitTests;
 
 import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
-import demo.entities.Book;
-import demo.entities.BooksActivity;
-import demo.entities.User;
 import demo.repositories.BookRecordsRepository;
 import demo.repositories.BookRepository;
 import demo.repositories.UserRepository;
-import demo.status.Status;
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,20 +30,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         XsuaaServiceConfiguration.class})
 
 public class EndpointTest {
-    private final BookRepository bookRepository;
-    private final UserRepository userRepository;
-    private final BookRecordsRepository bookRecordsRepository;
     private final WebApplicationContext webApplicationContext;
-    private static final String jwt = "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vbGlicmFyeS1tYW5hZ21lbnQuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTUyNzk1MjQyOCIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMGNjMDBlYzIwZmE0MGUzYTI1YzMzZDBlYmVlNGY3ZCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5MTg4MDYxNS1hYzU0LTQ4OTgtYTk3NC1mZWE0NmNiOGU2NDIiLCJ6ZG4iOiJsaWJyYXJ5LW1hbmFnbWVudCJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiTGlicmFyeS1Vc2VyIl19LCJnaXZlbl9uYW1lIjoiWW9yZGFuIiwieHMudXNlci5hdHRyaWJ1dGVzIjp7fSwiZmFtaWx5X25hbWUiOiJCZXJvdiIsInN1YiI6ImMyMTRkNDI2LTA5MzUtNDhiNi05NTQ3LWM0NDQ5YzMzYzNmOSIsInNjb3BlIjpbIm9wZW5pZCIsIkxpYnJhcnktc2VjIXQzNDA4OS5Vc2VyIl0sImNsaWVudF9pZCI6InNiLUxpYnJhcnktc2VjIXQzNDA4OSIsImNpZCI6InNiLUxpYnJhcnktc2VjIXQzNDA4OSIsImF6cCI6InNiLUxpYnJhcnktc2VjIXQzNDA4OSIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJjMjE0ZDQyNi0wOTM1LTQ4YjYtOTU0Ny1jNDQ0OWMzM2MzZjkiLCJvcmlnaW4iOiJzYXAuZGVmYXVsdCIsInVzZXJfbmFtZSI6InlvcmRhbi5iZXJvdkBzYXAuY29tIiwiZW1haWwiOiJ5b3JkYW4uYmVyb3ZAc2FwLmNvbSIsImF1dGhfdGltZSI6MTYzMjIwOTIzMSwicmV2X3NpZyI6IjZmYTEzYzMwIiwiaWF0IjoxNjMyMjA5MjMxLCJleHAiOjE2MzIyNTI0MzEsImlzcyI6Imh0dHBzOi8vbGlicmFyeS1tYW5hZ21lbnQuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiYzgwZGY0YzEtN2I5NS00NTEzLWI4OGQtYTM3M2FjZTNiMjFkIiwiYXVkIjpbIkxpYnJhcnktc2VjIXQzNDA4OSIsInNiLUxpYnJhcnktc2VjIXQzNDA4OSIsIm9wZW5pZCJdfQ.1JwwDVUsbPCH8hfQNozUT5EiPGSCYKqwAjFByAr9mm2JLu2SRiLC9cOm4LfhCIdB-KpfxgQDRFf5DkdqbrNHzlvCcSIY02eGoMjMJeFt75Ybwi4rA2qKpaPsFrHKlA2L73HukJHZ_ws2bozJFUxZTvbSEm8YtDvK_bU_V8a1ga-WSnCJDl5cKTUVhSpS6TexmwVImZrJ9w-J2jh5DVKotYbwz7P67X4uC5EVKQkkCZ-Mwp5vzNr40RIzOGQw8PlpaGQHX9OSQmIIeyXd3nTNGkgwM-NCgYBY95n026X42qiSmSIlUqIjyVJr0ZiD3kGdjZ7smk_VFrjdluKeuQO0ZA";
+    private static final String jwt = "";
     private MockMvc mockMvc;
     private static final String urlBase = "/api/v1/books";
     private static String userURL;
     
     @Autowired
     public EndpointTest(BookRepository bookRepository, UserRepository userRepository, BookRecordsRepository bookRecordsRepository, WebApplicationContext webApplicationContext) {
-        this.bookRepository = bookRepository;
-        this.userRepository = userRepository;
-        this.bookRecordsRepository = bookRecordsRepository;
         this.webApplicationContext = webApplicationContext;
     }
 

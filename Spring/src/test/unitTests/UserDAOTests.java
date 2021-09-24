@@ -33,8 +33,14 @@ public class UserDAOTests {
 	
 	@Test
 	public void userExistsTest() {
-		BDDMockito.given(userDAO.UserExists(username)).willReturn(user);
-		Assertions.assertEquals(userDAO.UserExists(username).getName(), user.getName());
+		BDDMockito.given(userDAO.findUserByName(username)).willReturn(user);
+		Assertions.assertEquals(userDAO.findUserByName(username).getName(), user.getName());
+	}
+	
+	@Test
+	public void deleteUserTest() {
+		BDDMockito.given(userDAO.deleteUser(username)).willReturn(user);
+		Assertions.assertEquals(userDAO.findUserByName(username).getName(), user.getName());
 	}
 	
 	@Test

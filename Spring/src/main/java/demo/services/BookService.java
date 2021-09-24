@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Component
 public class BookService {
 	private final BooksDAOImpl booksDAO;
 	private final BookRecordsDAO bookRecordsDAO;

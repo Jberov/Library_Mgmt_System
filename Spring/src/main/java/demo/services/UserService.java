@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -44,8 +45,8 @@ public class UserService {
 			return null;
 		} else if (!booksDAO.bookExistsByID(isbn) || booksDAO.getCount(isbn) <= 0) {
 			return null;
-		} else if (userDAO.UserExists(username) == null) {
-			userDAO.addUsers(username);
+		} else if (userDAO.findUserByName(username) == null) {
+			userDAO.addUser(username);
 			return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
 		} else if (bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) {
 			return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
@@ -74,6 +75,9 @@ public class UserService {
 			return bookRecordsDAO.getUsersByBook(isbn);
 		}
 		return null;
+	}
+	public UserDTO deleteUser(String username) throws NoSuchElementException {
+		return userMapper.userToDTO(userDAO.deleteUser(username));
 	}
 }
 

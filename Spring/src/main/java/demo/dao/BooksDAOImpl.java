@@ -32,22 +32,14 @@ public class BooksDAOImpl {
 	}
 	
 	public Book addBook(Book book) {
-		bookRepository.save(book);
-		return book;
+		return bookRepository.save(book);
 	}
 	
 	public Book deleteBook(String isbn) {
-		Book temp = getBook(isbn);
-		List<BooksActivity> records = bookRecordsRepository.findByBookIsbn(isbn);
-		String book;
-		for (BooksActivity record : records) {
-			System.out.println(record.getBook().getName());
-			book = record.getBook().getName() + ", " + record.getBook().getAuthor();
-			userDAO.saveBookToHistory(record.getUser(), book);
-			bookRecordsRepository.delete(record);
-		}
-		bookRepository.delete(temp);
-		return temp;
+		Book book = getBook(isbn);
+		cleanBookRecords(isbn);
+		bookRepository.delete(book);
+		return book;
 	}
 	
 	public Book getBook(String isbn) {
@@ -81,6 +73,17 @@ public class BooksDAOImpl {
 	
 	public int getCount(String isbn) {
 		return bookRepository.findByIsbn(isbn).getCount();
+	}
+	
+	private void cleanBookRecords(String isbn){
+		List<BooksActivity> records = bookRecordsRepository.findByBookIsbn(isbn);
+		String bookString;
+		for (BooksActivity record : records) {
+			System.out.println(record.getBook().getName());
+			bookString = record.getBook().getName() + ", " + record.getBook().getAuthor();
+			userDAO.saveBookToHistory(record.getUser(), bookString);
+			bookRecordsRepository.delete(record);
+		}
 	}
 }
 
