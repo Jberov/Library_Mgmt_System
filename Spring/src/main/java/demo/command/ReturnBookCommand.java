@@ -24,7 +24,7 @@ public class ReturnBookCommand {
 		this.userService = userService;
 	}
 	
-	@PatchMapping(value = "api/v1/books/returns/{isbn}")
+	@PatchMapping(value = "api/v1/books/reconveyance/{isbn}")
 	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn) {
 		
 		JSONObject result = new JSONObject();

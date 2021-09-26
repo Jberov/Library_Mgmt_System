@@ -22,7 +22,7 @@ public class GetBookUsedAtTheMomentCommand {
 		this.userService = userService;
 	}
 	
-	@GetMapping(value = "/api/v1/users/byBook/{isbn}")
+	@GetMapping(value = "/api/v1/users/{isbn}/books")
 	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn) {
 		JSONObject result = new JSONObject();
 		

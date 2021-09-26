@@ -52,9 +52,7 @@ public class BookRecordsDAO {
 	}
 	
 	public Book returnBook(String bookId, String username) {
-		new BooksActivity();
-		BooksActivity temp;
-		temp = bookRecordsRepository.findFirstByBookIsbnAndStatusAndUserId(books.getBook(bookId).getIsbn(), Status.TAKEN, user.findUserByName(username).getId());
+		BooksActivity temp = bookRecordsRepository.findFirstByBookIsbnAndStatusAndUserId(books.getBook(bookId).getIsbn(), Status.TAKEN, user.findUserByName(username).getId());
 		temp.setStatus(Status.RETURNED);
 		books.increaseCountBy1(bookId);
 		bookRecordsRepository.save(temp);

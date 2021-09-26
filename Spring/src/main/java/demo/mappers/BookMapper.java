@@ -27,14 +27,7 @@ public class BookMapper {
 		if (bookDTO == null) {
 			return null;
 		}
-		
-		Book book = new Book();
-		book.setIsbn(bookDTO.getIsbn());
-		book.setCount(bookDTO.getCount());
-		book.setAuthor(bookDTO.getAuthor());
-		book.setName(bookDTO.getName());
-		book.setDescription(bookDTO.getDescription());
-		return book;
+		return new Book(bookDTO.getIsbn(),bookDTO.getCount(),bookDTO.getAuthor(),bookDTO.getName(),bookDTO.getDescription());
 	}
 	
 	public List<BookDTO> listToDTO(List<Book> entityList) {

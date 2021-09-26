@@ -19,9 +19,6 @@ public class BookActivityDTO {
 	@NotNull
 	private Status statusDTO;
 	
-	public BookActivityDTO() {
-	}
-	
 	public BookActivityDTO(UserDTO userDTO, BookDTO bookDTO, Status statusDTO) {
 		this.userDTO = userDTO;
 		this.bookDTO = bookDTO;

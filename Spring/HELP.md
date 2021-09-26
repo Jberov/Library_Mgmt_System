@@ -51,7 +51,7 @@ information, if he/she exists.
 Allows a user to lease a book from the library, if enough copies are available. Response : "Book successfully leased",
 if conditions are met, otherwise a custom message will show what went wrong.
 
-### PATCH "api/v1/books/returns/{isbn}"
+### PATCH "api/v1/books/reconveyance/{isbn}"
 
 Allows a user to return a book from the library. Response : "Book successfully returned", if conditions are met,
 otherwise a custom message will show what went wrong.
@@ -64,4 +64,8 @@ Lists all book. Response : Status 200 OK and a JSON object with the book, if any
 
 Lists all books, which the user has ever used, given his/her username Response : Status 200 OK and a JSON object with the
 book, if any are present.
+
+### DELETE "api/v1/users/{username}"
+
+Deletes a user, given his username. Returns the details of the deleted user, if operation is successful, or an appropriate error message.
 
