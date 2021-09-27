@@ -1,36 +1,40 @@
-package demo.dto;
+package demo.entities;
 
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.PositiveOrZero;
 
-public class BookDTO {
+@Entity
+@Table(name = "book")
+public class Book {
 	
+	@Id
 	@Pattern(regexp = "([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})")
-	@NotNull
 	private String isbn;
 	
-	@PositiveOrZero
-	private int count_books;
+	@Column
+	private int countBooks;
 	
-	@NotNull
+	@Column
 	private String author;
 	
-	@NotNull
+	@Column(unique = true)
 	private String name;
 	
-	@NotNull
+	@Column
 	private String description;
 	
-	public BookDTO(String isbn, int count_books, String author, String name, String description) {
+	public Book(String isbn, int countBooks, String author, String name, String description) {
 		this.isbn = isbn;
-		this.count_books = count_books;
+		this.countBooks = countBooks;
 		this.author = author;
 		this.name = name;
 		this.description = description;
 	}
 	
-	public BookDTO() {
+	public Book() {
 	}
 	
 	public String getIsbn() {
@@ -42,11 +46,11 @@ public class BookDTO {
 	}
 	
 	public int getCount() {
-		return count_books;
+		return countBooks;
 	}
 	
 	public void setCount(int count) {
-		this.count_books = count;
+		this.countBooks = count;
 	}
 	
 	public String getAuthor() {

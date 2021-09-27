@@ -1,8 +1,6 @@
 package demo.command;
 
-import com.sap.cloud.security.xsuaa.token.SpringSecurityContext;
-import demo.dto.BookDTO;
-import demo.services.UserService;
+import demo.services.BookService;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,31 +12,28 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.InputMismatchException;
 
-
+@RequestMapping("/api/v1")
 @RestController
-public class ReturnBookCommand {
-	private final UserService userService;
+public class GetBookCommand {
+	private final BookService bookService;
 	
 	@Autowired
-	public ReturnBookCommand(UserService userService) {
-		this.userService = userService;
+	public GetBookCommand(BookService bookService) {
+		this.bookService = bookService;
 	}
 	
-	@PatchMapping(value = "api/v1/books/reconveyance/{isbn}")
+	@GetMapping(value = "/books/{isbn}")
 	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn) {
-		
 		JSONObject result = new JSONObject();
 		
 		try {
-			BookDTO returned = userService.returnBook(isbn, SpringSecurityContext.getToken().getLogonName());
-			if (returned == null) {
-				result.put("message", "No such book exists or has been taken by you");
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+			if (bookService.getBookById(isbn) != null) {
+				result.put("book", bookService.getBookById(isbn));
+				return ResponseEntity.status(HttpStatus.OK).body(result);
 			}
 			
-			result.put("message", "Book successfully returned");
-			result.put("response", returned);
-			return ResponseEntity.status(HttpStatus.OK).body(result);
+			result.put("error", "No such book found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
@@ -53,6 +48,7 @@ public class ReturnBookCommand {
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");

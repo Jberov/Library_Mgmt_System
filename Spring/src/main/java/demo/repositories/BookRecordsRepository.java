@@ -1,14 +1,21 @@
 package demo.repositories;
 
 import demo.entities.BooksActivity;
-import demo.entities.Status;
+import demo.status.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.LinkedList;
+import java.util.List;
 
+@Repository
 public interface BookRecordsRepository extends JpaRepository<BooksActivity, Long> {
-    BooksActivity findByBooksIsbnAndStatusAndUserId(long isbn, Status status, long userId);
-    LinkedList<BooksActivity> findByUserId(long userID);
-    LinkedList<BooksActivity> findByBooksIsbnAndStatus(long userID, Status status);
-    boolean existsByBooksIsbnAndStatus(long userID,Status status);
+	BooksActivity findFirstByBookIsbnAndStatusAndUserId(String isbn, Status status, long userId);
+	
+	List<BooksActivity> findByUserId(long userID);
+	
+	List<BooksActivity> findByBookIsbnAndStatus(String isbn, Status status);
+	
+	List<BooksActivity> findByBookIsbn(String isbn);
+	
+	boolean existsByBookIsbnAndStatus(String isbn, Status status);
 }
