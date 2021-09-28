@@ -36,7 +36,7 @@ Deletes a book from the database, given its isbn. Response : "Delete successful"
 Gets all information about a book, given its id. Response : Status 200 OK and a JSON object with the requested book
 information
 
-### GET /admin/book/users/{isbn}
+### GET /api/v1/users/{isbn}/books
 
 Gets all users, who have loaned the book with the given id(isbn). Response : Status 200 OK and a JSON object with all
 users, if they exist

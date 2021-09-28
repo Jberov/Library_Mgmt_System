@@ -27,10 +27,14 @@ import java.util.Collections;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
+	private final XsuaaServiceConfiguration xsuaaServiceConfiguration;
+
 	@Autowired
-	private XsuaaServiceConfiguration xsuaaServiceConfiguration;
-	
+	public WebSecurityConfig(XsuaaServiceConfiguration xsuaaServiceConfiguration) {
+		this.xsuaaServiceConfiguration = xsuaaServiceConfiguration;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
