@@ -1,3 +1,4 @@
+
 @Library(["piper-lib-os"])_
 
 pipeline {
@@ -10,7 +11,7 @@ pipeline {
   stages {
     stage("Build") {
       steps {
-          sh "maven clean install"
+          sh "mvn clean install"
       }
     }
 
@@ -18,13 +19,19 @@ pipeline {
       when {
         branch "main"
       }
-      steps {
-        withCredentials([usernamePassword(credentialsId: "BookAppCreds", usernameVariable: "CF_USER", passwordVariable: "CF_PASS")]) {
-          dockerExecute(script: this, dockerImage: "ppiper/cf-cli:v8") {
-            sh "cf login -a $CF_API -u $CF_USER -p $CF_PASS -o '$CF_ORG' -s '$CF_SPACE' cf push -f manifest.yml"
+      script {
+       	def userInput = input(
+       	id: 'userInput', message: 'Enter MFA token:?',
+       	parameters: [string(defaultValue: 'None', description: 'Token', name: 'Token')])
+       	def mfaToken = userInput?:''
+          steps {
+            withCredentials([usernamePassword(credentialsId: "BookAppCreds", usernameVariable: "CF_USER", passwordVariable: "CF_PASS")]) {
+              dockerExecute(script: this, dockerImage: "ppiper/cf-cli:v8") {
+                sh "cf login -a $CF_API -u $CF_USER -p "$CF_PASS$mfaToken" -o '$CF_ORG' -s '$CF_SPACE' cf push -f manifest.yml"
+              }
+            }
           }
         }
       }
     }
   }
-}
