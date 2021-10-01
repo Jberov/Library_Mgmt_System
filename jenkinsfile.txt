@@ -8,14 +8,6 @@ pipeline {
     CF_SPACE= "LibraryApp"
   }
   stages {
-    stage("Setup") {
-        steps {
-            deleteDir()
-            checkout master
-            setupPipelineEnvironment script: this
-        }
-    }
-
     stage("Build") {
       steps {
           sh "maven clean install"
