@@ -14,7 +14,6 @@ pipeline {
           sh "mvn clean install"
       }
     }
-
     stage("Deploy") {
       when {
         branch "main"
@@ -24,6 +23,7 @@ pipeline {
        	id: 'userInput', message: 'Enter MFA token:?',
        	parameters: [string(defaultValue: 'None', description: 'Token', name: 'Token')])
        	def mfaToken = userInput?:''
+       	}
           steps {
             withCredentials([usernamePassword(credentialsId: "BookAppCreds", usernameVariable: "CF_USER", passwordVariable: "CF_PASS")]) {
               dockerExecute(script: this, dockerImage: "ppiper/cf-cli:v8") {
@@ -34,4 +34,3 @@ pipeline {
         }
       }
     }
-  }
