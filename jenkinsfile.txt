@@ -18,9 +18,7 @@ pipeline {
 
     stage("Build") {
       steps {
-               {
           sh "maven clean install"
-        }
       }
     }
 
