@@ -3,7 +3,7 @@ applications:
   - name: library-app
     host: library-app
     memory: 700M
-    path: /Users/I551610/IdeaProjects/Intern_project--Library/Spring/target/demo-0.0.1-SNAPSHOT.jar
+    path: Spring/target/demo-0.0.1-SNAPSHOT.jar
     services:
     - library-xsuaa
     - database
