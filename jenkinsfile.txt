@@ -1,4 +1,6 @@
-@Library(['piper-lib-os']) _
+
+@Library(["piper-lib-os"]) _
+
 pipeline {
   agent any
   environment {
@@ -7,21 +9,17 @@ pipeline {
     CF_SPACE= "LibraryApp"
   }
   stages {
-    stage('Build') {
+    stage("Build") {
       steps {
-          sh "mvn clean install"
+          sh 'mvn -f Spring/pom.xml clean install'
       }
     }
-    stage('Deploy') {
+    stage("Deploy") {
       steps {
           script {
             def userInput = input(
             id: 'userInput', message: 'Enter MFA token:?',
-            parameters: [
-            string(defaultValue: 'None',
-            description: 'OTP code',
-            name: 'Token')
-            ])
+            parameters: [string(defaultValue: 'None', description: 'OTP code', name: 'Token')])
             def mfaToken = userInput?:''
             withCredentials([usernamePassword(credentialsId: 'BookAppCreds', usernameVariable: 'CF_USER', passwordVariable: 'CF_PASS')]) {
               dockerExecute(script: this, dockerImage: 'ppiper/cf-cli:v8') {
