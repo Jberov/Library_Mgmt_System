@@ -23,7 +23,7 @@ pipeline {
             def mfaToken = userInput?:''
             withCredentials([usernamePassword(credentialsId: "BookAppCreds", usernameVariable: "CF_USER", passwordVariable: "CF_PASS")]) {
               dockerExecute(script: this, dockerImage: "ppiper/cf-cli:v8") {
-                sh """cf login -a $CF_API -u $CF_USER -p $CF_PASS$mfaToken -o '$CF_ORG' -s '$CF_SPACE'
+                sh """cf login -a $CF_API -u $CF_USER -p $CF_PASS$mfaToken -o \"$CF_ORG\" -s '$CF_SPACE'
                 cf push -f manifest.yml"""
               }
             }
