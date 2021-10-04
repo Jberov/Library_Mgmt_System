@@ -1,5 +1,5 @@
 
-@Library(["piper-lib-os"])_
+@Library(["piper-lib-os"]) _
 
 pipeline {
   agent any
@@ -11,7 +11,7 @@ pipeline {
   stages {
     stage("Build") {
       steps {
-          sh "mvn -f Spring/pom.xml clean install"
+          sh 'mvn -f Spring/pom.xml clean install'
       }
     }
     stage("Deploy") {
@@ -19,12 +19,14 @@ pipeline {
           script {
             def userInput = input(
             id: 'userInput', message: 'Enter MFA token:?',
-            parameters: [string(defaultValue: 'None', description: 'Token', name: 'Token')])
+            parameters: [string(defaultValue: 'None', description: 'OTP code', name: 'Token')])
             def mfaToken = userInput?:''
-            withCredentials([usernamePassword(credentialsId: "BookAppCreds", usernameVariable: "CF_USER", passwordVariable: "CF_PASS")]) {
-              dockerExecute(script: this, dockerImage: "ppiper/cf-cli:v8") {
-                sh """cf login -a $CF_API -u $CF_USER -p $CF_PASS$mfaToken -o '\"$CF_ORG\"' -s '$CF_SPACE'
-                cf push -f manifest.yml"""
+            withCredentials([usernamePassword(credentialsId: 'BookAppCreds', usernameVariable: 'CF_USER', passwordVariable: 'CF_PASS')]) {
+              dockerExecute(script: this, dockerImage: 'ppiper/cf-cli:v8') {
+                sh """
+                cf login -a $CF_API -u $CF_USER -p "$CF_PASS$mfaToken" -o '$CF_ORG' -s '$CF_SPACE'
+                cf push -f manifest.yml
+                """
               }
             }
           }
