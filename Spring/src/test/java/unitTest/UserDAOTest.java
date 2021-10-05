@@ -11,6 +11,7 @@ import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ActiveProfiles("test")
@@ -18,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SpringBootTest(classes = {
 		LibraryApplication.class,
 		XsuaaServiceConfiguration.class})
+@ContextConfiguration(classes = LibraryApplication.class)
 public class UserDAOTest {
 	private static final String username = "";
 	

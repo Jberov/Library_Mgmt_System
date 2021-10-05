@@ -16,6 +16,7 @@ import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.junit.jupiter.api.Assertions;
 
@@ -26,6 +27,7 @@ import java.util.*;
 @SpringBootTest(classes = {
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
+@ContextConfiguration(classes = LibraryApplication.class)
 public class UserServiceTest {
     private static final List<String> list = new ArrayList<>();
     private static final Set<String> set = new HashSet<>();

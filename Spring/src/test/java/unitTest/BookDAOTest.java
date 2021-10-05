@@ -12,6 +12,7 @@ import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.List;
 @SpringBootTest(classes = {
 		LibraryApplication.class,
 		XsuaaServiceConfiguration.class})
+@ContextConfiguration(classes = LibraryApplication.class)
 public class BookDAOTest {
 	
 	private static final Book book = new Book("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История");
