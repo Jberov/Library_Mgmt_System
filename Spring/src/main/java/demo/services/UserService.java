@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -70,7 +71,7 @@ public class UserService {
 		return history;
 	}
 	
-	public List<String> getUsersByBook(String isbn) {
+	public Set<String> getUsersByBook(String isbn) {
 		if (booksDAO.bookExistsByID(isbn)) {
 			return bookRecordsDAO.getUsersByBook(isbn);
 		}

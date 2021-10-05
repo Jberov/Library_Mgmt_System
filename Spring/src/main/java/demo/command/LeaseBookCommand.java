@@ -30,7 +30,6 @@ public class LeaseBookCommand {
 		
 		try {
 			BookDTO leased = userService.leaseBook(isbn, SpringSecurityContext.getToken().getLogonName());
-			
 			if (leased == null) {
 				result.put("response", "Book does not exist or is not available");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

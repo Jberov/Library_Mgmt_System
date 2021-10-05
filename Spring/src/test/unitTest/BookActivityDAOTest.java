@@ -1,27 +1,27 @@
-package unitTests;
+package unitTest;
 
 import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
 import demo.entities.Book;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringRunner.class)
+import java.util.*;
+
+@ActiveProfiles("test")
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
 		LibraryApplication.class,
 		XsuaaServiceConfiguration.class})
-public class BookActivityDAOTests {
-	private static final String username = "";
+public class BookActivityDAOTest {
+	private static final String username = "yordan.berov@sap.com";
 	
 	private static final String wrongIsbn = "978-0-09-923808-7";
 	
@@ -65,14 +65,14 @@ public class BookActivityDAOTests {
 	
 	@Test
 	public void getUsersByBookTest() {
-		List<String> list = new ArrayList<>();
-		BDDMockito.given(bookRecordsDAO.getUsersByBook(book.getIsbn())).willReturn(list);
-		Assertions.assertEquals(bookRecordsDAO.getUsersByBook(book.getIsbn()), list);
+		Set<String> set = new HashSet<>();
+		BDDMockito.given(bookRecordsDAO.getUsersByBook(book.getIsbn())).willReturn(set);
+		Assertions.assertEquals(bookRecordsDAO.getUsersByBook(book.getIsbn()), set);
 	}
 	
 	@Test
 	public void getUsersByNullBookTest() {
-		List<String> list = new ArrayList<>();
+		Set<String> list = new HashSet<>();
 		BDDMockito.given(bookRecordsDAO.getUsersByBook(wrongIsbn)).willReturn(list);
 		Assertions.assertTrue(bookRecordsDAO.getUsersByBook(book.getIsbn()).isEmpty());
 	}

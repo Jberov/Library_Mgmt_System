@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface BookRecordsRepository extends JpaRepository<BooksActivity, Long> {
@@ -13,7 +14,7 @@ public interface BookRecordsRepository extends JpaRepository<BooksActivity, Long
 	
 	List<BooksActivity> findByUserId(long userID);
 	
-	List<BooksActivity> findByBookIsbnAndStatus(String isbn, Status status);
+	Set<BooksActivity> findByBookIsbnAndStatus(String isbn, Status status);
 	
 	List<BooksActivity> findByBookIsbn(String isbn);
 	

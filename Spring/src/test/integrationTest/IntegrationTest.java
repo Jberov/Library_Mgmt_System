@@ -1,4 +1,4 @@
-package integrationTests;
+package integrationTest;
 
 import net.minidev.json.JSONObject;
 import org.assertj.core.api.AssertionsForClassTypes;

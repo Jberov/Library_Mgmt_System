@@ -1,4 +1,4 @@
-package unitTests;
+package unitTest;
 
 import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
@@ -13,13 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import javax.servlet.ServletContext;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
 
+@ActiveProfiles("test")
 public class EndpointTest {
     private final WebApplicationContext webApplicationContext;
     private static final String jwt = "";

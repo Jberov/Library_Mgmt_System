@@ -1,4 +1,4 @@
-package unitTests;
+package unitTest;
 
 import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
@@ -7,22 +7,23 @@ import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
 import demo.dto.BookDTO;
 import demo.services.BookService;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.LinkedList;
 import java.util.List;
 
-
-@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
-public class BookServiceUnitTests {
+public class BookServiceUnitTest {
     
     private static final BookDTO bookDTO = new BookDTO("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История");
     @MockBean

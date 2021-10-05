@@ -1,4 +1,4 @@
-package unitTests;
+package unitTest;
 
 import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
@@ -10,25 +10,25 @@ import demo.dto.UserDTO;
 import demo.mappers.BookMapper;
 import demo.mappers.UserMapper;
 import demo.services.UserService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.junit.jupiter.api.Assertions;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+import java.util.*;
 
-@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
         LibraryApplication.class,
         XsuaaServiceConfiguration.class})
-public class UserServiceTests {
+public class UserServiceTest {
     private static final List<String> list = new ArrayList<>();
+    private static final Set<String> set = new HashSet<>();
     private static final String username = "";
     private static final BookDTO bookDTO = new BookDTO("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История");
     private static final Map<String, List<String>> history = new HashMap<String, List<String>>() {
@@ -84,13 +84,13 @@ public class UserServiceTests {
 
     @Test
     public void getUsersByBookTest() {
-        BDDMockito.given(userService.getUsersByBook(bookDTO.getIsbn())).willReturn(list);
-        Assertions.assertEquals(userService.getUsersByBook(bookDTO.getIsbn()), list);
+        BDDMockito.given(userService.getUsersByBook(bookDTO.getIsbn())).willReturn(set);
+        Assertions.assertEquals(userService.getUsersByBook(bookDTO.getIsbn()), set);
     }
     
     @Test
     public void getUsersByNullBookTest() {
-        BDDMockito.given(userService.getUsersByBook("978-0-09-959808-9")).willReturn(list);
+        BDDMockito.given(userService.getUsersByBook("978-0-09-959808-9")).willReturn(set);
         Assertions.assertTrue(list.isEmpty());
     }
 }
