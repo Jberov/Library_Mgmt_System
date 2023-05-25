@@ -1,6 +1,5 @@
 package unitTest;
 
-import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
 import demo.entities.User;
 import demo.repositories.UserRepository;
@@ -16,8 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-        LibraryApplication.class,
-        XsuaaServiceConfiguration.class})
+        LibraryApplication.class})
 @ContextConfiguration(classes = LibraryApplication.class)
 public class UserEntityTest {
     
@@ -28,8 +26,8 @@ public class UserEntityTest {
     public void whenFoundByNameReturnBook() {
         User user = new User("JBaller");
         userRepository.save(user);
-        User found = userRepository.findByName(user.getName());
-        AssertionsForClassTypes.assertThat(found.getName())
-                .isEqualTo(user.getName());
+        User found = userRepository.findByUsername(user.getUsername());
+        AssertionsForClassTypes.assertThat(found.getUsername())
+                .isEqualTo(user.getUsername());
     }
 }

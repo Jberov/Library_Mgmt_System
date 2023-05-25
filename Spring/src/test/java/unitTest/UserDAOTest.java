@@ -1,6 +1,5 @@
 package unitTest;
 
-import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
 import demo.dao.UserDAOImpl;
 import demo.entities.User;
@@ -17,8 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-		LibraryApplication.class,
-		XsuaaServiceConfiguration.class})
+		LibraryApplication.class})
 @ContextConfiguration(classes = LibraryApplication.class)
 public class UserDAOTest {
 	private static final String username = "";
@@ -32,15 +30,15 @@ public class UserDAOTest {
 	@Test
 	public void getAndDeleteUserTest() {
 		BDDMockito.given(userDAO.findUserByName(username)).willReturn(user);
-		Assertions.assertEquals(userDAO.findUserByName(username).getName(), user.getName());
+		Assertions.assertEquals(userDAO.findUserByName(username).getUsername(), user.getUsername());
 		BDDMockito.given(userDAO.deleteUser(username)).willReturn(user);
-		Assertions.assertEquals(userDAO.findUserByName(username).getName(), user.getName());
+		Assertions.assertEquals(userDAO.findUserByName(username).getUsername(), user.getUsername());
 	}
 	
 	@Test
 	public void userExistsTest() {
 		BDDMockito.given(userDAO.findUserByName(username)).willReturn(user);
-		Assertions.assertEquals(userDAO.findUserByName(username).getName(), user.getName());
+		Assertions.assertEquals(userDAO.findUserByName(username).getUsername(), user.getUsername());
 	}
 	
 	@Test

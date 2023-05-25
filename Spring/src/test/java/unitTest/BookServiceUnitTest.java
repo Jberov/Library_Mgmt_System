@@ -1,12 +1,13 @@
 package unitTest;
 
-import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
 import demo.dto.BookDTO;
 import demo.services.BookService;
+import java.util.LinkedList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +17,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import java.util.LinkedList;
-import java.util.List;
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-        LibraryApplication.class,
-        XsuaaServiceConfiguration.class})
+        LibraryApplication.class})
 @ContextConfiguration(classes = LibraryApplication.class)
 public class BookServiceUnitTest {
     

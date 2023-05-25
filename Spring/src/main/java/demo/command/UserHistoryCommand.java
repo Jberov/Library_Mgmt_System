@@ -1,7 +1,9 @@
 package demo.command;
 
-import com.sap.cloud.security.xsuaa.token.SpringSecurityContext;
 import demo.services.UserService;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +13,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 public class UserHistoryCommand {
@@ -28,14 +26,14 @@ public class UserHistoryCommand {
 	@GetMapping(value = "api/v1/users/history")
 	public ResponseEntity<JSONObject> execute() {
 		JSONObject result = new JSONObject();
-		Map<String, List<String>> history = userService.userUsedBooks(SpringSecurityContext.getToken().getLogonName());
+		Map<String, List<String>> history = userService.userUsedBooks("");
 		try {
 			if (history == null) {
 				result.put("error", "No such user");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
-			result.put(SpringSecurityContext.getToken().getLogonName() + "'s history", history);
+			result.put("" + "'s history", history);
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");

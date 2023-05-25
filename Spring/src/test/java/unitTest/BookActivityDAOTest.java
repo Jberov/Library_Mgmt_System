@@ -1,9 +1,13 @@
 package unitTest;
 
-import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
 import demo.entities.Book;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,13 +18,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.*;
-
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-		LibraryApplication.class,
-		XsuaaServiceConfiguration.class})
+		LibraryApplication.class})
 @ContextConfiguration(classes = LibraryApplication.class)
 public class BookActivityDAOTest {
 	private static final String username = "yordan.berov@sap.com";

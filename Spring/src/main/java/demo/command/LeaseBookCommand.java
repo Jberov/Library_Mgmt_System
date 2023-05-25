@@ -1,18 +1,23 @@
 package demo.command;
 
-import com.sap.cloud.security.xsuaa.token.SpringSecurityContext;
 import demo.dto.BookDTO;
+import demo.entities.User;
 import demo.services.UserService;
+import java.util.InputMismatchException;
+import javax.validation.Valid;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.InputMismatchException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -29,7 +34,9 @@ public class LeaseBookCommand {
 		JSONObject result = new JSONObject();
 		
 		try {
-			BookDTO leased = userService.leaseBook(isbn, SpringSecurityContext.getToken().getLogonName());
+			User user = (User) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			BookDTO leased = userService.leaseBook(isbn, user.getUsername());
 			if (leased == null) {
 				result.put("response", "Book does not exist or is not available");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

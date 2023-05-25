@@ -60,11 +60,11 @@ public class BookRecordsDAO {
 	}
 	
 	public Map<String, List<String>> booksUsedByUser(String username) {
-		if (userRepository.findByName(username) == null) {
+		if (userRepository.findByUsername(username) == null) {
 			return null;
 		}
 		Map<String, List<String>> books = new HashMap<>();
-		List<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
+		List<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByUsername(username).getId());
 		if (records == null) {
 			return null;
 		}
@@ -90,7 +90,7 @@ public class BookRecordsDAO {
 			Set<String> usernames = new HashSet<>();
 			Set<BooksActivity> records = bookRecordsRepository.findByBookIsbnAndStatus(books.getBook(bookId).getIsbn(), Status.TAKEN);
 			for (BooksActivity record : records) {
-				usernames.add(record.getUser().getName());
+				usernames.add(record.getUser().getUsername());
 			}
 			return usernames;
 		}
@@ -98,7 +98,7 @@ public class BookRecordsDAO {
 	}
 	
 	private List<String> loadHistory(String username) {
-		return userRepository.findByName(username).getUserHistoryOfDeletedBooks();
+		return userRepository.findByUsername(username).getUserHistoryOfDeletedBooks();
 	}
 }
 

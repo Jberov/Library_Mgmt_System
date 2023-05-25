@@ -1,6 +1,5 @@
 package unitTest;
 
-import com.sap.cloud.security.xsuaa.XsuaaServiceConfiguration;
 import demo.LibraryApplication;
 import demo.entities.Book;
 import demo.repositories.BookRepository;
@@ -16,8 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
-        LibraryApplication.class,
-        XsuaaServiceConfiguration.class})
+        LibraryApplication.class})
 @ContextConfiguration(classes = LibraryApplication.class)
 public class BookEntityTest {
 

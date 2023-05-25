@@ -23,7 +23,7 @@ public class UserDAOImpl {
 	}
 	
 	public User findUserByName(String name) {
-		return userRepository.findByName(name);
+		return userRepository.findByUsername(name);
 	}
 	
 	public void saveBookToHistory(User user, String book) {
@@ -34,25 +34,25 @@ public class UserDAOImpl {
 	}
 	
 	public boolean isUser(String username) {
-		return userRepository.existsByName(username);
+		return userRepository.existsByUsername(username);
 	}
 	
-	public void addUser(String username) {
-		userRepository.save(new User(username));
+	public void addUser(User user) {
+		userRepository.save(user);
 	}
 	
 	public User deleteUser(String username){
-		User user = userRepository.findByName(username);
+		User user = userRepository.findByUsername(username);
 		if(user != null){
 			cleanUserRecords(username);
-			userRepository.delete(userRepository.findByName(username));
+			userRepository.delete(userRepository.findByUsername(username));
 			return user;
 		}
 		throw new NoSuchElementException();
 	}
 	
 	private void cleanUserRecords(String username){
-		List<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByName(username).getId());
+		List<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByUsername(username).getId());
 		for(BooksActivity record : records){
 			bookRecordsRepository.delete(record);
 		}

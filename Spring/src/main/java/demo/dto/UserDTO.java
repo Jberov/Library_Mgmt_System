@@ -1,32 +1,111 @@
 package demo.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 public class UserDTO {
-	@Null
-	private long id;
 	
-	@NotNull
-	private String name;
-	
+	@NotNull(message = "No email")
+	private String email;
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setTelephoneNumber(String telephoneNumber) {
+		this.telephoneNumber = telephoneNumber;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setMidName(String midName) {
+		this.midName = midName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	@NotNull(message = "No username")
+	private String username;
+
+	@NotNull(message = "No password")
+	private String password;
+
+	@NotNull(message = "No number")
+	private String telephoneNumber;
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getTelephoneNumber() {
+		return telephoneNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getMidName() {
+		return midName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	@NotNull(message = "No address")
+	private String address;
+
+	@NotNull(message = "No first name")
+	private String firstName;
+
+	@NotNull(message = "No mid name")
+	private String midName;
+
+	public UserDTO(String email, String username, String password, String telephoneNumber, String address,
+			String firstName, String midName, String lastName) {
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.telephoneNumber = telephoneNumber;
+		this.address = address;
+		this.firstName = firstName;
+		this.midName = midName;
+		this.lastName = lastName;
+	}
+
+	@NotNull(message = "No last name")
+	private String lastName;
+
+
 	private Map<String, List<String>> userHistory;
 	
-	public UserDTO(String name) {
-		this.name = name;
+	public UserDTO(String email) {
+		this.email = email;
 	}
 	
 	public UserDTO() {
-	}
-	
-	public long getId() {
-		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
 	}
 	
 	public Map<String, List<String>> getUserHistory() {
@@ -37,11 +116,11 @@ public class UserDTO {
 		this.userHistory = userHistory;
 	}
 	
-	public String getName() {
-		return name;
+	public String getEmail() {
+		return email;
 	}
 	
-	public void setName(String name) {
-		this.name = name;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

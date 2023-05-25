@@ -47,8 +47,7 @@ public class UserService {
 		} else if (!booksDAO.bookExistsByID(isbn) || booksDAO.getCount(isbn) <= 0) {
 			return null;
 		} else if (userDAO.findUserByName(username) == null) {
-			userDAO.addUser(username);
-			return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
+			throw new NoSuchElementException("No such User");
 		} else if (bookRecordsDAO.checkIfUserHasTakenBook(isbn, username)) {
 			return bookMapper.bookToDTO(bookRecordsDAO.leaseBook(isbn, username));
 		}
@@ -79,6 +78,13 @@ public class UserService {
 	}
 	public UserDTO deleteUser(String username) throws NoSuchElementException {
 		return userMapper.userToDTO(userDAO.deleteUser(username));
+	}
+
+	public void createUser(UserDTO userDTO) throws IllegalArgumentException {
+		if (getUser(userDTO.getUsername()) != null){
+			throw new IllegalArgumentException();
+		}
+		userDAO.addUser(userMapper.userDTOToEntity(userDTO));
 	}
 }
 
