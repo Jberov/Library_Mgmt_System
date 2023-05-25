@@ -1,6 +1,6 @@
 package demo.entities;
 
-import demo.status.Status;
+import demo.enums.Status;
 
 import javax.persistence.*;
 

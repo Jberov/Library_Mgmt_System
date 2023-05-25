@@ -1,7 +1,7 @@
 package demo.repositories;
 
 import demo.entities.BooksActivity;
-import demo.status.Status;
+import demo.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

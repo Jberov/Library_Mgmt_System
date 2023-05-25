@@ -4,7 +4,7 @@ import demo.entities.Book;
 import demo.entities.BooksActivity;
 import demo.repositories.BookRecordsRepository;
 import demo.repositories.UserRepository;
-import demo.status.Status;
+import demo.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
