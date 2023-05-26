@@ -2,11 +2,11 @@ package demo.dto;
 
 import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class UserDTO {
 	
-	@NotNull(message = "No email")
+	@NotBlank(message = "No email")
 	private String email;
 
 	public void setUsername(String username) {
@@ -37,13 +37,13 @@ public class UserDTO {
 		this.lastName = lastName;
 	}
 
-	@NotNull(message = "No username")
+	@NotBlank(message = "No username")
 	private String username;
 
-	@NotNull(message = "No password")
+	@NotBlank(message = "No password")
 	private String password;
 
-	@NotNull(message = "No number")
+	@NotBlank(message = "No number")
 	private String telephoneNumber;
 
 	public String getUsername() {
@@ -74,13 +74,13 @@ public class UserDTO {
 		return lastName;
 	}
 
-	@NotNull(message = "No address")
+	@NotBlank(message = "No address")
 	private String address;
 
-	@NotNull(message = "No first name")
+	@NotBlank(message = "No first name")
 	private String firstName;
 
-	@NotNull(message = "No mid name")
+	@NotBlank(message = "No mid name")
 	private String midName;
 
 	public UserDTO(String email, String username, String password, String telephoneNumber, String address,
@@ -95,7 +95,7 @@ public class UserDTO {
 		this.lastName = lastName;
 	}
 
-	@NotNull(message = "No last name")
+	@NotBlank(message = "No last name")
 	private String lastName;
 
 
