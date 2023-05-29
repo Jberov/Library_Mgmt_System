@@ -40,6 +40,19 @@ public class UserDAOImpl {
 	public void addUser(User user) {
 		userRepository.save(user);
 	}
+
+	public void updateUser(String username, User user) {
+		User userToUpdate = userRepository.findByUsername(username);
+		userToUpdate.setEmail(user.getEmail());
+		userToUpdate.setUsername(user.getUsername());
+		userToUpdate.setPassword(user.getPassword());
+		userToUpdate.setTelephoneNumber(user.getTelephoneNumber());
+		userToUpdate.setAddress(user.getAddress());
+		userToUpdate.setFirstName(user.getFirstName());
+		userToUpdate.setMidName(user.getMidName());
+		userToUpdate.setLastName(user.getLastName());
+		userRepository.save(userToUpdate);
+	}
 	
 	public User deleteUser(String username){
 		User user = userRepository.findByUsername(username);

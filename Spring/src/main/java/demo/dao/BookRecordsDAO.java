@@ -65,7 +65,7 @@ public class BookRecordsDAO {
 		}
 		Map<String, List<String>> books = new HashMap<>();
 		List<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByUsername(username).getId());
-		if (records == null) {
+		if (records == null || records.isEmpty()) {
 			return null;
 		}
 		List<String> takenBooks = new ArrayList<>();
