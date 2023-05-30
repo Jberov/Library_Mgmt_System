@@ -1,10 +1,16 @@
 package demo.entities;
 
 import demo.enums.Status;
-
 import java.time.LocalDate;
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "activity")
@@ -47,12 +53,10 @@ public class BooksActivity {
 		this.returnDate = returnDate;
 	}
 
-	@Column(name = "issue_date", columnDefinition = "DATE")
-	@NotBlank
+	@Column(name = "issueDate", columnDefinition = "DATE", nullable = false)
 	private LocalDate issueDate;
 
-	@Column(name = "return_date", columnDefinition = "DATE")
-	@NotBlank
+	@Column(name = "returnDate", columnDefinition = "DATE",  nullable = false)
 	private LocalDate returnDate;
 
 
