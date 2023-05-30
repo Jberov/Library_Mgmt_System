@@ -33,7 +33,7 @@ public class UserServiceTest {
     private static final List<String> list = new ArrayList<>();
     private static final Set<String> set = new HashSet<>();
     private static final String username = "";
-    private static final BookDTO bookDTO = new BookDTO("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История");
+    private static final BookDTO bookDTO = new BookDTO("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История", "Estetika");
     private static final Map<String, List<String>> history = new HashMap<String, List<String>>() {
     };
    

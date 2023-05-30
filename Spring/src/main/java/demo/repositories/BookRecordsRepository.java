@@ -2,7 +2,9 @@ package demo.repositories;
 
 import demo.entities.BooksActivity;
 import demo.enums.Status;
+import java.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +21,8 @@ public interface BookRecordsRepository extends JpaRepository<BooksActivity, Long
 	List<BooksActivity> findByBookIsbn(String isbn);
 	
 	boolean existsByBookIsbnAndStatus(String isbn, Status status);
+
+	@Query("FROM BooksActivity ba WHERE ba.issue_date >= ?1")
+	List<BooksActivity> findByDate(LocalDate date);
+
 }

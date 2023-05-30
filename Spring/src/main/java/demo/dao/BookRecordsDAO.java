@@ -5,6 +5,7 @@ import demo.entities.BooksActivity;
 import demo.repositories.BookRecordsRepository;
 import demo.repositories.UserRepository;
 import demo.enums.Status;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,8 @@ public class BookRecordsDAO {
 	
 	public Book leaseBook(String bookId, String userName) {
 		if (books.getBook(bookId) != null) {
-			BooksActivity activity = new BooksActivity(user.findUserByName(userName), books.getBook(bookId), Status.TAKEN);
+			BooksActivity activity = new BooksActivity(user.findUserByName(userName), books.getBook(bookId), Status.TAKEN,
+					LocalDate.now(), LocalDate.now().plusDays(20));
 			books.decreaseCount(bookId);
 			bookRecordsRepository.save(activity);
 			return books.getBook(bookId);
@@ -95,6 +97,10 @@ public class BookRecordsDAO {
 			return usernames;
 		}
 		return null;
+	}
+
+	public List<BooksActivity> getReadLogs(LocalDate date){
+		return bookRecordsRepository.findByDate(date);
 	}
 	
 	private List<String> loadHistory(String username) {

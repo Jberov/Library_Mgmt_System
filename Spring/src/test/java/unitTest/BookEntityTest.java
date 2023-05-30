@@ -24,7 +24,7 @@ public class BookEntityTest {
 
     @Test
     public void whenFoundByNameReturnBook() {
-        Book book = new Book("9780141301068", 3, "Roald Dahl", "Matilda", "Genius girl");
+        Book book = new Book("9780141301068", 3, "Roald Dahl", "Matilda", "Genius girl", "cOMEDY");
         bookRepository.save(book);
         Book found = bookRepository.findByName(book.getName());
         AssertionsForClassTypes.assertThat(found.getAuthor())

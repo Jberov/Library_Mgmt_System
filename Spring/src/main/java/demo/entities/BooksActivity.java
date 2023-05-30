@@ -2,7 +2,9 @@ package demo.entities;
 
 import demo.enums.Status;
 
+import java.time.LocalDate;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "activity")
@@ -20,7 +22,40 @@ public class BooksActivity {
 	
 	@Enumerated(EnumType.ORDINAL)
 	private Status status;
-	
+
+	public LocalDate getIssueDate() {
+		return issueDate;
+	}
+
+	public void setIssueDate(LocalDate issueDate) {
+		this.issueDate = issueDate;
+	}
+
+	public LocalDate getReturnDate() {
+		return returnDate;
+	}
+
+	public void setReturnDate(LocalDate returnDate) {
+		this.returnDate = returnDate;
+	}
+
+	public BooksActivity(User user, Book book, Status status, LocalDate issueDate, LocalDate returnDate) {
+		this.user = user;
+		this.book = book;
+		this.status = status;
+		this.issueDate = issueDate;
+		this.returnDate = returnDate;
+	}
+
+	@Column(name = "issue_date", columnDefinition = "DATE")
+	@NotBlank
+	private LocalDate issueDate;
+
+	@Column(name = "return_date", columnDefinition = "DATE")
+	@NotBlank
+	private LocalDate returnDate;
+
+
 	public BooksActivity() {
 	}
 	

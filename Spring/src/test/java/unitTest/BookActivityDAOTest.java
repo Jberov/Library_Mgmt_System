@@ -28,7 +28,7 @@ public class BookActivityDAOTest {
 	
 	private static final String wrongIsbn = "978-0-09-923808-7";
 	
-	private static final Book book = new Book("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История");
+	private static final Book book = new Book("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История", "Estetika");
 	
 	@MockBean
 	private BookRecordsDAO bookRecordsDAO;

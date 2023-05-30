@@ -20,6 +20,7 @@ public class BookMapper {
 		bookDTO.setAuthor(book.getAuthor());
 		bookDTO.setName(book.getName());
 		bookDTO.setDescription(book.getDescription());
+		bookDTO.setGenre(book.getGenre());
 		return bookDTO;
 	}
 	
@@ -27,7 +28,8 @@ public class BookMapper {
 		if (bookDTO == null) {
 			return null;
 		}
-		return new Book(bookDTO.getIsbn(),bookDTO.getCount(),bookDTO.getAuthor(),bookDTO.getName(),bookDTO.getDescription());
+		return new Book(bookDTO.getIsbn(),bookDTO.getCount(),bookDTO.getAuthor(),bookDTO.getName(),bookDTO.getDescription(),
+				bookDTO.getGenre());
 	}
 	
 	public List<BookDTO> listToDTO(List<Book> entityList) {

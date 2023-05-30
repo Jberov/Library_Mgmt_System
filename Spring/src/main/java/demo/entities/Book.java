@@ -19,6 +19,13 @@ public class Book {
 	
 	@Column
 	private String author;
+
+	public String getGenre() {
+		return genre;
+	}
+
+	@Column
+	private String genre;
 	
 	@Column(unique = true)
 	private String name;
@@ -26,12 +33,13 @@ public class Book {
 	@Column
 	private String description;
 	
-	public Book(String isbn, int countBooks, String author, String name, String description) {
+	public Book(String isbn, int countBooks, String author, String name, String description, String genre) {
 		this.isbn = isbn;
 		this.countBooks = countBooks;
 		this.author = author;
 		this.name = name;
 		this.description = description;
+		this.genre = genre;
 	}
 	
 	public Book() {
@@ -56,11 +64,7 @@ public class Book {
 	public String getAuthor() {
 		return author;
 	}
-	
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -71,9 +75,5 @@ public class Book {
 	
 	public String getDescription() {
 		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
 	}
 }
