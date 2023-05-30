@@ -3,6 +3,7 @@ package demo.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -27,16 +28,17 @@ public class BasicAuthEntryPoint extends BasicAuthenticationEntryPoint {
 
   @Override
   public void afterPropertiesSet() {
-    this.setRealmName("Library ILS");
+    this.setRealmName("Library_ILS");
     super.afterPropertiesSet();
   }
+  private String getUnauthorizedReason() {
+    return "Wrong username or password";
+  }
 
-
-  private void createAndSendUnauthorizedResponse(HttpServletResponse httpServletResponse) throws IOException {
-    httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    Exception exceptionDto = new org.apache.tomcat.websocket.AuthenticationException(HttpStatus.UNAUTHORIZED.getReasonPhrase());
-    String responseBody = new ObjectMapper().writeValueAsString(exceptionDto);
-    this.sendResponse(httpServletResponse, responseBody);
+  private HashMap<String, String> getErrorContent() {
+    HashMap<String, String> errorContent = new HashMap<>();
+    errorContent.put("reason", this.getUnauthorizedReason());
+    return errorContent;
   }
 
   private void sendResponse(HttpServletResponse httpServletResponse, String responseBody) throws IOException {
@@ -46,4 +48,12 @@ public class BasicAuthEntryPoint extends BasicAuthenticationEntryPoint {
     out.print(responseBody);
     out.flush();
   }
+
+  private void createAndSendUnauthorizedResponse(HttpServletResponse httpServletResponse) throws IOException {
+    httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    Exception exceptionDto = new org.apache.tomcat.websocket.AuthenticationException(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+    String responseBody = new ObjectMapper().writeValueAsString(exceptionDto);
+    this.sendResponse(httpServletResponse, responseBody);
+  }
+
 }

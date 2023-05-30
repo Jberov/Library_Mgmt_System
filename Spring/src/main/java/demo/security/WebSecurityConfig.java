@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @ComponentScan(basePackages = "demo.*")
 @EnableWebSecurity
+@Configuration
 public class WebSecurityConfig{
 
 	@Bean
@@ -38,8 +40,10 @@ public class WebSecurityConfig{
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, BasicAuthEntryPoint basicAuthEntryPoint) throws Exception {
-		httpSecurity.cors().and().csrf().disable().formLogin().disable()
-				;
+		httpSecurity.cors().and().csrf().disable().formLogin().disable().authorizeRequests().anyRequest().authenticated()
+				.and()
+				.httpBasic()
+				.authenticationEntryPoint(basicAuthEntryPoint);
 		/*http.sessionManagement().authorizeRequests()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
