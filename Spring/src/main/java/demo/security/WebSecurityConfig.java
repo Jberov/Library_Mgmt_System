@@ -37,8 +37,9 @@ public class WebSecurityConfig{
 	}
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.cors().and().csrf().disable().formLogin().disable();
+	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, BasicAuthEntryPoint basicAuthEntryPoint) throws Exception {
+		httpSecurity.cors().and().csrf().disable().formLogin().disable()
+				;
 		/*http.sessionManagement().authorizeRequests()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()

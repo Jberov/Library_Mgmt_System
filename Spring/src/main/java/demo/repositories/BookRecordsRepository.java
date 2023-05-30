@@ -22,7 +22,7 @@ public interface BookRecordsRepository extends JpaRepository<BooksActivity, Long
 	
 	boolean existsByBookIsbnAndStatus(String isbn, Status status);
 
-	@Query("FROM BooksActivity ba WHERE ba.issueDate >= ?1")
+	@Query("FROM BooksActivity ba WHERE ba.issueDate>=?1")
 	List<BooksActivity> findByDate(LocalDate date);
 
 }

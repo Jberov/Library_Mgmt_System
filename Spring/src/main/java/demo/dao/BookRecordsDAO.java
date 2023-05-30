@@ -60,6 +60,13 @@ public class BookRecordsDAO {
 		bookRecordsRepository.save(temp);
 		return books.getBook(bookId);
 	}
+
+	public List<BooksActivity> getAllUserRecords(String username){
+		if (userRepository.findByUsername(username) == null) {
+			return null;
+		}
+		return bookRecordsRepository.findByUserId(userRepository.findByUsername(username).getId());
+	}
 	
 	public Map<String, List<String>> booksUsedByUser(String username) {
 		if (userRepository.findByUsername(username) == null) {
