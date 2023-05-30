@@ -1,5 +1,7 @@
 package demo.command;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import demo.dto.UserDTO;
 import demo.services.UserService;
 import javax.validation.Valid;
@@ -25,8 +27,9 @@ public class UpdateUserCommand {
 
   @PutMapping(value = "/api/v1/users/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<String> updateUser(@PathVariable("username") String username ,@RequestBody @Valid UserDTO userDTO){
-    service.updateUser(username, userDTO);
-    return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode node = mapper.convertValue(service.updateUser(username, userDTO), JsonNode.class);
+    return ResponseEntity.status(HttpStatus.CREATED).body("User successfully updated\n" + node.toPrettyString());
   }
 
   @ExceptionHandler(IllegalArgumentException.class)

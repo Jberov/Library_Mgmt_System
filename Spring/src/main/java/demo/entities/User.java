@@ -1,7 +1,16 @@
 package demo.entities;
 
-import javax.persistence.*;
+import demo.enums.UserRole;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -13,6 +22,23 @@ public class User {
 	
 	@Column(unique = true)
 	private String username;
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private UserRole role;
+
+	public User(String username, UserRole role, String email, String password, String telephoneNumber, String address,
+			String firstName, String midName, String lastName) {
+		this.username = username;
+		this.role = role;
+		this.email = email;
+		this.password = password;
+		this.telephoneNumber = telephoneNumber;
+		this.address = address;
+		this.firstName = firstName;
+		this.midName = midName;
+		this.lastName = lastName;
+	}
 
 	public String getEmail() {
 		return email;
@@ -32,18 +58,6 @@ public class User {
 
 	public String getFirstName() {
 		return firstName;
-	}
-
-	public User(String username, String email, String password, String telephoneNumber, String address, String firstName,
-			String midName, String lastName) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.telephoneNumber = telephoneNumber;
-		this.address = address;
-		this.firstName = firstName;
-		this.midName = midName;
-		this.lastName = lastName;
 	}
 
 	public String getMidName() {
@@ -133,5 +147,13 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public UserRole getRole() {
+		return role;
+	}
+
+	public void setRole(UserRole role) {
+		this.role = role;
 	}
 }

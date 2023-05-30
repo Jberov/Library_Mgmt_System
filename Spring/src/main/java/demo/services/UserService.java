@@ -87,11 +87,12 @@ public class UserService {
 		userDAO.addUser(userMapper.userDTOToEntity(userDTO));
 	}
 
-	public void updateUser(String username, UserDTO userDTO) throws IllegalArgumentException {
+	public UserDTO updateUser(String username, UserDTO userDTO) throws IllegalArgumentException {
 		if (getUser(username) == null){
 			throw new IllegalArgumentException();
 		}
 		userDAO.updateUser(username, userMapper.userDTOToEntity(userDTO));
+		return userDTO;
 	}
 }
 

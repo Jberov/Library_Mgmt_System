@@ -46,6 +46,13 @@ public class UserDTO {
 	@NotBlank(message = "No number")
 	private String telephoneNumber;
 
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	private String role;
+
+
 	public String getUsername() {
 		return username;
 	}
@@ -83,12 +90,13 @@ public class UserDTO {
 	@NotBlank(message = "No mid name")
 	private String midName;
 
-	public UserDTO(String email, String username, String password, String telephoneNumber, String address,
+	public UserDTO(String email, String username, String password, String telephoneNumber, String role, String address,
 			String firstName, String midName, String lastName) {
 		this.email = email;
 		this.username = username;
 		this.password = password;
 		this.telephoneNumber = telephoneNumber;
+		this.role = role;
 		this.address = address;
 		this.firstName = firstName;
 		this.midName = midName;
@@ -119,8 +127,12 @@ public class UserDTO {
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getRole() {
+		return role;
 	}
 }
