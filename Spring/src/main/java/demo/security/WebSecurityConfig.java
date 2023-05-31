@@ -29,8 +29,6 @@ public class WebSecurityConfig{
 		JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
 		jdbcUserDetailsManager.setUsersByUsernameQuery("SELECT username, password FROM users WHERE username = ?");
 		jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("SELECT u.username, u.role FROM users u WHERE u.username = ?");
-		// previously, one had to explicitly set the password encoder to BCryptPasswordEncoder
-		// now, after WebSecurityConfigurerAdapter is deprecated, the PasswordEncoder is defined in a bean (in PasswordEncoderConfig)
 		return jdbcUserDetailsManager;
 	}
 
@@ -40,7 +38,10 @@ public class WebSecurityConfig{
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, BasicAuthEntryPoint basicAuthEntryPoint) throws Exception {
-		httpSecurity.cors().and().csrf().disable().formLogin().disable().authorizeRequests().anyRequest().authenticated()
+		httpSecurity.cors().and().csrf().disable().formLogin().disable()
+				.authorizeRequests()
+				.anyRequest()
+				.authenticated()
 				.and()
 				.httpBasic()
 				.authenticationEntryPoint(basicAuthEntryPoint);
