@@ -7,13 +7,13 @@ import demo.dto.BookDTO;
 import demo.dto.UserDTO;
 import demo.mappers.BookMapper;
 import demo.mappers.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
@@ -22,14 +22,17 @@ public class UserService {
 	private final BookRecordsDAO bookRecordsDAO;
 	private final UserMapper userMapper;
 	private final BookMapper bookMapper;
-	
+	private final PasswordEncoder passwordEncoder;
+
+
 	@Autowired
-	public UserService(UserDAOImpl userDAO, BooksDAOImpl booksDAO, BookRecordsDAO bookRecordsDAO, UserMapper userMapper, BookMapper bookMapper) {
+	public UserService(PasswordEncoder passwordEncoder, UserDAOImpl userDAO, BooksDAOImpl booksDAO, BookRecordsDAO bookRecordsDAO, UserMapper userMapper, BookMapper bookMapper) {
 		this.userDAO = userDAO;
 		this.booksDAO = booksDAO;
 		this.bookRecordsDAO = bookRecordsDAO;
 		this.userMapper = userMapper;
 		this.bookMapper = bookMapper;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	public UserDTO getUser(String name) {
@@ -84,6 +87,7 @@ public class UserService {
 		if (getUser(userDTO.getUsername()) != null){
 			throw new IllegalArgumentException();
 		}
+		encodePassword(userDTO);
 		userDAO.addUser(userMapper.userDTOToEntity(userDTO));
 	}
 
@@ -91,8 +95,14 @@ public class UserService {
 		if (getUser(username) == null){
 			throw new IllegalArgumentException();
 		}
+		encodePassword(userDTO);
 		userDAO.updateUser(username, userMapper.userDTOToEntity(userDTO));
 		return userDTO;
+	}
+
+	private void encodePassword(UserDTO userDTO){
+		String encodedPassword = this.passwordEncoder.encode(userDTO.getPassword());
+		userDTO.setPassword(encodedPassword);
 	}
 }
 

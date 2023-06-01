@@ -28,7 +28,7 @@ public class User {
 	private UserRole role;
 
 	public User(String username, UserRole role, String email, String password, String telephoneNumber, String address,
-			String firstName, String midName, String lastName) {
+			String firstName, String midName, String lastName, boolean enabled) {
 		this.username = username;
 		this.role = role;
 		this.email = email;
@@ -38,6 +38,51 @@ public class User {
 		this.firstName = firstName;
 		this.midName = midName;
 		this.lastName = lastName;
+		this.enabled = enabled;
+	}
+
+	@Column(unique = true)
+	private String email;
+
+	@Column(unique = true)
+	private String password;
+
+	@Column(unique = true)
+	private String telephoneNumber;
+
+	@Column
+	private String address;
+
+	@Column
+	private String firstName;
+
+	@Column
+	private String midName;
+
+	@Column
+	private String lastName;
+
+	@Column
+	private boolean enabled;
+	
+	@ElementCollection
+	@Column
+	@GeneratedValue
+	private List<String> userHistoryOfDeletedBooks;
+	
+	public User(String username) {
+		this.username = username;
+	}
+	
+	public User() {
+	}
+	
+	public List<String> getUserHistoryOfDeletedBooks() {
+		return userHistoryOfDeletedBooks;
+	}
+	
+	public void setUserHistoryOfDeletedBooks(List<String> userHistoryOfDeletedBooks) {
+		this.userHistoryOfDeletedBooks = userHistoryOfDeletedBooks;
 	}
 
 	public String getEmail() {
@@ -68,47 +113,6 @@ public class User {
 		return lastName;
 	}
 
-	@Column(unique = true)
-	private String email;
-
-	@Column(unique = true)
-	private String password;
-
-	@Column(unique = true)
-	private String telephoneNumber;
-
-	@Column
-	private String address;
-
-	@Column
-	private String firstName;
-
-	@Column
-	private String midName;
-
-	@Column
-	private String lastName;
-	
-	@ElementCollection
-	@Column
-	@GeneratedValue
-	private List<String> userHistoryOfDeletedBooks;
-	
-	public User(String username) {
-		this.username = username;
-	}
-	
-	public User() {
-	}
-	
-	public List<String> getUserHistoryOfDeletedBooks() {
-		return userHistoryOfDeletedBooks;
-	}
-	
-	public void setUserHistoryOfDeletedBooks(List<String> userHistoryOfDeletedBooks) {
-		this.userHistoryOfDeletedBooks = userHistoryOfDeletedBooks;
-	}
-	
 	public long getId() {
 		return id;
 	}

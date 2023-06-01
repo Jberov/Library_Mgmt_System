@@ -46,6 +46,8 @@ public class GetUserCommand {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}
+
+
 	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) {

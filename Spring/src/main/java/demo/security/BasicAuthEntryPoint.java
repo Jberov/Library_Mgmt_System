@@ -31,6 +31,7 @@ public class BasicAuthEntryPoint extends BasicAuthenticationEntryPoint {
     this.setRealmName("Library_ILS");
     super.afterPropertiesSet();
   }
+
   private String getUnauthorizedReason() {
     return "Wrong username or password";
   }
@@ -51,7 +52,7 @@ public class BasicAuthEntryPoint extends BasicAuthenticationEntryPoint {
 
   private void createAndSendUnauthorizedResponse(HttpServletResponse httpServletResponse) throws IOException {
     httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    Exception exceptionDto = new org.apache.tomcat.websocket.AuthenticationException(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+    Exception exceptionDto = new Exception(HttpStatus.UNAUTHORIZED.getReasonPhrase());
     String responseBody = new ObjectMapper().writeValueAsString(exceptionDto);
     this.sendResponse(httpServletResponse, responseBody);
   }
