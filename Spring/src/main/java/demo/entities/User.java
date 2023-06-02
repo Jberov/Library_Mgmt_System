@@ -67,7 +67,6 @@ public class User {
 	
 	@ElementCollection
 	@Column
-	@GeneratedValue
 	private List<String> userHistoryOfDeletedBooks;
 	
 	public User(String username) {

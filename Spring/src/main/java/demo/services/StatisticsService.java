@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,13 @@ public class StatisticsService {
     this.booksDAO = booksDAO;
   }
 
-  public HashMap<String, Integer> getMostReadBooks(LocalDate date){
-    List<BooksActivity> logs = bookRecordsDAO.getReadLogs(date);
+  public HashMap<String, Integer> getMostReadBooks(Optional<LocalDate> date){
+    List<BooksActivity> logs;
+    if (date.isPresent()){
+      logs = bookRecordsDAO.getReadLogs(date.get());
+    }
+    else
+      logs = bookRecordsDAO.getAllActivity();
 
     HashMap<String, Integer> countOfReadBooks = new HashMap<>();
 
@@ -47,6 +53,7 @@ public class StatisticsService {
             (oldValue, newValue) -> oldValue, LinkedHashMap::new));
   }
 
+
   public String suggestBookToUser(String username) {
     List<BooksActivity> logs = bookRecordsDAO.getAllUserRecords(username);
 
@@ -65,8 +72,13 @@ public class StatisticsService {
     return "";
   }
 
-  public HashMap<String, Integer> getMostReadGenresByDate(LocalDate date){
-    List<BooksActivity> logs = bookRecordsDAO.getReadLogs(date);
+  public HashMap<String, Integer> getMostReadGenresByDate(Optional<LocalDate> date){
+    List<BooksActivity> logs;
+    if (date.isEmpty()){
+      logs = bookRecordsDAO.getAllActivity();
+    } else{
+      logs = bookRecordsDAO.getReadLogs(date.get());
+    }
     HashMap<String, Integer> countOfReadBooks = new HashMap<>();
 
     for (BooksActivity activity : logs) {
@@ -86,7 +98,8 @@ public class StatisticsService {
             (oldValue, newValue) -> oldValue, LinkedHashMap::new));
   }
 
-  public int getCountOfReadBooksForTime(LocalDate date){
-   return bookRecordsDAO.getReadLogs(date).size();
+  public int getCountOfReadBooks(Optional<LocalDate> date) {
+    return date.map(localDate -> bookRecordsDAO.getReadLogs(localDate).size())
+        .orElseGet(() -> bookRecordsDAO.getAllActivity().size());
   }
 }

@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/v1/users")
 public class UpdateUserCommand {
   private final UserService service;
 
@@ -25,7 +27,7 @@ public class UpdateUserCommand {
   public UpdateUserCommand(UserService service) {this.service = service;}
 
 
-  @PutMapping(value = "/api/v1/users/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+  @PutMapping(value = "/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<String> updateUser(@PathVariable("username") String username ,@RequestBody @Valid UserDTO userDTO){
     ObjectMapper mapper = new ObjectMapper();
     JsonNode node = mapper.convertValue(service.updateUser(username, userDTO), JsonNode.class);
@@ -33,9 +35,9 @@ public class UpdateUserCommand {
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
   public ResponseEntity<String> userAlreadyExists(IllegalArgumentException ex) {
-    return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("No such user exists!");
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such user exists!");
   }
 }

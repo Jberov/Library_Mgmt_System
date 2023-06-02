@@ -106,6 +106,10 @@ public class BookRecordsDAO {
 		return null;
 	}
 
+	public List<BooksActivity> getAllActivity(){
+		return bookRecordsRepository.findAll();
+	}
+
 	public List<BooksActivity> getReadLogs(LocalDate date){
 		return bookRecordsRepository.findByDate(date);
 	}

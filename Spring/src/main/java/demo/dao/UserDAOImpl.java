@@ -70,4 +70,8 @@ public class UserDAOImpl {
 			bookRecordsRepository.delete(record);
 		}
 	}
+
+	public List<User> getAllUsers(){
+		return userRepository.findAll();
+	}
 }

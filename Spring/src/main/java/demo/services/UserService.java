@@ -5,8 +5,10 @@ import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
 import demo.dto.BookDTO;
 import demo.dto.UserDTO;
+import demo.entities.User;
 import demo.mappers.BookMapper;
 import demo.mappers.UserMapper;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -33,6 +35,19 @@ public class UserService {
 		this.userMapper = userMapper;
 		this.bookMapper = bookMapper;
 		this.passwordEncoder = passwordEncoder;
+	}
+
+	public List<UserDTO> getAllUsers() throws NullPointerException{
+		List<UserDTO> users = new ArrayList<>();
+
+		if (userDAO.getAllUsers().isEmpty() || userDAO.getAllUsers() == null){
+			throw new NullPointerException("No users");
+		}
+
+		for(User user : userDAO.getAllUsers()){
+			users.add(userMapper.userToDTO(user));
+		}
+		return users;
 	}
 	
 	public UserDTO getUser(String name) {

@@ -40,9 +40,9 @@ public class CreateUserCommand {
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
   public ResponseEntity<String> userAlreadyExists(IllegalArgumentException ex) {
-    return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("Such user already exists!");
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Such user already exists!");
   }
 }

@@ -4,11 +4,9 @@ import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dto.BookDTO;
 import demo.mappers.BookMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BookService {
@@ -46,6 +44,10 @@ public class BookService {
 	
 	public BookDTO getBookById(String isbn) {
 		return bookMapper.bookToDTO(booksDAO.getBook(isbn));
+	}
+
+	public BookDTO getBookByName(String name) {
+		return bookMapper.bookToDTO(booksDAO.getBookByName(name));
 	}
 }
 

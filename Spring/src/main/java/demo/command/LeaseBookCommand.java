@@ -1,7 +1,6 @@
 package demo.command;
 
 import demo.dto.BookDTO;
-import demo.entities.User;
 import demo.services.UserService;
 import java.util.InputMismatchException;
 import javax.validation.Valid;
@@ -10,7 +9,7 @@ import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,13 +29,10 @@ public class LeaseBookCommand {
 	}
 	
 	@PatchMapping(value = "api/v1/books/rental/{isbn}")
-	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn) {
+	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn, Authentication authentication) {
 		JSONObject result = new JSONObject();
-		
 		try {
-			User user = (User) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			BookDTO leased = userService.leaseBook(isbn, user.getUsername());
+			BookDTO leased = userService.leaseBook(isbn, authentication.getName());
 			if (leased == null) {
 				result.put("response", "Book does not exist or is not available");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

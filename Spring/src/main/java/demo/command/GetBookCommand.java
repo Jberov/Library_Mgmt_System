@@ -23,10 +23,18 @@ public class GetBookCommand {
 	}
 	
 	@GetMapping(value = "/books/{isbn}")
-	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn) {
+	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn, @RequestHeader("Criteria") String criteria) {
 		JSONObject result = new JSONObject();
 		
 		try {
+
+			if(criteria.equals("Name")){
+				if (bookService.getBookByName(isbn) != null) {
+					result.put("book", bookService.getBookById(isbn));
+					return ResponseEntity.status(HttpStatus.OK).body(result);
+				}
+			}
+
 			if (bookService.getBookById(isbn) != null) {
 				result.put("book", bookService.getBookById(isbn));
 				return ResponseEntity.status(HttpStatus.OK).body(result);

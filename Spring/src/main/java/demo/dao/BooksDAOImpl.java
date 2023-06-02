@@ -45,6 +45,10 @@ public class BooksDAOImpl {
 	public Book getBook(String isbn) {
 		return bookRepository.findByIsbn(isbn);
 	}
+
+	public Book getBookByName(String name) {
+		return bookRepository.findByName(name);
+	}
 	
 	
 	public boolean bookExistsByID(String isbn) {
@@ -59,13 +63,13 @@ public class BooksDAOImpl {
 	}
 	
 	public void increaseCountBy1(String bookId) {
-		Book temp = bookRepository.getById(bookId);
+		Book temp = bookRepository.findByIsbn(bookId);
 		temp.setCount(temp.getCount() + 1);
 		bookRepository.save(temp);
 	}
 	
 	public Book increaseCount(String bookId, int count) {
-		Book temp = bookRepository.getById(bookId);
+		Book temp = bookRepository.findByIsbn(bookId);
 		temp.setCount(temp.getCount() + count);
 		bookRepository.save(temp);
 		return temp;
