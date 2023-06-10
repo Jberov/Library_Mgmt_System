@@ -5,14 +5,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import demo.services.StatisticsService;
 import java.time.LocalDate;
 import java.util.Optional;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,28 +34,42 @@ public class StatisticsController {
 
 
   @GetMapping(path = "/mostPopularBooks",produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<JsonNode> getMostPopularByCriteria(@RequestBody(required = false) JsonNode date, @RequestHeader("Criteria") String criteria){
+  public ResponseEntity<JsonNode> getMostPopularByCriteria(@RequestBody(required = false) String date, @RequestHeader("Criteria") String criteria){
     if (criteria.equals("genre")) {
-      if (!date.isNull() || !date.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadGenresByDate(Optional.of(LocalDate.parse(date.get("date").toString()))), JsonNode.class));
+      if (date != null) {
+        System.out.println("Should not be here");
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadGenresByDate(Optional.of(LocalDate.parse(date))), JsonNode.class));
       } else {
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadBooks(Optional.empty()), JsonNode.class));
+        System.out.println("Should be here");
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadGenresByDate(Optional.empty()), JsonNode.class));
       }
     } else {
-      if (!date.isNull() || !date.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadBooks(Optional.of(LocalDate.parse(date.get("date").toString()))), JsonNode.class));
+      if (date != null) {
+        System.out.println("Should not be here");
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadBooks(Optional.of(LocalDate.parse(date))), JsonNode.class));
       } else {
+        System.out.println("Should be here");
         return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadBooks(Optional.empty()), JsonNode.class));
       }
     }
   }
 
-  @GetMapping(path = "/countOfBooks",produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<JsonNode> getCountOfReadBooks(@RequestBody(required = false) JsonNode date) {
+  @GetMapping(path = "/countOfBooks",consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<JSONObject> getCountOfReadBooks(@RequestBody(required = false) String date) {
     System.out.println(LocalDate.now());
+    JSONObject object = new JSONObject();
     if(date == null){
-      return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getCountOfReadBooks(Optional.empty()), JsonNode.class));
+      object.put("countOfReadings", service.getCountOfReadBooks(Optional.empty()));
+      return ResponseEntity.status(HttpStatus.OK).body(object);
     }
-    return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getCountOfReadBooks(Optional.of(LocalDate.parse(date.get("date").toString()))), JsonNode.class));
+    object.put("countOfReadings", service.getCountOfReadBooks(Optional.of(LocalDate.parse(date))));
+    return ResponseEntity.status(HttpStatus.OK).body(object);
+  }
+
+  @ExceptionHandler(ServletRequestBindingException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseBody
+  public ResponseEntity<String> headerMissing(ServletRequestBindingException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No criteria header set");
   }
 }

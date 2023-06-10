@@ -82,8 +82,8 @@ public class UserService {
 	
 	public Map<String, List<String>> userUsedBooks(String username) {
 		Map<String, List<String>> history = bookRecordsDAO.booksUsedByUser(username);
-		if ((!userDAO.isUser(username)) || (history == null)) {
-			return null;
+		if (!userDAO.isUser(username)){
+			throw new NullPointerException();
 		}
 		return history;
 	}

@@ -1,16 +1,23 @@
 package demo.command;
 
 import demo.services.BookService;
+import java.util.InputMismatchException;
+import javax.validation.Valid;
 import net.minidev.json.JSONObject;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.InputMismatchException;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1")
 @RestController
@@ -30,7 +37,7 @@ public class GetBookCommand {
 
 			if(criteria.equals("Name")){
 				if (bookService.getBookByName(isbn) != null) {
-					result.put("book", bookService.getBookById(isbn));
+					result.put("book", bookService.getBookByName(isbn));
 					return ResponseEntity.status(HttpStatus.OK).body(result);
 				}
 			}
@@ -60,5 +67,12 @@ public class GetBookCommand {
 	@ResponseBody
 	public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
+	}
+
+	@ExceptionHandler(ServletRequestBindingException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ResponseEntity<String> headerMissing(ServletRequestBindingException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No criteria header set");
 	}
 }

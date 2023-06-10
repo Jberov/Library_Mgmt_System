@@ -41,7 +41,7 @@ public class UserHistoryCommand {
 
 		try {
 			if (history == null) {
-				result.put("error", "No such user");
+				result.put("error", "User has no history");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
@@ -62,6 +62,11 @@ public class UserHistoryCommand {
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing parameter(s): " + ex.getParameterName());
+	}
+
+	@ExceptionHandler(NullPointerException.class)
+	public ResponseEntity<String> handleNoUser(NullPointerException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such user");
 	}
 	
 }
