@@ -28,8 +28,8 @@ public class CreateUserCommand {
 
   @PostMapping(value = "/api/v1/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userDTO){
-    if(service.userExistsByMail(userDTO.getEmail())){
-      return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");
+    if(service.userExistsByMail(userDTO.getEmail()) || service.userExistsByPhone(userDTO.getTelephoneNumber())){
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email or telephone are already used");
     }
     service.createUser(userDTO);
     return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");

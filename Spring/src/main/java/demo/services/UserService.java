@@ -62,6 +62,10 @@ public class UserService {
 	public boolean userExistsByMail(String mail) {
 		return userDAO.isUserByMail(mail);
 	}
+
+	public boolean userExistsByPhone(String phone) {
+		return userDAO.isUserByPhone(phone);
+	}
 	
 	public BookDTO leaseBook(String isbn, String username) {
 		if (booksDAO.getBook(isbn) == null) {
