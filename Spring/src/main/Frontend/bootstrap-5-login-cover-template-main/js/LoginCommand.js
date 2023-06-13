@@ -22,9 +22,9 @@ $(document).ready(function(){
                 oJqXhr.setRequestHeader('Authorization', getBasicAuthString(username, password));
             },
             success: function(result) {
-                let response = jQuery.parseJSON(result);
+                $("#errorMsg").hide();
                 console.log("Logged in");
-                alert("Logged in as " + response[0].get("authority"));
+                
                 // Do something with the result
             },
             error: function(oJqXhr) {

@@ -58,6 +58,10 @@ public class UserService {
 		userDTO.setUserHistory(userUsedBooks(name));
 		return userDTO;
 	}
+
+	public boolean userExistsByMail(String mail) {
+		return userDAO.isUserByMail(mail);
+	}
 	
 	public BookDTO leaseBook(String isbn, String username) {
 		if (booksDAO.getBook(isbn) == null) {
@@ -99,7 +103,7 @@ public class UserService {
 	}
 
 	public void createUser(UserDTO userDTO) throws IllegalArgumentException {
-		if (getUser(userDTO.getUsername()) != null){
+		if (getUser(userDTO.getUsername()) != null || getUser(userDTO.getUsername()) != null){
 			throw new IllegalArgumentException();
 		}
 		encodePassword(userDTO);

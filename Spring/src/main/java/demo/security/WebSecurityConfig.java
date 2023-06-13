@@ -1,6 +1,7 @@
 package demo.security;
 
 import java.util.Arrays;
+import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -45,8 +46,7 @@ public class WebSecurityConfig{
 				.antMatchers(HttpMethod.GET, "/api/v1/users/byBook/*").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.GET, "/api/v1/users/info/*").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.PATCH, "/api/v1/books/rental/*").hasAnyAuthority("USER", "ADMIN")
-				.antMatchers(HttpMethod.GET, "/api/v1/books").fullyAuthenticated()
-				.antMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
 				.antMatchers(HttpMethod.PUT, "/api/v1/users/*").hasAnyAuthority("USER", "ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/v1/users/").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/v1/books/*").hasAuthority("ADMIN")
@@ -63,31 +63,13 @@ public class WebSecurityConfig{
 				.authenticationEntryPoint(basicAuthEntryPoint).and()
 				.logout()
 				.logoutUrl("/logout");
-		/*http.sessionManagement().authorizeRequests()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/api/v1/books").hasAuthority("Admin")
-				.antMatchers(HttpMethod.GET, "/api/v1/books/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.GET, "/api/v1/users/byBook/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.GET, "/api/v1/users/info/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.PATCH, "/api/v1/books/rental/*").hasAnyAuthority("User", "Admin")
-				.antMatchers(HttpMethod.GET, "/api/v1/books").authenticated()
-				.antMatchers(HttpMethod.POST, "/api/v1/users/").anyRequest()
-				.antMatchers(HttpMethod.PUT, "/api/v1/users/").hasAuthority("Admin")
-				.antMatchers(HttpMethod.DELETE, "/api/v1/books/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.PATCH, "/api/v1/books/return/*").hasAnyAuthority("User", "Admin")
-				.antMatchers(HttpMethod.DELETE, "/api/v1/users/*").hasAuthority("Admin")
-				.antMatchers(HttpMethod.GET, "/api/v1/users/history").hasAnyAuthority("User", "Admin")
-				;
-
-		 */
 		return httpSecurity.build();
 	}
 	
 	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
+	CorsConfigurationSource corsConfigurationSource()  {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
+		corsConfiguration.setAllowedOrigins(List.of("http://localhost"));
 		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
 		corsConfiguration.setAllowCredentials(true);
 		corsConfiguration.addAllowedHeader("*");

@@ -28,6 +28,9 @@ public class CreateUserCommand {
 
   @PostMapping(value = "/api/v1/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userDTO){
+    if(service.userExistsByMail(userDTO.getEmail())){
+      return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");
+    }
     service.createUser(userDTO);
     return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");
   }
@@ -40,9 +43,9 @@ public class CreateUserCommand {
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.CONFLICT)
   @ResponseBody
   public ResponseEntity<String> userAlreadyExists(IllegalArgumentException ex) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Such user already exists!");
+    return ResponseEntity.status(HttpStatus.CONFLICT).body("Such user already exists!");
   }
 }

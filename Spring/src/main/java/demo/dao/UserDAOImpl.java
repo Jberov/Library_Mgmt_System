@@ -36,6 +36,10 @@ public class UserDAOImpl {
 	public boolean isUser(String username) {
 		return userRepository.existsByUsername(username);
 	}
+
+	public boolean isUserByMail(String email) {
+		return userRepository.existsByEmail(email);
+	}
 	
 	public void addUser(User user) {
 		userRepository.save(user);
