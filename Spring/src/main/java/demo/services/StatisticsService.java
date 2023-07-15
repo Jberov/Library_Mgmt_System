@@ -82,11 +82,11 @@ public class StatisticsService {
     HashMap<String, Integer> countOfReadBooks = new HashMap<>();
 
     for (BooksActivity activity : logs) {
-      if (countOfReadBooks.containsKey(activity.getBook().getGenre())) {
-        countOfReadBooks.put(activity.getBook().getGenre(), countOfReadBooks.get(activity.getBook().getGenre()) + 1);
+      if (countOfReadBooks.containsKey(activity.getBook().getGenre().getGenre())) {
+        countOfReadBooks.put(activity.getBook().getGenre().getGenre(), countOfReadBooks.get(activity.getBook().getGenre().getGenre()) + 1);
         continue;
       }
-      countOfReadBooks.put(activity.getBook().getGenre(), 1);
+      countOfReadBooks.put(activity.getBook().getGenre().getGenre(), 1);
     }
 
     return  countOfReadBooks.entrySet()

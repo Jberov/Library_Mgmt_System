@@ -3,6 +3,8 @@ package demo.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 
@@ -11,29 +13,30 @@ import javax.validation.constraints.Pattern;
 public class Book {
 	
 	@Id
+	@Column(nullable = false)
 	@Pattern(regexp = "([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})")
 	private String isbn;
-	
-	@Column
-	private int countBooks;
-	
-	@Column
-	private String author;
 
-	public String getGenre() {
+	@Column(nullable = false)
+	private int countBooks;
+
+	@OneToOne
+	private Author author;
+
+	public Genre getGenre() {
 		return genre;
 	}
 
-	@Column
-	private String genre;
+	@ManyToOne
+	private Genre genre;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String name;
-	
-	@Column
+
+	@Column(nullable = false)
 	private String description;
 	
-	public Book(String isbn, int countBooks, String author, String name, String description, String genre) {
+	public Book(String isbn, int countBooks, Author author, String name, String description, Genre genre) {
 		this.isbn = isbn;
 		this.countBooks = countBooks;
 		this.author = author;
@@ -61,7 +64,7 @@ public class Book {
 		this.countBooks = count;
 	}
 	
-	public String getAuthor() {
+	public Author getAuthor() {
 		return author;
 	}
 

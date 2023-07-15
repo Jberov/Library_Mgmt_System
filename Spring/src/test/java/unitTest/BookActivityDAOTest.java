@@ -2,7 +2,9 @@ package unitTest;
 
 import demo.LibraryApplication;
 import demo.dao.BookRecordsDAO;
+import demo.entities.Author;
 import demo.entities.Book;
+import demo.entities.Genre;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +30,7 @@ public class BookActivityDAOTest {
 	
 	private static final String wrongIsbn = "978-0-09-923808-7";
 	
-	private static final Book book = new Book("978-0-09-959008-8",7,"Ювал Харари","Кратка история на Хомо Сапиенс","История", "Estetika");
+	private static final Book book = new Book("978-0-09-959008-8",7,new Author("Харари", "Еврейски публицист"),"Кратка история на Хомо Сапиенс","История", new Genre("Публицистика", "Описание"));
 	
 	@MockBean
 	private BookRecordsDAO bookRecordsDAO;

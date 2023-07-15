@@ -1,7 +1,9 @@
 package unitTest;
 
 import demo.LibraryApplication;
+import demo.entities.Author;
 import demo.entities.Book;
+import demo.entities.Genre;
 import demo.repositories.BookRepository;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,7 @@ public class BookEntityTest {
 
     @Test
     public void whenFoundByNameReturnBook() {
-        Book book = new Book("9780141301068", 3, "Roald Dahl", "Matilda", "Genius girl", "cOMEDY");
+        Book book = new Book("978-0-09-959008-8",7,new Author("Харари", "Еврейски публицист"),"Кратка история на Хомо Сапиенс","История", new Genre("Публицистика", "Описание"));
         bookRepository.save(book);
         Book found = bookRepository.findByName(book.getName());
         AssertionsForClassTypes.assertThat(found.getAuthor())

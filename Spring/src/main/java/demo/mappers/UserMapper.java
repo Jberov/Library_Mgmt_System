@@ -2,6 +2,7 @@ package demo.mappers;
 
 import demo.dto.UserDTO;
 import demo.entities.User;
+import demo.entities.UserRoles;
 import demo.enums.UserRole;
 import org.springframework.stereotype.Component;
 
@@ -32,11 +33,14 @@ public class UserMapper {
 			return null;
 		}
 
+		UserRoles roles = new UserRoles();
 		if (userDTO.getRole().equals("USER")) {
-			return new User(userDTO.getUsername(),UserRole.USER, userDTO.getEmail(), userDTO.getPassword(), userDTO.getTelephoneNumber(),
-					userDTO.getAddress(), userDTO.getFirstName(), userDTO.getMidName(), userDTO.getLastName(), true);
+			roles.setRole(UserRole.USER);
+		} else {
+			roles.setRole(UserRole.ADMIN);
 		}
-		return new User(userDTO.getUsername(),UserRole.ADMIN, userDTO.getEmail(), userDTO.getPassword(), userDTO.getTelephoneNumber(),
+
+		return new User(userDTO.getUsername(), roles, userDTO.getEmail(), userDTO.getPassword(), userDTO.getTelephoneNumber(),
 				userDTO.getAddress(), userDTO.getFirstName(), userDTO.getMidName(), userDTO.getLastName(), true);
 	}
 }

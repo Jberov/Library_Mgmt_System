@@ -20,17 +20,38 @@ public class BookDTO {
 	private String name;
 	
 	@NotNull
-	private String description;
+	private String authorDescription;
 
 	@NotNull
 	private String genre;
-	
-	public BookDTO(String isbn, int count_books, String author, String name, String description, String genre) {
+
+	public String getGenreDescription() {
+		return genreDescription;
+	}
+
+	public void setGenreDescription(String genreDescription) {
+		this.genreDescription = genreDescription;
+	}
+
+	public BookDTO(String isbn, int count_books, String author, String name, String authorDescription, String genre,
+			String genreDescription) {
 		this.isbn = isbn;
 		this.count_books = count_books;
 		this.author = author;
 		this.name = name;
-		this.description = description;
+		this.authorDescription = authorDescription;
+		this.genre = genre;
+		this.genreDescription = genreDescription;
+	}
+
+	private String genreDescription;
+	
+	public BookDTO(String isbn, int count_books, String author, String name, String authorDescription, String genre) {
+		this.isbn = isbn;
+		this.count_books = count_books;
+		this.author = author;
+		this.name = name;
+		this.authorDescription = authorDescription;
 		this.genre = genre;
 	}
 	
@@ -69,12 +90,12 @@ public class BookDTO {
 		this.name = name;
 	}
 	
-	public String getDescription() {
-		return description;
+	public String getAuthorDescription() {
+		return authorDescription;
 	}
 	
-	public void setDescription(String description) {
-		this.description = description;
+	public void setAuthorDescription(String authorDescription) {
+		this.authorDescription = authorDescription;
 	}
 
 	public String getGenre() {

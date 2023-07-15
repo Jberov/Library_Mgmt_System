@@ -29,7 +29,8 @@ public class WebSecurityConfig{
 	UserDetailsManager userDetailsManager (DataSource dataSource) {
 		JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
 		jdbcUserDetailsManager.setUsersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username = ?");
-		jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("SELECT u.username, u.role FROM users u WHERE u.username = ?");
+		jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("SELECT u.username, r.role FROM users u " +
+				"JOIN roles r ON u.role_id = r.role_id WHERE u.username = ?");
 		return jdbcUserDetailsManager;
 	}
 

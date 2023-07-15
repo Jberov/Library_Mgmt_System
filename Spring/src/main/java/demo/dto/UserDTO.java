@@ -50,6 +50,7 @@ public class UserDTO {
 		this.role = role;
 	}
 
+	@NotBlank(message = "No user role")
 	private String role;
 
 

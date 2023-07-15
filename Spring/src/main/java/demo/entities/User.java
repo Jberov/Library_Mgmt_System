@@ -1,16 +1,16 @@
 package demo.entities;
 
-import demo.enums.UserRole;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -24,11 +24,11 @@ public class User {
 	@Column(unique = true)
 	private String username;
 
-	@Column
-	@Enumerated(EnumType.STRING)
-	private UserRole role;
+	@ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
+	@JoinColumn(name = "roleId")
+	private UserRoles role;
 
-	public User(String username, UserRole role, String email, String password, String telephoneNumber, String address,
+	public User(String username, UserRoles role, String email, String password, String telephoneNumber, String address,
 			String firstName, String midName, String lastName, boolean enabled) {
 		this.username = username;
 		this.role = role;
@@ -62,6 +62,14 @@ public class User {
 
 	@Column
 	private String lastName;
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 	@Column
 	private boolean enabled;
@@ -153,11 +161,11 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public UserRole getRole() {
+	public UserRoles getRole() {
 		return role;
 	}
 
-	public void setRole(UserRole role) {
+	public void setRole(UserRoles role) {
 		this.role = role;
 	}
 }
