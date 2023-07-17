@@ -3,13 +3,18 @@ package demo.entities;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "tokens")
 public class VerificationToken {
   private static final int EXPIRATION = 60 * 24;
 
@@ -51,8 +56,8 @@ public class VerificationToken {
     this.expiryDate = expiryDate;
   }
 
-  @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-  @JoinColumn(nullable = false, name = "user_id")
+  @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER,cascade= CascadeType.ALL)
+  @JoinColumn(nullable = false, name = "users_id")
   private User user;
 
   private Date expiryDate;
