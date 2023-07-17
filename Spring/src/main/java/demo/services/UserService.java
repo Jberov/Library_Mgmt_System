@@ -6,8 +6,10 @@ import demo.dao.UserDAOImpl;
 import demo.dto.BookDTO;
 import demo.dto.UserDTO;
 import demo.entities.User;
+import demo.entities.VerificationToken;
 import demo.mappers.BookMapper;
 import demo.mappers.UserMapper;
+import demo.repositories.VerificationTokenRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +27,18 @@ public class UserService {
 	private final UserMapper userMapper;
 	private final BookMapper bookMapper;
 	private final PasswordEncoder passwordEncoder;
+	private final VerificationTokenRepository tokenRepository;
 
 
 	@Autowired
-	public UserService(PasswordEncoder passwordEncoder, UserDAOImpl userDAO, BooksDAOImpl booksDAO, BookRecordsDAO bookRecordsDAO, UserMapper userMapper, BookMapper bookMapper) {
+	public UserService(PasswordEncoder passwordEncoder, UserDAOImpl userDAO, BooksDAOImpl booksDAO, BookRecordsDAO bookRecordsDAO, UserMapper userMapper, BookMapper bookMapper, VerificationTokenRepository tokenRepository) {
 		this.userDAO = userDAO;
 		this.booksDAO = booksDAO;
 		this.bookRecordsDAO = bookRecordsDAO;
 		this.userMapper = userMapper;
 		this.bookMapper = bookMapper;
 		this.passwordEncoder = passwordEncoder;
+		this.tokenRepository = tokenRepository;
 	}
 
 	public List<UserDTO> getAllUsers() throws NullPointerException{
@@ -106,12 +110,19 @@ public class UserService {
 		return userMapper.userToDTO(userDAO.deleteUser(username));
 	}
 
-	public void createUser(UserDTO userDTO) throws IllegalArgumentException {
+	public UserDTO createUser(UserDTO userDTO) throws IllegalArgumentException {
 		if (getUser(userDTO.getUsername()) != null || getUser(userDTO.getUsername()) != null){
 			throw new IllegalArgumentException();
 		}
 		encodePassword(userDTO);
 		userDAO.addUser(userMapper.userDTOToEntity(userDTO));
+		return userDTO;
+	}
+
+	public void enableUser(String username){
+		User user = userDAO.findUserByName(username);
+		user.setEnabled(true);
+		userDAO.updateUser(username, user);
 	}
 
 	public UserDTO updateUser(String username, UserDTO userDTO) throws IllegalArgumentException {
@@ -126,6 +137,15 @@ public class UserService {
 	private void encodePassword(UserDTO userDTO){
 		String encodedPassword = this.passwordEncoder.encode(userDTO.getPassword());
 		userDTO.setPassword(encodedPassword);
+	}
+
+	public void createVerificationToken(User user, String token) {
+		VerificationToken myToken = new VerificationToken(token, user);
+		tokenRepository.save(myToken);
+	}
+
+	public VerificationToken getVerificationToken(String VerificationToken) {
+		return tokenRepository.findByToken(VerificationToken);
 	}
 }
 
