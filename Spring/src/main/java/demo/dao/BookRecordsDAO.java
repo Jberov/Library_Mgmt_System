@@ -84,10 +84,10 @@ public class BookRecordsDAO {
 		for (BooksActivity record : records) {
 			String bookHistory;
 			if (record.getStatus().equals(Status.TAKEN)) {
-				bookHistory = record.getBook().getName() + ", " + record.getBook().getAuthor();
+				bookHistory = record.getBook().getName() + ", " + record.getBook().getAuthor().getName();
 				books.get("Currently taken books by user:").add(bookHistory);
 			} else {
-				bookHistory = record.getBook().getName() + ", " + record.getBook().getAuthor();
+				bookHistory = record.getBook().getName() + ", " + record.getBook().getAuthor().getName();
 				books.get("Already returned books by user:").add(bookHistory);
 			}
 		}

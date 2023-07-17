@@ -1,7 +1,13 @@
 package demo.entities;
 
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -20,17 +26,17 @@ public class Book {
 	@Column(nullable = false)
 	private int countBooks;
 
-	@OneToOne
+	@OneToOne(targetEntity=Author.class, fetch= FetchType.EAGER, cascade = {PERSIST, MERGE, REFRESH, DETACH})
 	private Author author;
 
 	public Genre getGenre() {
 		return genre;
 	}
 
-	@ManyToOne
+	@ManyToOne(targetEntity=Genre.class, fetch= FetchType.EAGER, cascade = {PERSIST, MERGE, REFRESH, DETACH})
 	private Genre genre;
 	
-	@Column(unique = true, nullable = false)
+	@Column(unique = true, name = "book_name")
 	private String name;
 
 	@Column(nullable = false)

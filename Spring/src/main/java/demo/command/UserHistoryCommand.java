@@ -25,16 +25,14 @@ public class UserHistoryCommand {
 		this.userService = userService;
 	}
 	
-	@GetMapping(value = "api/v1/users/history/{username}")
+	@GetMapping(value = {"api/v1/users/history/{username}","api/v1/users/history"})
 	public ResponseEntity<JSONObject> execute(Authentication authentication, @PathVariable(required = false) String username) {
 		Map<String, List<String>> history;
 		JSONObject result = new JSONObject();
 		String endUser;
 		if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN")) && username != null){
-			System.out.println("God-Emperor mode");
 			endUser = username;
 		} else {
-			System.out.println("Peasant mode");
 			endUser = authentication.getName();
 		}
 		history = userService.userUsedBooks(endUser);

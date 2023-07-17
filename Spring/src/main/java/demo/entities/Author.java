@@ -1,13 +1,21 @@
 package demo.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "authors")
 public class Author {
+
   @Id
+  @GeneratedValue
+  @Column(name = "Id")
+  private Long id;
+
+  @Column(nullable = false)
   private String name;
 
   public Author(String name, String description) {
