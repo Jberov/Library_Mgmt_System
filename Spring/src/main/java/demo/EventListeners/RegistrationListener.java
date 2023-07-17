@@ -1,13 +1,14 @@
 package demo.EventListeners;
 
 import demo.dto.UserDTO;
-import demo.entities.User;
 import demo.mappers.UserMapper;
 import demo.services.UserService;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
   @Autowired
