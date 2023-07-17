@@ -29,7 +29,7 @@ public class User {
 	private UserRoles role;
 
 	public User(String username, UserRoles role, String email, String password, String telephoneNumber, String address,
-			String firstName, String midName, String lastName, boolean enabled) {
+			String firstName, String midName, String lastName) {
 		this.username = username;
 		this.role = role;
 		this.email = email;
@@ -39,7 +39,7 @@ public class User {
 		this.firstName = firstName;
 		this.midName = midName;
 		this.lastName = lastName;
-		this.enabled = enabled;
+		this.enabled = false;
 	}
 
 	@Column(unique = true)
