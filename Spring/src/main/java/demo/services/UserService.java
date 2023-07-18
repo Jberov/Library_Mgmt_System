@@ -18,6 +18,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -139,7 +140,9 @@ public class UserService {
 		userDTO.setPassword(encodedPassword);
 	}
 
-	public void createVerificationToken(User user, String token) {
+	@Transactional
+	public void createVerificationToken(User userReceived, String token) {
+		User user = userDAO.findUserByName(userReceived.getUsername());
 		VerificationToken myToken = new VerificationToken(token, user);
 		tokenRepository.save(myToken);
 	}

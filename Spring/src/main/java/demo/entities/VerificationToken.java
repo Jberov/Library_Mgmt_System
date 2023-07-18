@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ public class VerificationToken {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "tokenId")
   private Long id;
 
   private String token;
@@ -27,6 +29,7 @@ public class VerificationToken {
   public VerificationToken(String token, User user) {
     this.token = token;
     this.user = user;
+    this.expiryDate = calculateExpiryDate(EXPIRATION);
   }
 
   public VerificationToken() {
@@ -56,8 +59,8 @@ public class VerificationToken {
     this.expiryDate = expiryDate;
   }
 
-  @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER,cascade= CascadeType.ALL)
-  @JoinColumn(nullable = false, name = "users_id")
+  @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER,cascade= {CascadeType.ALL})
+  @JoinColumn(nullable = false, name = "userId")
   private User user;
 
   private Date expiryDate;

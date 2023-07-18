@@ -51,8 +51,11 @@ public class CreateUserCommand {
     }
     UserDTO registered = service.createUser(userDTO);
     String appUrl = request.getContextPath();
+    System.out.println("1");
     eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered,
         request.getLocale(), appUrl));
+    System.out.println("1");
+
     return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");
   }
 
