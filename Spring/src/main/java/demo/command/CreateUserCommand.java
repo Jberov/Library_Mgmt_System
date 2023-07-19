@@ -59,7 +59,7 @@ public class CreateUserCommand {
     return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");
   }
 
-  @GetMapping("/regitrationConfirm")
+  @GetMapping("/registrationConfirm")
   public ResponseEntity<String> confirmRegistration
       (WebRequest request, Model model, @RequestParam("token") String token) {
 
@@ -67,7 +67,7 @@ public class CreateUserCommand {
 
     VerificationToken verificationToken = service.getVerificationToken(token);
     if (verificationToken == null) {
-      String message = messages.getMessage("auth.message.invalidToken", null, locale);
+      String message = "Wrong token";
       model.addAttribute("message", message);
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("redirect:/badUser.html?lang=" + locale.getLanguage());
     }
@@ -75,9 +75,9 @@ public class CreateUserCommand {
     UserDTO user = mapper.userToDTO(verificationToken.getUser());
     Calendar cal = Calendar.getInstance();
     if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-      String messageValue = messages.getMessage("auth.message.expired", null, locale);
+      String messageValue = "Expired token";
       model.addAttribute("message", messageValue);
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("redirect:/badUser.html?lang=" + locale.getLanguage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Expired token. User is not enabled");
     }
 
     service.enableUser(user.getUsername());

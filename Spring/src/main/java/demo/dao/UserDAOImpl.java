@@ -59,6 +59,7 @@ public class UserDAOImpl {
 		userToUpdate.setFirstName(user.getFirstName());
 		userToUpdate.setMidName(user.getMidName());
 		userToUpdate.setLastName(user.getLastName());
+		userToUpdate.setEnabled(user.isEnabled());
 		userRepository.save(userToUpdate);
 	}
 

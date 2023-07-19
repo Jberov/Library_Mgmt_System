@@ -48,6 +48,7 @@ public class WebSecurityConfig{
 				.antMatchers(HttpMethod.GET, "/api/v1/users/info/*").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.PATCH, "/api/v1/books/rental/*").hasAnyAuthority("USER", "ADMIN")
 				.antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+				.antMatchers(HttpMethod.GET, "/registrationConfirm").permitAll()
 				.antMatchers(HttpMethod.PUT, "/api/v1/users/*").hasAnyAuthority("USER", "ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/v1/users/").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/v1/books/*").hasAuthority("ADMIN")
