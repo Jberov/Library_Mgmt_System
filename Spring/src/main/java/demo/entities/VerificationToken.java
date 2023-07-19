@@ -1,9 +1,13 @@
 package demo.entities;
 
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,7 +63,7 @@ public class VerificationToken {
     this.expiryDate = expiryDate;
   }
 
-  @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER,cascade= {CascadeType.ALL})
+  @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = {PERSIST, MERGE, REFRESH, DETACH})
   @JoinColumn(nullable = false, name = "userId")
   private User user;
 

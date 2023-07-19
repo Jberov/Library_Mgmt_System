@@ -80,6 +80,8 @@ public class CreateUserCommand {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Expired token. User is not enabled");
     }
 
+    service.deleteToken(verificationToken.getToken());
+
     service.enableUser(user.getUsername());
     return ResponseEntity.status(HttpStatus.OK).body("redirect:/login.html?lang=" + request.getLocale().getLanguage());
   }

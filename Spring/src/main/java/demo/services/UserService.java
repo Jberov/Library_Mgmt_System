@@ -11,6 +11,7 @@ import demo.mappers.BookMapper;
 import demo.mappers.UserMapper;
 import demo.repositories.VerificationTokenRepository;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -107,8 +108,13 @@ public class UserService {
 		}
 		return null;
 	}
+
 	public UserDTO deleteUser(String username) throws NoSuchElementException {
 		return userMapper.userToDTO(userDAO.deleteUser(username));
+	}
+
+	public void deleteToken(String token) {
+		userDAO.deleteToken(token);
 	}
 
 	public UserDTO createUser(UserDTO userDTO) throws IllegalArgumentException {
@@ -149,6 +155,13 @@ public class UserService {
 
 	public VerificationToken getVerificationToken(String VerificationToken) {
 		return tokenRepository.findByToken(VerificationToken);
+	}
+
+	@Transactional
+	public void invalidateToken(String VerificationToken){
+		VerificationToken token = tokenRepository.findByToken(VerificationToken);
+		token.setExpiryDate(new Date());
+		tokenRepository.save(token);
 	}
 }
 

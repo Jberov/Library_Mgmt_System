@@ -2,8 +2,10 @@ package demo.dao;
 
 import demo.entities.BooksActivity;
 import demo.entities.User;
+import demo.entities.VerificationToken;
 import demo.repositories.BookRecordsRepository;
 import demo.repositories.UserRepository;
+import demo.repositories.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,14 @@ public class UserDAOImpl {
 	private final UserRepository userRepository;
 	
 	private final BookRecordsRepository bookRecordsRepository;
+
+	private final VerificationTokenRepository tokenRepository;
 	
 	@Autowired
-	public UserDAOImpl(UserRepository userRepository, BookRecordsRepository bookRecordsRepository) {
+	public UserDAOImpl(UserRepository userRepository, BookRecordsRepository bookRecordsRepository, VerificationTokenRepository tokenRepository) {
 		this.userRepository = userRepository;
 		this.bookRecordsRepository = bookRecordsRepository;
+		this.tokenRepository = tokenRepository;
 	}
 	
 	public User findUserByName(String name) {
@@ -63,27 +68,18 @@ public class UserDAOImpl {
 		userRepository.save(userToUpdate);
 	}
 
-	public void enableUser(String username, User user) {
-		User userToUpdate = userRepository.findByUsername(username);
-		userToUpdate.setEmail(user.getEmail());
-		userToUpdate.setUsername(user.getUsername());
-		userToUpdate.setPassword(user.getPassword());
-		userToUpdate.setTelephoneNumber(user.getTelephoneNumber());
-		userToUpdate.setAddress(user.getAddress());
-		userToUpdate.setFirstName(user.getFirstName());
-		userToUpdate.setMidName(user.getMidName());
-		userToUpdate.setLastName(user.getLastName());
-		userRepository.save(userToUpdate);
-	}
-	
 	public User deleteUser(String username){
 		User user = userRepository.findByUsername(username);
 		if(user != null){
 			cleanUserRecords(username);
-			userRepository.delete(userRepository.findByUsername(username));
 			return user;
 		}
 		throw new NoSuchElementException();
+	}
+
+	public void deleteToken(String token) {
+		VerificationToken token1 = tokenRepository.findByToken(token);
+		tokenRepository.delete(token1);
 	}
 	
 	private void cleanUserRecords(String username){
