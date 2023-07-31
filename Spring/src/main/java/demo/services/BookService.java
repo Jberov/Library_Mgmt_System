@@ -36,11 +36,11 @@ public class BookService {
 		return bookMapper.bookToDTO(booksDAO.addBook(bookMapper.bookToEntity(bookDTO)));
 	}
 	
-	public BookDTO deleteBook(String isbn) {
-		if ((booksDAO.getBook(isbn) == null) || (bookRecordsDAO.userHistoryExists(isbn))) {
+	public BookDTO deleteBook(String name) {
+		if ((booksDAO.getBookByName(name) == null) || (bookRecordsDAO.userHistoryExists(name))) {
 			return null;
 		}
-		return bookMapper.bookToDTO(booksDAO.deleteBook(isbn));
+		return bookMapper.bookToDTO(booksDAO.deleteBook(name));
 	}
 	
 	public BookDTO getBookById(String isbn) {

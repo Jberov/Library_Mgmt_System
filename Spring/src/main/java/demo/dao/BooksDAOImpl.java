@@ -35,9 +35,9 @@ public class BooksDAOImpl {
 		return bookRepository.save(book);
 	}
 	
-	public Book deleteBook(String isbn) {
-		Book book = getBook(isbn);
-		cleanBookRecords(isbn);
+	public Book deleteBook(String name) {
+		Book book = getBookByName(name);
+		cleanBookRecords(name);
 		bookRepository.delete(book);
 		return book;
 	}

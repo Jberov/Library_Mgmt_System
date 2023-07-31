@@ -21,9 +21,11 @@ $(document).ready(function(){
             },beforeSend: function(oJqXhr) {
                 oJqXhr.setRequestHeader('Authorization', getBasicAuthString(username, password));
             },
+            async: true,
             success: function(result) {
                 $("#errorMsg").hide();
-                console.log("Logged in");
+                window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/categories-template.html");
+
                 
                 // Do something with the result
             },
