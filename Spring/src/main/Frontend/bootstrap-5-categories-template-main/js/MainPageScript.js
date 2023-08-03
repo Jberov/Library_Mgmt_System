@@ -101,7 +101,8 @@ async function loadBookList(){
     if (bookResponse != null) {
         let bookList = bookResponse.books;
         bookList.forEach(element => {
-            $("#bookSection").append('<div class="row bookList">' +
+            $("#bookSection").append(
+                '<div class="row bookList">' +
             '            <div class="col-md-4 mb-4">' +
             '              <div class="bg-image hover-overlay shadow-1-strong rounded ripple" data-mdb-ripple-color="light">' +
             '                <img src="./img/Open-book-bg.png" class="img-fluid" />' +
@@ -118,13 +119,14 @@ async function loadBookList(){
             '              <button type="button" class="btn btn-success UpdateBookBtn">Промени</button>' +
             '              <button type="button" class="btn btn-danger DeleteBookBtn">Премахни</button>' +
             '            </div>' +
-            '          </div>')
+            '          </div>'
+            )
         });
     }
 }
 
-$(document).ready(function(){
-    loadBookList();
+$(document).ready(async function(){
+   await loadBookList();
 
     $.ajax({
         url: 'http://localhost:8080/login',
