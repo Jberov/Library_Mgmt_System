@@ -22,7 +22,7 @@ public class BookMapper {
 		bookDTO.setAuthor(book.getAuthor().getName());
 		bookDTO.setAuthorDescription(book.getAuthor().getDescription());
 		bookDTO.setName(book.getName());
-		bookDTO.setAuthorDescription(book.getDescription());
+		bookDTO.setDescription(book.getDescription());
 		bookDTO.setGenre(book.getGenre().getGenre());
 		bookDTO.setGenreDescription(book.getGenre().getDescription());
 		return bookDTO;
@@ -35,7 +35,7 @@ public class BookMapper {
 		System.out.println(bookDTO.getName());
 		Genre genre = new Genre(bookDTO.getGenre(), bookDTO.getGenreDescription());
 		Author author = new Author(bookDTO.getAuthor(), bookDTO.getAuthorDescription());
-		return new Book(bookDTO.getIsbn(),bookDTO.getCount(),author,bookDTO.getName(),bookDTO.getAuthorDescription(),
+		return new Book(bookDTO.getIsbn(),bookDTO.getCount(),author,bookDTO.getName(),bookDTO.getDescription(),
 				genre);
 	}
 	

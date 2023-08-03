@@ -32,7 +32,7 @@ public class BookService {
 			}
 			return bookMapper.bookToDTO(booksDAO.increaseCount(bookDTO.getIsbn(), bookDTO.getCount()));
 		}
-		System.out.println("Here");
+
 		return bookMapper.bookToDTO(booksDAO.addBook(bookMapper.bookToEntity(bookDTO)));
 	}
 	

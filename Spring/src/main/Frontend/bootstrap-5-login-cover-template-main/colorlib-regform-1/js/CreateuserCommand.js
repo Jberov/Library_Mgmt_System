@@ -67,7 +67,6 @@ $(document).ready(function(){
                alert(result);
                console.log(result.toString());
                window.location.replace("http://localhost/library-frontend/bootstrap-5-login-cover-template-main/index.html");
-                // Do something with the result
             },
             error: function(result) {
                 if(result.status == 400) {
