@@ -44,7 +44,7 @@
               <a class="nav-link" href="#intro">Библиотека</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="AddBookPage.html" rel="nofollow"
+              <a class="nav-link" href="#" rel="nofollow"
                 target="_blank">Добави книга</a>
             </li>
             <li class="nav-item">
@@ -90,17 +90,43 @@
   <!--Main layout-->
   <main class="my-5">
     <div class="container">
-      
-      <!--Grid row-->
-      <div class="row">
-        <!--Grid column-->
-        <div class="col-md-9 mb-4">
-          <!--Section: Content-->
-          <section id="bookSection">
-          </section>
-          <!--Section: Content-->
+        <div method="POST" id="allInput">
+            <div class="input-group">
+                <p class="errorMsg font-robo" id="bookNameError">Попълнете полето</p>
+                <input class="input--style-1" type="text" placeholder="Име на книгата" id="bookName">
+            </div>
+            <div class="input-group">
+                <p class="errorMsg" id="isbnError">Попълнете полето</p>
+                <input class="input--style-1" type="text" placeholder="Isbn номер" id="isbn">
+            </div>
+            <div class="input-group">
+                <p class="errorMsg font-robo" id="countError">Попълнете полето</p>
+                <input class="input--style-1" type="text" placeholder="Брой книги" id="count">
+            </div>
+            <div class="input-group">
+                <p class="errorMsg font-robo" id="authorError">Попълнете полето</p>
+                <input class="input--style-1" type="text" placeholder="Автор" id="author">
+            </div>
+            <div class="input-group">
+                <p class="errorMsg font-robo" id="authorDescError">Попълнете полето</p>
+                <textarea class="form-control" placeholder="Описание на автора" id="authorDesc" rows="3"></textarea>
+            </div>
+            <div class="input-group">
+                <p class="errorMsg font-robo" id="genreError">Попълнете полето</p>
+                <input class="input--style-1" type="text" placeholder="Жанр" id="Genre">
+            </div>
+            <div class="input-group">
+                <p class="errorMsg font-robo" id="genreDescError">Попълнете полето</p>
+                <textarea class="form-control" placeholder="Описание на жанр" id="GenreDesc" rows="3"></textarea>
+            </div>
+            <div class="input-group">
+                <p class="errorMsg font-robo" id="descError">Попълнете полето</p>
+                <textarea class="form-control" placeholder="Описание на жанр" id="description" rows="3"></textarea>
+            </div>
+            <div class="p-t-20">
+                <button class="btn btn--radius btn--green" type="submit">Добави книга</button>
+            </div>
         </div>
-      </div>
     </div>
   </main>
   <!--Main layout-->
@@ -118,6 +144,6 @@
     <!-- MDB -->
     <script type="text/javascript" src="js/mdb.min.js"></script>
     <!-- Custom scripts -->
-    <script type="text/javascript" src="js/MainPageScript.js"></script>
+    <script type="text/javascript" src="js/AddBookScript.js"></script>
 </body>
 </html>
