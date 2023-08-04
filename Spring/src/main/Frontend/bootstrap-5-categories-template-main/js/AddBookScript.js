@@ -15,8 +15,8 @@ function createJSONPayload() {
     return JSON.stringify(jsonObj);
 }
 
-$(document).ready(async function(){
-
+$(document).ready(function(){
+    $(".errorMsg").hide();
     $("button").click(function(){
         $.ajax({
             url: 'http://localhost:8080/api/v1/books',
@@ -28,7 +28,7 @@ $(document).ready(async function(){
             success: function(result) {
                alert(result.message);
             },
-            error: function(result) {
+            error: function() {
                 alert("Грешка при операцията")
             }
         });

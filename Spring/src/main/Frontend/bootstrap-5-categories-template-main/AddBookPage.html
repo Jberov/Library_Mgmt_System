@@ -13,6 +13,18 @@
     <!-- Custom styles -->
     <link rel="stylesheet" href="css/style.css" />
 
+    <link href="../bootstrap-5-login-cover-template-main/colorlib-regform-1/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="../bootstrap-5-login-cover-template-main/colorlib-regform-1/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="../bootstrap-5-login-cover-template-main/colorlib-regform-1/vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="../bootstrap-5-login-cover-template-main/colorlib-regform-1/vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="../bootstrap-5-login-cover-template-main/colorlib-regform-1/css/main.css" rel="stylesheet" media="all">
+
     <!-- JQuery lib-->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
@@ -90,6 +102,8 @@
   <!--Main layout-->
   <main class="my-5">
     <div class="container">
+      <div class="card-body">
+        <h2 class="title">Добавяне на книга</h2>
         <div method="POST" id="allInput">
             <div class="input-group">
                 <p class="errorMsg font-robo" id="bookNameError">Попълнете полето</p>
@@ -107,19 +121,21 @@
                 <p class="errorMsg font-robo" id="authorError">Попълнете полето</p>
                 <input class="input--style-1" type="text" placeholder="Автор" id="author">
             </div>
-            <div class="input-group">
+            <div>
                 <p class="errorMsg font-robo" id="authorDescError">Попълнете полето</p>
                 <textarea class="form-control" placeholder="Описание на автора" id="authorDesc" rows="3"></textarea>
             </div>
+            <br>
             <div class="input-group">
                 <p class="errorMsg font-robo" id="genreError">Попълнете полето</p>
                 <input class="input--style-1" type="text" placeholder="Жанр" id="Genre">
             </div>
-            <div class="input-group">
+            <div>
                 <p class="errorMsg font-robo" id="genreDescError">Попълнете полето</p>
                 <textarea class="form-control" placeholder="Описание на жанр" id="GenreDesc" rows="3"></textarea>
             </div>
-            <div class="input-group">
+            <br>
+            <div>
                 <p class="errorMsg font-robo" id="descError">Попълнете полето</p>
                 <textarea class="form-control" placeholder="Описание на жанр" id="description" rows="3"></textarea>
             </div>
@@ -127,6 +143,7 @@
                 <button class="btn btn--radius btn--green" type="submit">Добави книга</button>
             </div>
         </div>
+      </div>
     </div>
   </main>
   <!--Main layout-->
@@ -145,5 +162,13 @@
     <script type="text/javascript" src="js/mdb.min.js"></script>
     <!-- Custom scripts -->
     <script type="text/javascript" src="js/AddBookScript.js"></script>
+
+    <script src="../bootstrap-5-login-cover-template-main/colorlib-regform-1/vendor/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="../bootstrap-5-login-cover-template-main/colorlib-regform-1/vendor/select2/select2.min.js"></script>
+    <script src="../bootstrap-5-login-cover-template-main/colorlib-regform-1/vendor/datepicker/moment.min.js"></script>
+    <script src="../bootstrap-5-login-cover-template-main/colorlib-regform-1/vendor/datepicker/daterangepicker.js"></script>
+    <!-- Main JS-->
+    <script src="../bootstrap-5-login-cover-template-main/colorlib-regform-1/js/global.js"></script>
 </body>
 </html>
