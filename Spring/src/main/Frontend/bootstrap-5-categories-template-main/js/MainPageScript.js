@@ -118,7 +118,6 @@ async function loadBookList(){
             '              <p>' + element.description +
             '              </p>' +
             '              <button type="button" class="btn btn-primary LeaseBookBtn">Заеми</button>' +
-            '              <button type="button" class="btn btn-success UpdateBookBtn">Промени</button>' +
             '              <button type="button" class="btn btn-danger DeleteBookBtn">Премахни</button>' +
             '            </div>' +
             '          </div>'
@@ -155,9 +154,7 @@ async function getBookRequest(searchable) {
                 alert("Грешен критерий за търсене");
                 return false;
             }
-        
-            console.log("Status for search is " + response.status);
-        
+                
             if (response.status == 200) {
                 return true;
             }
@@ -201,7 +198,6 @@ $(document).ready(async function(){
                     }   
                 });
 
-            $('.UpdateBookBtn').hide();
             $('.DeleteBookBtn').hide();
         }
         }
