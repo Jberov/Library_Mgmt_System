@@ -4,7 +4,8 @@ async function fetchBooks(){
         type: 'GET',
         xhrFields: {
             withCredentials: true            
-        }
+        },
+        async:true
     });
 }
 
