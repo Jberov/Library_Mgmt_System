@@ -108,7 +108,7 @@ async function loadBookList(){
             '            <div class="col-md-4 mb-4">' +
             '              <div class="bg-image hover-overlay shadow-1-strong rounded ripple" data-mdb-ripple-color="light">' +
             '                <img src="./img/Open-book-bg.png" class="img-fluid" />' +
-            '                <a href="BookInfo.html?name=' + element.name + '">' +
+            '                <a href="BookInfo.html?book=' + element.name + '">' +
             '                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>' +
             '                </a>' +
             '              </div>' +
@@ -125,6 +125,56 @@ async function loadBookList(){
             )
         });
     }
+}
+
+function getHeader(parameter){
+    const regex = /([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})/;
+
+    if (regex.test(parameter)) {
+        return "Isbn";
+    }
+
+    return "Name";
+}
+
+function sendRequest(searchable){
+    let response = $.ajax({
+        url: 'http://localhost:8080/api/v1/books/' + searchable,
+        type: 'GET',
+        async: true,
+        contentType: 'application/json; charset=utf-8',
+        xhrFields: {
+            withCredentials: true            
+        },
+        crossDomain:true,
+        beforeSend: function(oJqXhr) {
+            oJqXhr.setRequestHeader('Criteria', getHeader(searchable));
+        }
+    });
+
+    if(response.status == 400){
+        alert("Грешен критерий за търсене");
+        return false;
+    }
+
+    if(response.status == 200) {
+        return true;
+    }
+    
+    return false;
+}
+
+function findBook(){
+    const searchable = $("#searchValue").text();
+
+    console.log("Search " + searchable);
+
+    if (sendRequest(searchable)) { 
+        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
+    } else {
+        alert("Книгата не е намерена");
+    }
+    
 }
 
 $(document).ready(async function(){
@@ -154,11 +204,14 @@ $(document).ready(async function(){
     });
 
     $(document).on("click",".LeaseBookBtn",function(event){
-    
        leaseBook(event);
     });
 
     $(document).on("click",".DeleteBookBtn",function(event){
         deleteBook(event);
+    });
+
+    $("#search-button").click(function(){
+        findBook();
     });
 });

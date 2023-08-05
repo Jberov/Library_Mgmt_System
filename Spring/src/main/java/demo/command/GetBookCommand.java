@@ -1,5 +1,6 @@
 package demo.command;
 
+import demo.dto.BookDTO;
 import demo.services.BookService;
 import java.util.InputMismatchException;
 import javax.validation.Valid;
@@ -35,20 +36,24 @@ public class GetBookCommand {
 		
 		try {
 
-			if(criteria.equals("Name")){
-				if (bookService.getBookByName(isbn) != null) {
-					result.put("book", bookService.getBookByName(isbn));
-					return ResponseEntity.status(HttpStatus.OK).body(result);
-				}
+			BookDTO book;
+			if (criteria.equals("Name")) {
+				book = bookService.getBookByName(isbn);
+			} else if (criteria.equals("Isbn")) {
+				book = bookService.getBookById(isbn);
+			} else {
+				result.put("error", "Please set header for criteria search Name or Isbn");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 			}
 
-			if (bookService.getBookById(isbn) != null) {
-				result.put("book", bookService.getBookById(isbn));
-				return ResponseEntity.status(HttpStatus.OK).body(result);
+			if (book == null){
+				result.put("error", "No such book found");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
-			
-			result.put("error", "No such book found");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+
+			result.put("book", book);
+			return ResponseEntity.status(HttpStatus.OK).body(result);
+
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);

@@ -1,9 +1,19 @@
 function getURLParam(){
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("name");
+    return urlParams.get("book");
 }
 
-async function sendRequest(){
+function getHeader(){
+    let parameter = getURLParam(), regex = /([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})/;
+
+    if (regex.test(parameter)) {
+        return "Isbn";
+    }
+
+    return "Name";
+}
+
+async function sendFetchRequest(){
     let response = await $.ajax({
         url: 'http://localhost:8080/api/v1/books/' + getURLParam(),
         type: 'GET',
@@ -14,17 +24,15 @@ async function sendRequest(){
         },
         crossDomain:true,
         beforeSend: function(oJqXhr) {
-            oJqXhr.setRequestHeader('Criteria', 'Name');
+            oJqXhr.setRequestHeader('Criteria', getHeader());
         }
     });
 
-    if(response.status == 404){
-        alert("Няма такава книга");
+    if(response.status == 400){
+        alert("Грешен критерий за търсене");
         return null;
     }
-
-    console.log("Response is " + response.book)
-
+    
     return response.book;
 }
 
@@ -51,7 +59,7 @@ $(document).ready(async function(){
         }
     });
 
-    let book = await sendRequest();
+    let book = await sendFetchRequest();
 
     if (book != null) {
         console.log("Reporting here for HTML init");
