@@ -108,7 +108,7 @@ async function loadBookList(){
             '            <div class="col-md-4 mb-4">' +
             '              <div class="bg-image hover-overlay shadow-1-strong rounded ripple" data-mdb-ripple-color="light">' +
             '                <img src="./img/Open-book-bg.png" class="img-fluid" />' +
-            '                <a href="BookInfo.html/' + element.name + '">' +
+            '                <a href="BookInfo.html?name=' + element.name + '">' +
             '                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>' +
             '                </a>' +
             '              </div>' +
