@@ -47,7 +47,6 @@ function getHeader(parameter){
 }
 
 async function getBookRequest(searchable) {
-    console.log(getHeader(searchable));
     return await $.ajax({
         url: 'http://localhost:8080/api/v1/books/' + searchable,
         type: 'GET',
@@ -81,6 +80,7 @@ async function getBookResult(searchable){
 async function findBook(){
     const searchable = $("#searchValue").val();
     if (await getBookResult(searchable)) { 
+        alert("Намерена книга");
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
     } else {
         alert("Книгата не е намерена");
@@ -90,10 +90,6 @@ async function findBook(){
 
 $(document).ready(async function(){
     $("#timestamp p").text(new Date().toLocaleDateString());
-    
-    $("#search-button").click(async function(){
-        await findBook();
-    });
 
     $.ajax({
         url: 'http://localhost:8080/login',
@@ -128,4 +124,8 @@ $(document).ready(async function(){
         $("#genreDesc").text(book.genreDescription.toString());
         $("#count").text(book.count.toString());
     }
+
+    $("#search-button").click(async function(){
+        await findBook();
+    });
 });

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,16 +29,22 @@ public class UpdateUserCommand {
 
 
   @PutMapping(value = "/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-  public ResponseEntity<String> updateUser(@PathVariable("username") String username ,@RequestBody @Valid UserDTO userDTO){
+  public ResponseEntity<String> updateUser(@PathVariable(value = "username", required = false) String username ,@RequestBody @Valid UserDTO userDTO, Authentication authentication){
     ObjectMapper mapper = new ObjectMapper();
-    JsonNode node = mapper.convertValue(service.updateUser(username, userDTO), JsonNode.class);
-    return ResponseEntity.status(HttpStatus.CREATED).body("User successfully updated\n" + node.toPrettyString());
+
+    JsonNode node;
+    if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN") && username != null)) {
+      node = mapper.convertValue(service.updateUser(username, userDTO), JsonNode.class);
+    } else {
+      node = mapper.convertValue(service.updateUser(authentication.getName(), userDTO), JsonNode.class);
+    }
+    return ResponseEntity.status(HttpStatus.OK).body("User successfully updated\n" + node.toPrettyString());
   }
 
-  @ExceptionHandler(IllegalArgumentException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(NullPointerException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   @ResponseBody
   public ResponseEntity<String> userAlreadyExists(IllegalArgumentException ex) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such user exists!");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such user exists!");
   }
 }
