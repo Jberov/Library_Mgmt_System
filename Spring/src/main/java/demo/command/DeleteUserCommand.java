@@ -32,6 +32,9 @@ public class DeleteUserCommand {
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
+		}catch (IllegalArgumentException illegalArgumentException) {
+			result.put("error", illegalArgumentException.getLocalizedMessage());
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
 		} catch (Exception e) {
 			result.put("error", "Error, service is currently unavailable");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);

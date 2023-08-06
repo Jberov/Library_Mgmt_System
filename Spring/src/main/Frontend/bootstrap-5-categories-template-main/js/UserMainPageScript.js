@@ -11,7 +11,6 @@ async function fetchUsers(){
 
 async function deleteUserRequest(event){
     let urlString = 'http://localhost:8080/api/v1/users/' + $(event.target).siblings("h5").text();
-    console.log(urlString);
     return books = await $.ajax({
         url: urlString,
         type: 'DELETE',
@@ -28,15 +27,21 @@ async function deleteUser(event){
         case 404:
             alert("Няма такъв потребител");
             return false;
+        case 409:
+            alert(userResponse.error);
+            return false;
         case 500:
             alert("Проблем в системата");
-            break; 
+            return false;
         case 502:
             alert("Няма връзка със системата");
-            break;        
+            return false;       
     };
-    location.reload();
+
     alert("Потребителят е изтрит");
+    location.reload();
+    console.log("Nqma potrebitel we`e");
+
 }
 
 async function loadUserList(){
@@ -44,7 +49,7 @@ async function loadUserList(){
     if (userResponse != null) {
         let userList = userResponse;
         userList.forEach(user => {
-            $("#bookSection").append(
+            $("#userSection").append(
                 '<div class="row bookList">' +
             '            <div class="col-md-4 mb-4">' +
             '              <div class="bg-image hover-overlay shadow-1-strong rounded ripple" data-mdb-ripple-color="light">' +
@@ -58,7 +63,7 @@ async function loadUserList(){
             '              <h5 class="UsernameHeading">' + user.username + '</h5>' +
             '              <p> Email: ' + user.email +
             '              </p>' +
-            '              <button type="button" class="btn btn-primary ChangeUserBtn">Заеми</button>' +
+            '              <button type="button" class="btn btn-primary ChangeUserBtn">Промени</button>' +
             '              <button type="button" class="btn btn-danger DeleteUserBtn">Премахни</button>' +
             '            </div>' +
             '          </div>'
@@ -165,7 +170,6 @@ async function findUser(event){
 
 $(document).ready(async function(){
    await loadUserList();
-
     $(document).on("click",".ChangeUserBtn",function(){
         const searchable = $("#searchValue").val();
        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable)

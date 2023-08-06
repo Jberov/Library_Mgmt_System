@@ -3,6 +3,7 @@ package demo.dao;
 import demo.entities.BooksActivity;
 import demo.entities.User;
 import demo.entities.VerificationToken;
+import demo.enums.Status;
 import demo.repositories.BookRecordsRepository;
 import demo.repositories.UserRepository;
 import demo.repositories.VerificationTokenRepository;
@@ -70,8 +71,9 @@ public class UserDAOImpl {
 
 	public User deleteUser(String username){
 		User user = userRepository.findByUsername(username);
-		if(user != null){
+		if (user != null){
 			cleanUserRecords(username);
+			userRepository.delete(user);
 			return user;
 		}
 		throw new NoSuchElementException();
@@ -85,6 +87,9 @@ public class UserDAOImpl {
 	private void cleanUserRecords(String username){
 		List<BooksActivity> records = bookRecordsRepository.findByUserId(userRepository.findByUsername(username).getId());
 		for(BooksActivity record : records){
+			if(record.getStatus().equals(Status.TAKEN)) {
+				throw new IllegalArgumentException("Потребителят не е върнал всички книги");
+			}
 			bookRecordsRepository.delete(record);
 		}
 	}
