@@ -40,8 +40,6 @@ async function deleteUser(event){
 
     alert("Потребителят е изтрит");
     location.reload();
-    console.log("Nqma potrebitel we`e");
-
 }
 
 async function loadUserList(){
