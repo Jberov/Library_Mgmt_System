@@ -1,10 +1,8 @@
-function validateInput() {
+async function validateInput() {
     $(".errorMsg").hide();
         let textInput, flag = false;
-        console.log($("#allInput").children(".input-group").length);
-        $("#allInput").children(".input-group").each(function(){
+        $("#allInput").children(".stringInput").each(function(){
             textInput = $(this).find("input").val();
-            console.log(textInput.toString());
             if( textInput == "" || textInput == undefined ) {
                 $(this).find(".errorMsg").show();
                 flag = true;
@@ -20,7 +18,7 @@ function validateInput() {
         }
 
         textInput = $("#password").val();
-        let regexPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+        let regexPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
         if (!regexPattern.test(textInput)) {
             $("#passwordError").text("Паролата трябва да съдържа поне една цифра, една главна и малка буква и да е с дължина от поне 8 символа");
@@ -29,7 +27,8 @@ function validateInput() {
         }
 
         textInput = $("#email").val();
-        regexPattern = /@[a-z]*.[a-z]{2,4}$/
+        regexPattern = new RegExp('@');
+
         if (!regexPattern.test(textInput)) {
             $("#emailError").text("Невалиден имейл");
             $("#emailError").show();
@@ -54,7 +53,7 @@ function validateInput() {
     return true;
 }
 
-function determineOperation() {
+async function determineOperation() {
     const urlParams = new URLSearchParams(window.location.search);
     if ( urlParams.get("user") != null) {
         return 'PUT';
@@ -69,6 +68,8 @@ function getParam(){
 }
 
 async function sendChangeRequest(method) {
+    console.log("Here request");
+
     return $.ajax({
         url: 'http://localhost:8080/api/v1/users',
         type: method,
@@ -81,7 +82,7 @@ async function sendChangeRequest(method) {
         },
         success: function(result) {
            alert(result);
-           console.log(result.message.toString());
+           console.log("Успешно създаден потребител");
         },
         error: function(result) {
             if (result.status == 400) {
@@ -136,16 +137,25 @@ async function findUser(){
 
 $(document).ready(async function(){
     $(".errorMsg").hide();
-    let method = determineOperation();
+    let method = await determineOperation();
+
+    console.log("Here");
 
     if (method == 'PUT') {
        $("#register").val("Промени потребител");
        await visualizeInfo();
     }
+    console.log("Here");
 
     $("#register").click(async function(){
-        if (validateInput()) {
-            await sendChangeRequest(method);
+        console.log("Here");
+
+        if (await validateInput()) {
+            console.log("Here");
+
+            sendChangeRequest(method);
+            console.log("Here");
+
         } 
     });
 
@@ -222,9 +232,8 @@ function createJSONPayload() {
     jsonObj.midName = names[1];
     jsonObj.lastName = names[2];
 
-    if ($('select').find(":selected").val() != null) {
-        console.log($('select').find(":selected").val());
-        jsonObj.role = $('select').find(":selected").val();
-    }
+    console.log("Select is " + $('select').find(":selected").val());
+    jsonObj.role = $('select').find(":selected").val();
+    
     return JSON.stringify(jsonObj);
 }

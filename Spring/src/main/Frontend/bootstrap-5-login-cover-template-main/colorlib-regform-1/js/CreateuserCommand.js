@@ -29,7 +29,7 @@ function validateInput() {
         }
 
         textInput = $("#email").val();
-        regexPattern = /@[a-z]*.[a-z]{2,4}$/
+        regexPattern = /@/;
         if (!regexPattern.test(textInput)) {
             $("#emailError").text("Невалиден имейл");
             $("#emailError").show();
@@ -54,14 +54,13 @@ function validateInput() {
     return true;
 }
 
-async function sendCreateRequest() {
+function sendCreateRequest() {
     return $.ajax({
         url: 'http://localhost:8080/api/v1/users',
         type: "POST",
         data: createJSONPayload(),
         contentType: 'application/json; charset=utf-8',
         dataType: 'text',
-        async: true,
         success: function(result) {
            alert(result);
            console.log("Създаден потребител");
@@ -81,12 +80,12 @@ async function sendCreateRequest() {
     });
 }
 
-$(document).ready(async function(){
+$(document).ready(function(){
     $(".errorMsg").hide();
 
-    $("button").click(async function(){
+    $("button").click(function(){
         if (validateInput()) {
-            await sendCreateRequest();
+            sendCreateRequest();
         } 
     });
 });

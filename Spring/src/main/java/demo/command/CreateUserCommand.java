@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +32,13 @@ public class CreateUserCommand {
   private final UserService service;
   private final ApplicationEventPublisher eventPublisher;
   private final UserMapper mapper;
-  private final MessageSource messages;
 
   @Autowired
-  public CreateUserCommand(UserService service, ApplicationEventPublisher eventPublisher, UserMapper mapper, MessageSource messages) {
+  public CreateUserCommand(UserService service, ApplicationEventPublisher eventPublisher, UserMapper mapper) {
     this.service = service;
     this.eventPublisher = eventPublisher;
     this.mapper = mapper;
-    this.messages = messages;
   }
-
 
   @PostMapping(value = "/api/v1/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userDTO, HttpServletRequest request){
@@ -51,10 +47,9 @@ public class CreateUserCommand {
     }
     UserDTO registered = service.createUser(userDTO);
     String appUrl = request.getContextPath();
-    System.out.println("1");
+
     eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered,
         request.getLocale(), appUrl));
-    System.out.println("1");
 
     return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");
   }
