@@ -24,7 +24,7 @@ $(document).ready(function(){
             async: true,
             success: function(result) {
                 $("#errorMsg").hide();
-                window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/categories-template.html");
+                window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/MainPage.html");
 
                 
                 // Do something with the result

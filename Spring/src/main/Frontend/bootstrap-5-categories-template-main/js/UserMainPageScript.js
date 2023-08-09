@@ -168,9 +168,9 @@ async function findUser(event){
 
 $(document).ready(async function(){
    await loadUserList();
-    $(document).on("click",".ChangeUserBtn",function(){
-        const searchable = $("#searchValue").val();
-       window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable)
+    $(document).on("click",".ChangeUserBtn",function(event){
+       const searchable = $(event.target).siblings("h5").text();
+       window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/AddUserPageAdmin.html?user=" + searchable)
     });
 
     $(document).on("click",".DeleteUserBtn",function(event){

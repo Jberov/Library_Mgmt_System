@@ -41,5 +41,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     String message = "You registered successfully. We will send you a confirmation message to your email account." + "\r\n" + "http://localhost:8080" + confirmationUrl;
 
     mailService.sendMail(recipientAddress, subject, message);
+
+    System.out.println("Mail sent");
   }
 }
