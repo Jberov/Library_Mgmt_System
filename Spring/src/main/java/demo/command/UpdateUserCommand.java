@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import demo.dto.UserDTO;
 import demo.services.UserService;
 import javax.validation.Valid;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,14 +32,23 @@ public class UpdateUserCommand {
   @PutMapping(value = "/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<String> updateUser(@PathVariable(value = "username", required = false) String username ,@RequestBody @Valid UserDTO userDTO, Authentication authentication){
     ObjectMapper mapper = new ObjectMapper();
-
+    JSONObject result = new JSONObject();
     JsonNode node;
     if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN") && username != null)) {
       node = mapper.convertValue(service.updateUser(username, userDTO), JsonNode.class);
     } else {
+      UserDTO persistedUser = service.getUser(userDTO.getUsername());
+
+      if (!userDTO.getRole().equals(persistedUser.getRole()) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN")))
+      {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Потребителят не може да си смени ролята");
+      }
+
       node = mapper.convertValue(service.updateUser(authentication.getName(), userDTO), JsonNode.class);
     }
-    return ResponseEntity.status(HttpStatus.OK).body("User successfully updated\n" + node.toPrettyString());
+    result.put("message", "User successfully updated");
+    result.put("user", node);
+    return ResponseEntity.status(HttpStatus.OK).body("User successfully updated\n" + result);
   }
 
   @ExceptionHandler(NullPointerException.class)
