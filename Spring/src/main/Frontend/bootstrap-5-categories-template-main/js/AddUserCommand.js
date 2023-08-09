@@ -68,10 +68,8 @@ function getParam(){
 }
 
 async function sendChangeRequest(method) {
-    console.log("Here request");
-
     return $.ajax({
-        url: 'http://localhost:8080/api/v1/users',
+        url: 'http://localhost:8080/api/v1/users/' + getParam(),
         type: method,
         data: createJSONPayload(),
         contentType: 'application/json; charset=utf-8',
@@ -82,45 +80,41 @@ async function sendChangeRequest(method) {
         },
         success: function(result) {
            alert(result);
-           console.log("Успешно създаден потребител");
         },
         error: function(result) {
             if (result.status == 400) {
-                console.log(result);
-                alert("Телефон, мейл са вече използвами или нямате права да смените ролята си.");
+                alert("Нямате права да смените ролята си.");
             } else if (result.status == 403){
                 alert("Нямате права");
             } else {
                 alert("Грешка в системата");
-                console.log(result);
             }
         }
     });
 }
 
 async function visualizeInfo(){
-    let user = await fetchUser();
+    const userResponse = await fetchUser(getParam());
 
-    $("#username").val(user.username);
-    $("#password").val(user.password);
-    $("#email").val(user.email);
-    $("#telephone").val(user.telephoneNumber);
-    $("#address").val(user.address);
-    $("select").val(user.role).trigger("chosen:updated");
-    let name = user.firstName + " " + user.midName + " " + user.lastName;
+    $("#username").val(userResponse.user.username);
+    $("#password").val(userResponse.user.password);
+    $("#email").val(userResponse.user.email);
+    $("#telephone").val(userResponse.user.telephoneNumber);
+    $("#address").val(userResponse.user.address);
+    $("select").val(userResponse.user.role).trigger("chosen:updated");
+    let name = userResponse.user.firstName + " " + userResponse.user.midName + " " + userResponse.user.lastName;
     $("#names").val(name);
 }
 
-async function fetchUser(name=getParam()) {
+async function fetchUser(name) {
      return await $.ajax({
-        url: 'http://localhost:8080/api/v1/users/' + name,
+        url: 'http://localhost:8080/api/v1/users/info/single/' + name,
         type: 'GET',
-        data: createJSONPayload(),
         contentType: 'application/json; charset=utf-8',
-        dataType: 'text',
+        dataType: 'json',
         async: true,
-        error: function(result) {
-            alert(result.toString());
+        xhrFields: {
+            withCredentials: true            
         }
     });
 }
@@ -139,23 +133,15 @@ $(document).ready(async function(){
     $(".errorMsg").hide();
     let method = await determineOperation();
 
-    console.log("Here");
-
     if (method == 'PUT') {
-       $("#register").val("Промени потребител");
-       await visualizeInfo();
+       $("#register").text("Промени потребител");
+        await visualizeInfo();
     }
-    console.log("Here");
 
     $("#register").click(async function(){
-        console.log("Here");
 
-        if (await validateInput()) {
-            console.log("Here");
-
+        if (validateInput()) {
             sendChangeRequest(method);
-            console.log("Here");
-
         } 
     });
 
@@ -226,13 +212,10 @@ function createJSONPayload() {
     jsonObj.email = $("#email").val();
     jsonObj.telephoneNumber = $("#telephone").val();
     jsonObj.address = $("#address").val();
-    jsonObj.role = "USER";
     let names = $("#names").val().split(" ");
     jsonObj.firstName = names[0];
     jsonObj.midName = names[1];
     jsonObj.lastName = names[2];
-
-    console.log("Select is " + $('select').find(":selected").val());
     jsonObj.role = $('select').find(":selected").val();
     
     return JSON.stringify(jsonObj);

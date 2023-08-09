@@ -57,7 +57,7 @@ async function loadUserList(){
             '                </a>' +
             '              </div>' +
             '            </div>' +
-            '            <div class="col-md-8 mb-4 singleBook">' +
+            '            <div class="col-md-8 mb-4 singleUser">' +
             '              <h5 class="UsernameHeading">' + user.username + '</h5>' +
             '              <p> Email: ' + user.email +
             '              </p>' +
@@ -111,7 +111,7 @@ async function getBookRequest(searchable) {
 async function getUserRequest(searchable) {
     console.log(getHeader(searchable));
     return await $.ajax({
-        url: 'http://localhost:8080/api/v1/users/info/' + searchable,
+        url: 'http://localhost:8080/api/v1/users/info/single/' + searchable,
         type: 'GET',
         contentType: 'application/json; charset=utf-8',
         xhrFields: {
@@ -170,7 +170,7 @@ $(document).ready(async function(){
    await loadUserList();
     $(document).on("click",".ChangeUserBtn",function(event){
        const searchable = $(event.target).siblings("h5").text();
-       window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/AddUserPageAdmin.html?user=" + searchable)
+       window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/AddUserPageAdmin.html?user=" + searchable);
     });
 
     $(document).on("click",".DeleteUserBtn",function(event){

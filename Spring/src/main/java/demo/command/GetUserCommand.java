@@ -33,12 +33,18 @@ public class GetUserCommand {
 		this.service = service;
 	}
 	
-	@GetMapping(value = "/info/{name}")
-	public ResponseEntity<JSONObject> execute(@PathVariable("name") String name) {
+	@GetMapping(value = {"/info/single/{name}", "/info/single"}, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<JSONObject> execute(@PathVariable(value = "name", required = false) String name, Authentication auth) {
 		JSONObject result = new JSONObject();
 		try {
 
-			UserDTO user = userService.getUser(name);
+			UserDTO user;
+			if (name == null){
+				user = userService.getUser(auth.getName());
+			} else {
+				user = userService.getUser(name);
+			}
+
 			if (user == null) {
 				result.put("error", "No such user");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

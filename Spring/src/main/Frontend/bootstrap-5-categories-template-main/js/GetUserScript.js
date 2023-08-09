@@ -14,7 +14,7 @@ function getHeader(){
 }
 
 async function getUser(parameter){
-    let url = 'http://localhost:8080/api/v1/users/info';
+    let url = 'http://localhost:8080/api/v1/users/info/single';
     if( getURLParam() != null) {
         url += '/';
         url += getURLParam();

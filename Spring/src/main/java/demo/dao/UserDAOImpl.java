@@ -58,6 +58,7 @@ public class UserDAOImpl {
 	public void updateUser(String username, User user) {
 		User userToUpdate = userRepository.findByUsername(username);
 		userToUpdate.setEmail(user.getEmail());
+		userToUpdate.setRole(user.getRole());
 		userToUpdate.setUsername(user.getUsername());
 		userToUpdate.setPassword(user.getPassword());
 		userToUpdate.setTelephoneNumber(user.getTelephoneNumber());

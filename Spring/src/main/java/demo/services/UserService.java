@@ -133,10 +133,16 @@ public class UserService {
 	}
 
 	public UserDTO updateUser(String username, UserDTO userDTO) throws IllegalArgumentException {
-		if (getUser(username) == null){
+		UserDTO localUser = getUser(username);
+		if (localUser == null){
 			throw new NullPointerException();
 		}
-		encodePassword(userDTO);
+
+		//In case there is no password change
+		if (!userDTO.getPassword().equals(localUser.getPassword())){
+			encodePassword(userDTO);
+		}
+
 		userDAO.updateUser(username, userMapper.userDTOToEntity(userDTO));
 		return userDTO;
 	}

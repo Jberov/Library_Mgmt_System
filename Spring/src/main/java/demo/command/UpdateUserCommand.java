@@ -29,7 +29,7 @@ public class UpdateUserCommand {
   public UpdateUserCommand(UserService service) {this.service = service;}
 
 
-  @PutMapping(value = "/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+  @PutMapping(value = "/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> updateUser(@PathVariable(value = "username", required = false) String username ,@RequestBody @Valid UserDTO userDTO, Authentication authentication){
     ObjectMapper mapper = new ObjectMapper();
     JSONObject result = new JSONObject();
@@ -37,7 +37,7 @@ public class UpdateUserCommand {
     if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN") && username != null)) {
       node = mapper.convertValue(service.updateUser(username, userDTO), JsonNode.class);
     } else {
-      UserDTO persistedUser = service.getUser(userDTO.getUsername());
+      UserDTO persistedUser = service.getUser(username);
 
       if (!userDTO.getRole().equals(persistedUser.getRole()) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN")))
       {
