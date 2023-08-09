@@ -98,7 +98,6 @@ async function findBook(){
         alert("Книгата не е намерена");
         return false;
     }
- 
 }
 
 async function findUser(){
@@ -139,7 +138,6 @@ $(document).ready(async function(){
     if (user != null) {
         $("#email").text(user.email.toString());
         $("#username").text(user.username.toString());
-        $("#password").text(user.password.toString());
         $("#telephone").text(user.telephoneNumber.toString());
         $("#role").text(user.role.toString());
         $("#address").text(user.address.toString());

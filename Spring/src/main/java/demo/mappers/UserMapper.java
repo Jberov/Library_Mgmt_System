@@ -23,8 +23,13 @@ public class UserMapper {
 		userDTO.setFirstName(user.getFirstName());
 		userDTO.setMidName(user.getMidName());
 		userDTO.setLastName(user.getLastName());
-		userDTO.setRole(user.getRole().toString());
-		
+
+		if (user.getRole().getRole().equals(UserRole.USER)){
+			userDTO.setRole("USER");
+			return userDTO;
+		}
+
+		userDTO.setRole("ADMIN");
 		return userDTO;
 	}
 
