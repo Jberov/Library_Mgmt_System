@@ -31,7 +31,7 @@ $(document).ready(function(){
             },
             error: function(oJqXhr) {
                 if(oJqXhr.status != 401) {
-                    console.log("Status is " + oJqXhr.status)
+                    console.log("Status is " + oJqXhr.status);
                     // network error or http status different than 401 Unauthorized
                     $("#errorMsg").text("Connection error");
                     $("#errorMsg").show();
@@ -41,6 +41,5 @@ $(document).ready(function(){
                 }
             }
         });
-
     });
   });
