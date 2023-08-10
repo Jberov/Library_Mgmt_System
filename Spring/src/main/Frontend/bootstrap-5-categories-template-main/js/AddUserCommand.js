@@ -121,11 +121,11 @@ async function fetchUser(name) {
 
 async function findUser(){
     const searchable = $("#searchValue").val();
-    let user = await fetchUser(searchable);
-    if (user != null && user != undefined) { 
+    try {
+        await fetchUser(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
-    } else {
-        alert("Няма потребител");
+    } catch (error) {
+        alert("Няма потребител или книга с такова име");
     }
 }
 
@@ -146,8 +146,8 @@ $(document).ready(async function(){
     });
 
     $("#search-button").click(async function(){
-        if(!await findBook()) {
-            await findUser();
+        if(! await findBook()) {
+             findUser();
         }
     });
 });
@@ -170,37 +170,30 @@ async function getBookRequest(searchable) {
         xhrFields: {
             withCredentials: true            
         },
-        crossDomain:true,
+        async: true,
         beforeSend: function(oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', getHeader(searchable));
-        },
-        success: function (response){
-            if(response.status == 400){
-                alert("Грешен критерий за търсене");
-                return false;
-            }
-                
-            if (response.status == 200) {
-                return true;
-            }
-            
-            return false;
         }
     });
 }
 
 async function getBookResult(searchable){    
-    return await getBookRequest(searchable);
+    try{
+        await getBookRequest(searchable);
+    } catch(error){
+        console.log("Error in book");
+        return false;
+    }
+
+    return true;
 }
 
 async function findBook(){
     const searchable = $("#searchValue").val();
     if (await getBookResult(searchable)) { 
-        alert("Намерена книга");
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
         return true;
     } else {
-        alert("Книгата не е намерена");
         return false;
     }
 }

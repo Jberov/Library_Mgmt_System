@@ -51,7 +51,7 @@ async function loadUserList(){
                 '<div class="row bookList">' +
             '            <div class="col-md-4 mb-4">' +
             '              <div class="bg-image hover-overlay shadow-1-strong rounded ripple" data-mdb-ripple-color="light">' +
-            '                <img src="./img/userAvatar.jpg" class="img-fluid" />' +
+            '                <img src="./img/userAvatar.png" class="img-fluid" />' +
             '                <a href="UserInfo.html?user=' + user.username + '">' +
             '                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>' +
             '                </a>' +
