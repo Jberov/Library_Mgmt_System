@@ -108,7 +108,43 @@ async function findBook(){
     return true;
 }
 
+function showUserHistory(user){
+    const history = user.userHistory;
+    if(history != null) {
+        $("table").show();
+        let bookArray = history.Taken;
+        bookArray.forEach(element => {
+            const propArray = element.split(', ');
+            $("#tableBody").append(
+                "<tr>"
+                + "<td>" + propArray[0] + "</td>"
+                + "<td>" + propArray[1] + "</td>"
+                + "<td>" + "Заета" + "</td>"
+                + "<td>" + propArray[2] + "</td>"
+                + "<td>" + propArray[3] + "</td>"
+                + "<td>" + '<button type="button" class="btn btn-primary ReturnBook">Върни</button>' + "</td>"
+                + "</tr>"
+            )
+        });
+        bookArray = history.Returned;
+        bookArray.forEach(element => {
+            const propArray = element.split(', ');
+            $("#tableBody").append(
+                "<tr>"
+                + "<td>" + propArray[0] + "</td>"
+                + "<td>" + propArray[1] + "</td>"
+                + "<td>" + "Върната" + "</td>"
+                + "<td>" + propArray[2] + "</td>"
+                + "<td>" + propArray[3] + "</td>"
+                + "<td>" + '<button type="button" class="btn btn-primary LeaseBook">Заеми</button>' + "</td>"
+                + "</tr>"
+            )
+        });
+    }
+}
+
 $(document).ready(async function(){
+    $("table").hide();
     $("#timestamp p").text(new Date().toLocaleDateString());
 
     $.ajax({
@@ -142,6 +178,7 @@ $(document).ready(async function(){
         $("#firstName").text(user.firstName.toString());
         $("#midName").text(user.midName.toString());
         $("#lastName").text(user.lastName.toString());
+        showUserHistory(user);
     }
 
     $("#search-button").click(async function(){

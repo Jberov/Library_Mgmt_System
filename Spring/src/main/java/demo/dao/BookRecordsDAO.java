@@ -79,16 +79,16 @@ public class BookRecordsDAO {
 		}
 		List<String> takenBooks = new ArrayList<>();
 		List<String> returnedBooks = loadHistory(username);
-		books.put("Currently taken books by user:", takenBooks);
-		books.put("Already returned books by user:", returnedBooks);
+		books.put("Taken", takenBooks);
+		books.put("Returned", returnedBooks);
 		for (BooksActivity record : records) {
 			String bookHistory;
 			if (record.getStatus().equals(Status.TAKEN)) {
 				bookHistory = record.getBook().getName() + ", " + record.getBook().getAuthor().getName() + ", " + record.getIssueDate() + ", " + record.getReturnDate();
-				books.get("Currently taken books by user:").add(bookHistory);
+				books.get("Taken").add(bookHistory);
 			} else {
 				bookHistory = record.getBook().getName() + ", " + record.getBook().getAuthor().getName() + ", " + record.getIssueDate() + ", " + record.getReturnDate();
-				books.get("Already returned books by user:").add(bookHistory);
+				books.get("Returned").add(bookHistory);
 			}
 		}
 		return books;
