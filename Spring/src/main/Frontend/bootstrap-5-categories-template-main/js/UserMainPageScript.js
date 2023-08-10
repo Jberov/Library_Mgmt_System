@@ -81,7 +81,6 @@ function getHeader(parameter){
 }
 
 async function getBookRequest(searchable) {
-    console.log(getHeader(searchable));
     return await $.ajax({
         url: 'http://localhost:8080/api/v1/books/' + searchable,
         type: 'GET',
@@ -92,78 +91,44 @@ async function getBookRequest(searchable) {
         crossDomain:true,
         beforeSend: function(oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', getHeader(searchable));
-        },
-        success: function (response){
-            if(response.status == 400){
-                alert("Грешен критерий за търсене");
-                return false;
-            }
-                
-            if (response.status == 200) {
-                return true;
-            }
-            
-            return false;
         }
     });
 }
 
-async function getUserRequest(searchable) {
-    console.log(getHeader(searchable));
+async function fetchUser(name) {
     return await $.ajax({
-        url: 'http://localhost:8080/api/v1/users/info/single/' + searchable,
-        type: 'GET',
-        contentType: 'application/json; charset=utf-8',
-        xhrFields: {
-            withCredentials: true            
-        },
-        crossDomain:true,
-        beforeSend: function(oJqXhr) {
-            oJqXhr.setRequestHeader('Criteria', getHeader(searchable));
-        },
-        success: function (response){
-            if (response.status == 403) {
-                return false;
-            }
-
-            if(response.status == 400){
-                alert("Грешен критерий за търсене");
-                return false;
-            }
-                
-            if (response.status == 200) {
-                return true;
-            }
-            
-            return false;
-        }
-    });
+       url: 'http://localhost:8080/api/v1/users/info/single/' + name,
+       type: 'GET',
+       contentType: 'application/json; charset=utf-8',
+       dataType: 'json',
+       async: true,
+       xhrFields: {
+           withCredentials: true            
+       }
+   });
 }
 
-async function getBookResult(searchable){    
-    return await getBookRequest(searchable);
-}
-
-async function getUserResult(searchable){    
-    return await getUserRequest(searchable);
+async function findUser(){
+   const searchable = $("#searchValue").val();
+   try {
+       await fetchUser(searchable);
+       window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
+   } catch (error) {
+       alert("Няма потребител или книга с такова име");
+   }
 }
 
 async function findBook(){
     const searchable = $("#searchValue").val();
-    if (await getBookResult(searchable)) { 
-        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
-    } else {
-        return false;
-    }
-}
 
-async function findUser(event){
-    const searchable = $(event.target).siblings("h5").text();
-    if (await getUserRequest(searchable)) { 
-        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
-    } else {
+    try{ 
+        await getBookRequest(searchable);
+        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
+    } catch (error) {
+        console.log("No book found");
         return false;
     }
+    return true;
 }
 
 $(document).ready(async function(){
@@ -178,14 +143,8 @@ $(document).ready(async function(){
     });
 
     $("#search-button").click(async function(){
-        let result = await findBook();
-
-        if (!result) {
-            result = await findUser();
+        if(! await findBook()) {
+            await findUser();
         }
-        if (!result) {
-            alert("Няма такава книга или потребител");
-        }
-
     });
 });

@@ -46,18 +46,6 @@ async function getBookRequest(searchable) {
         crossDomain:true,
         beforeSend: function(oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', getHeader(searchable));
-        },
-        success: function (response){
-            if(response.status == 400){
-                alert("Грешен критерий за търсене");
-                return false;
-            }
-                
-            if (response.status == 200) {
-                return true;
-            }
-            
-            return false;
         }
     });
 }
@@ -76,18 +64,42 @@ function createJSONPayload() {
     return JSON.stringify(jsonObj);
 }
 
-async function getBookResult(searchable){    
-    return await getBookRequest(searchable);
+async function fetchUser(name) {
+    return await $.ajax({
+       url: 'http://localhost:8080/api/v1/users/info/single/' + name,
+       type: 'GET',
+       contentType: 'application/json; charset=utf-8',
+       dataType: 'json',
+       async: true,
+       xhrFields: {
+           withCredentials: true            
+       }
+   });
 }
+
+async function findUser(){
+   const searchable = $("#searchValue").val();
+   try {
+       await fetchUser(searchable);
+       window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
+   } catch (error) {
+       alert("Няма потребител или книга с такова име");
+   }
+}
+
+
 
 async function findBook(){
     const searchable = $("#searchValue").val();
-    if (await getBookResult(searchable)) { 
+
+    try{
+        await getBookRequest(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
-    } else {
-        alert("Книгата не е намерена");
+    } catch (error) {
+        console.log("No book found");
+        return false;
     }
- 
+    return true;
 }
 
 $(document).ready(async function(){
@@ -129,6 +141,8 @@ $(document).ready(async function(){
     });
 
     $("#search-button").click(async function(){
-        await findBook();
+        if(! await findBook()) {
+            findUser();
+        }
     });
 })

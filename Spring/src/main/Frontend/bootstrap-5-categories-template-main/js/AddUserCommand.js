@@ -181,7 +181,6 @@ async function getBookResult(searchable){
     try{
         await getBookRequest(searchable);
     } catch(error){
-        console.log("Error in book");
         return false;
     }
 
