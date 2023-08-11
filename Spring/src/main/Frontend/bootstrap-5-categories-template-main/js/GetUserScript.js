@@ -117,7 +117,7 @@ function showUserHistory(user){
             const propArray = element.split(', ');
             $("#tableBody").append(
                 "<tr>"
-                + "<td>" + propArray[0] + "</td>"
+                + '<td class="nameCol">' + propArray[0] + "</td>"
                 + "<td>" + propArray[1] + "</td>"
                 + "<td>" + "Заета" + "</td>"
                 + "<td>" + propArray[2] + "</td>"
@@ -131,7 +131,7 @@ function showUserHistory(user){
             const propArray = element.split(', ');
             $("#tableBody").append(
                 "<tr>"
-                + "<td>" + propArray[0] + "</td>"
+                + '<td class="nameCol">' + propArray[0] + "</td>"
                 + "<td>" + propArray[1] + "</td>"
                 + "<td>" + "Върната" + "</td>"
                 + "<td>" + propArray[2] + "</td>"
@@ -141,6 +141,49 @@ function showUserHistory(user){
             )
         });
     }
+}
+
+async function fetchBookIsbnRequest(book){
+    let urlString = 'http://localhost:8080/api/v1/books/' + book;
+    console.log(urlString);
+    const books = await $.ajax({
+        url: urlString,
+        type: 'GET',
+        xhrFields: {
+            withCredentials: true            
+        },
+        beforeSend: function(oJqXhr) {
+            oJqXhr.setRequestHeader('Criteria', 'Name');
+        }
+    });
+
+    return books.book.isbn;
+}
+
+async function leaseBook(event){
+        const book = $(event.target).closest('tr').find('.nameCol').text();
+        console.log(book);
+
+        const isbn = await fetchBookIsbnRequest(book);
+        const url = 'http://localhost:8080/api/v1/books/rental/' + isbn;
+        try {
+            $.ajax({
+                url: url,
+                type: 'PATCH',
+                async: true,
+                xhrFields: {
+                    withCredentials: true            
+                },
+                success: function(){
+                    alert("Книгата е успешно върната");
+                },
+                error: function(error){
+                    alert("Проблем при връщането на книга, поради" + error.message);
+                }
+            });
+        } catch (Error){
+            alert("Проблем при връщането на книга");
+        }
 }
 
 $(document).ready(async function(){
@@ -185,5 +228,69 @@ $(document).ready(async function(){
         if(! await findBook()) {
             findUser();
         }
+    });
+
+    $(document).on("click",".LeaseBook", async function(event){
+        const book = $(event.target).closest('tr').find('.nameCol').text();
+        console.log(book);
+
+        const isbn = await fetchBookIsbnRequest(book);
+
+       
+        const url = 'http://localhost:8080/api/v1/books/rental/' + isbn;
+
+        console.log(url);
+        try {
+            await $.ajax({
+                url: url,
+                type: 'PATCH',
+                async: true,
+                xhrFields: {
+                    withCredentials: true            
+                },
+                success: function(){
+                    alert("Книгата е успешно заета");
+                },
+                error: function(error){
+                    alert("Проблем при заемането на книга, поради" + error.message);
+                }
+            });
+            location.reload();
+        } catch (Error){
+            alert("Проблем при заемането на книга");
+        }
+        
+    });
+
+    $(document).on("click",".ReturnBook",async function(event){
+        const book = $(event.target).closest('tr').find('.nameCol').text();
+        console.log(book);
+
+        const isbn = await fetchBookIsbnRequest(book);
+
+       
+        const url = 'http://localhost:8080/api/v1/books/reconveyance/' + isbn;
+
+        console.log(url);
+        try {
+            await $.ajax({
+                url: url,
+                type: 'PATCH',
+                async: true,
+                xhrFields: {
+                    withCredentials: true            
+                },
+                success: function(){
+                    alert("Книгата е успешно върната");
+                },
+                error: function(error){
+                    alert("Проблем при връщането на книга, поради" + error.message);
+                }
+            });
+            location.reload();
+        } catch (Error){
+            alert("Проблем при връщането на книга");
+        }
+        
     });
 });
