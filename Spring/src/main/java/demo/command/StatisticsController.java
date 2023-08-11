@@ -33,25 +33,26 @@ public class StatisticsController {
   }
 
 
-  @GetMapping(path = "/mostPopularBooks",produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/mostPopularBooks",produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<JsonNode> getMostPopularByCriteria(@RequestBody(required = false) String date, @RequestHeader("Criteria") String criteria){
     if (criteria.equals("genre")) {
       if (date != null) {
-        System.out.println("Should not be here");
         return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadGenresByDate(Optional.of(LocalDate.parse(date))), JsonNode.class));
-      } else {
-        System.out.println("Should be here");
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadGenresByDate(Optional.empty()), JsonNode.class));
       }
-    } else {
+      return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadGenresByDate(Optional.empty()), JsonNode.class));
+    } else if (criteria.equals("author")) {
       if (date != null) {
-        System.out.println("Should not be here");
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadBooks(Optional.of(LocalDate.parse(date))), JsonNode.class));
-      } else {
-        System.out.println("Should be here");
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadBooks(Optional.empty()), JsonNode.class));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadAuthorsByDate(Optional.of(LocalDate.parse(date))), JsonNode.class));
       }
+      return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadAuthorsByDate(Optional.empty()), JsonNode.class));
     }
+
+    if (date != null) {
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadBooks(Optional.of(LocalDate.parse(date))), JsonNode.class));
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadBooks(Optional.empty()), JsonNode.class));
+
   }
 
   @GetMapping(path = "/countOfBooks",consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

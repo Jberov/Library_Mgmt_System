@@ -98,6 +98,32 @@ public class StatisticsService {
             (oldValue, newValue) -> oldValue, LinkedHashMap::new));
   }
 
+  public HashMap<String, Integer> getMostReadAuthorsByDate(Optional<LocalDate> date){
+    List<BooksActivity> logs;
+    if (date.isEmpty()){
+      logs = bookRecordsDAO.getAllActivity();
+    } else{
+      logs = bookRecordsDAO.getReadLogs(date.get());
+    }
+    HashMap<String, Integer> countOfReadBooks = new HashMap<>();
+
+    for (BooksActivity activity : logs) {
+      if (countOfReadBooks.containsKey(activity.getBook().getAuthor().getName())) {
+        countOfReadBooks.put(activity.getBook().getAuthor().getName(), countOfReadBooks.get(activity.getBook().getAuthor().getName()) + 1);
+        continue;
+      }
+      countOfReadBooks.put(activity.getBook().getAuthor().getName(), 1);
+    }
+
+    return  countOfReadBooks.entrySet()
+        .stream()
+        .sorted(Map.Entry.comparingByValue())
+        .collect(Collectors.toMap(
+            Map.Entry::getKey,
+            Map.Entry::getValue,
+            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+  }
+
   public int getCountOfReadBooks(Optional<LocalDate> date) {
     return date.map(localDate -> bookRecordsDAO.getReadLogs(localDate).size())
         .orElseGet(() -> bookRecordsDAO.getAllActivity().size());
