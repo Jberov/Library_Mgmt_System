@@ -33,13 +33,13 @@ async function fetchBookIsbnRequest(event){
         }
     });
 
-    return books.book.isbn;
+    return books.book;
 }
 
 async function leaseBookRequest(event) {
-    let isbn = await fetchBookIsbnRequest(event);
+    const book = await fetchBookIsbnRequest(event);
 
-    let url = 'http://localhost:8080/api/v1/books/rental/' + isbn;
+    const url = 'http://localhost:8080/api/v1/books/rental/' + book.isbn;
 
     let lease = $.ajax({
         url: url,
@@ -57,16 +57,13 @@ async function leaseBook(event){
 
     switch (lease.status) { 
         case 404:
-            alert("No such book");
-            return;
-        case 400:
-            alert("Bad request");
+            alert("Книгата не е налична");
             return;
         case 500:
-            alert("Server error");
+            alert("Недостъпна система");
             return; 
         case 502:
-            alert("Gateway error");
+            alert("Проблем със системата");
             return;        
     };
 
@@ -78,17 +75,17 @@ async function deleteBook(event){
 
     switch (bookResponse.status) { 
         case 404:
-            alert("No such book");
-            break;
+            alert("Не всички са върнали тази книга. Триенето е преустановено");
+            return;
         case 400:
-            alert("Bad request");
-            break;
+            alert("Проблем със заявката");
+            return;
         case 500:
-            alert("Server error");
-            break; 
+            alert("Недостъпна система");
+            return; 
         case 502:
-            alert("Gateway error");
-            break;        
+            alert("Проблем със системата");
+            return;        
     };
     location.reload();
     alert("Книгата е изтрита");
@@ -114,6 +111,7 @@ async function loadBookList(){
             '              <p>' + element.description +
             '              </p>' +
             '              <button type="button" class="btn btn-primary LeaseBookBtn">Заеми</button>' +
+            '              <button type="button" class="btn btn-primary UpdateBookBtn">Промени</button>' +
             '              <button type="button" class="btn btn-danger DeleteBookBtn">Премахни</button>' +
             '            </div>' +
             '          </div>'
@@ -183,6 +181,44 @@ async function findBook(){
     return true;
 }
 
+async function updateBookCount(event){
+    let bookResponse = await fetchBookIsbnRequest(event);
+
+    const promptResp = prompt("Моля въведете с колко бройки ще се увеличи книгата", "0");
+
+    if (promptResp !== null && promptResp !== "0") {
+        bookResponse.count = parseInt(promptResp);
+            await $.ajax({
+                url: 'http://localhost:8080/api/v1/books',
+                type: 'POST',
+                data: JSON.stringify(bookResponse),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'text',
+                async: true,
+                xhrFields: {
+                    withCredentials: true            
+                },
+                error: function(result) {
+                    switch(result.status){
+                        case(400):
+                            alert(result.message);
+                            return;
+                        case(500):
+                            alert("Грешка");
+                            return;
+                        case(502):
+                            alert(result.message);
+                            return;
+                        default:
+                            alert("Грешка");
+                            return;
+                    }
+                }
+            });    
+        alert("Книгата е актуализирана");
+    }
+}
+
 $(document).ready(async function(){
    await loadBookList();
 
@@ -202,9 +238,9 @@ $(document).ready(async function(){
                         $(this).remove();
                     }   
                 });
-
-            $('.DeleteBookBtn').hide();
-        }
+                $('.UpdateBookBtn').hide();
+                $('.DeleteBookBtn').hide();
+            }
         }
     });
 
@@ -212,8 +248,14 @@ $(document).ready(async function(){
        leaseBook(event);
     });
 
+    $(document).on("click",".UpdateBookBtn",function(event){
+       updateBookCount(event);
+    });
+
     $(document).on("click",".DeleteBookBtn",function(event){
-        deleteBook(event);
+        if (confirm("Искате ли да изтриете тази книга?")){
+            deleteBook(event);
+        }
     });
 
     $("#search-button").click(async function(){

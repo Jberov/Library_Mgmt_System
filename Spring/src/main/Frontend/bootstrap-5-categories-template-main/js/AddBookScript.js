@@ -120,10 +120,10 @@ $(document).ready(async function(){
                 success: function(result) {
                     alert(result.message);
                 },
-                error: function(result) {
-                    switch(result.status){
+                error: function(error) {
+                    switch(error.status){
                         case(400):
-                            alert(result);
+                            alert(error.message);
                             return;
                         case(500):
                             alert("Грешка в сървъра");

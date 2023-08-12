@@ -139,7 +139,10 @@ $(document).ready(async function(){
     });
 
     $(document).on("click",".DeleteUserBtn",function(event){
-        deleteUser(event);
+        if (confirm("Искате ли да изтриете този потребител?")){
+            deleteUser(event);
+        }
+
     });
 
     $("#search-button").click(async function(){
