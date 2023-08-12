@@ -34,21 +34,20 @@ public class LeaseBookCommand {
 		try {
 			BookDTO leased = userService.leaseBook(isbn, authentication.getName());
 			if (leased == null) {
-				result.put("response", "Book does not exist or is not available");
+				result.put("message", "Книгата не съществува или не е достъпна");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
-			result.put("message", "Successful lease of the book.");
-			result.put("response", leased);
+			result.put("message", "Успешно заеманe на книгата " + leased.getName());
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (JDBCConnectionException jdbc) {
-			result.put("error", "Error connecting to database");
+			result.put("message", "Грешка при достъпа на база данни");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
 		} catch (InputMismatchException ime) {
-			result.put("error", "Invalid input");
+			result.put("message", "Невалиден ISBN номер");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 		} catch (Exception e) {
-			result.put("error", "Error, service is currently unavailable");
+			result.put("message", "Грешка, системата е временно недостъпна");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}

@@ -25,6 +25,8 @@ async function fetchBookIsbnRequest(event){
     books = await $.ajax({
         url: urlString,
         type: 'GET',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
         xhrFields: {
             withCredentials: true            
         },
@@ -41,52 +43,42 @@ async function leaseBookRequest(event) {
 
     const url = 'http://localhost:8080/api/v1/books/rental/' + book.isbn;
 
-    let lease = $.ajax({
+    let lease = await $.ajax({
         url: url,
         type: 'PATCH',
+        async: true,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
         xhrFields: {
             withCredentials: true            
         },
+        statusCode: {
+            404: function(xhr) {
+                console.log(xhr)
+                alert(xhr.responseJSON.response);
+            },
+            500: function(xhr) {
+                alert(xhr.responseJSON.response);
+            },
+            502: function(xhr) {
+                alert(xhr.responseJSON.response);
+            }
+          }
     });
 
     return lease;
 }
 
 async function leaseBook(event){
-    const lease = await leaseBookRequest(event);
-
-    switch (lease.status) { 
-        case 404:
-            alert("Книгата не е налична");
-            return;
-        case 500:
-            alert("Недостъпна система");
-            return; 
-        case 502:
-            alert("Проблем със системата");
-            return;        
-    };
-
-    alert("Книгата " + lease.response.name + " успешно заета");
+    try{
+        const lease = await leaseBookRequest(event);
+        console.log("Test");
+        alert("Книгата " + lease.response.name + " успешно заета");
+    } catch {}
 }
 
 async function deleteBook(event){
-    let bookResponse = await deleteBookRequest(event);
-
-    switch (bookResponse.status) { 
-        case 404:
-            alert("Не всички са върнали тази книга. Триенето е преустановено");
-            return;
-        case 400:
-            alert("Проблем със заявката");
-            return;
-        case 500:
-            alert("Недостъпна система");
-            return; 
-        case 502:
-            alert("Проблем със системата");
-            return;        
-    };
+    await deleteBookRequest(event);
     location.reload();
     alert("Книгата е изтрита");
 }

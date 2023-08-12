@@ -121,7 +121,7 @@ public class StatisticsService {
         .collect(Collectors.toMap(
             Map.Entry::getKey,
             Map.Entry::getValue,
-            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+            (oldValue, newValue) -> newValue, LinkedHashMap::new));
   }
 
   public int getCountOfReadBooks(Optional<LocalDate> date) {

@@ -38,7 +38,6 @@ public class ListAllBooksCommand {
 			result.put("error", "Error connecting to database");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			result.put("error", "Error, service is currently unavailable");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}

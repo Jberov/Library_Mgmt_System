@@ -31,13 +31,13 @@ public class GetBookUsedAtTheMomentCommand {
 				result.put("users", userService.getUsersByBook(isbn));
 				return ResponseEntity.status(HttpStatus.OK).body(result);
 			} else if (userService.getUsersByBook(isbn) == null) {
-				result.put("error", "No such book exists");
+				result.put("message", "Няма такава книга");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			} else if (userService.getUsersByBook(isbn).isEmpty()) {
-				result.put("error", "No users have taken this book");
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+				result.put("message", "Книгата не е заемана в момента");
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
 			} else {
-				result.put("error", "No such book");
+				result.put("message", "Няма такава книга");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 		} catch (JDBCConnectionException jdbc) {
@@ -47,7 +47,6 @@ public class GetBookUsedAtTheMomentCommand {
 			result.put("error", "Invalid input");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			result.put("error", "Error, service is currently unavailable");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}

@@ -83,7 +83,6 @@ public class BooksDAOImpl {
 		List<BooksActivity> records = bookRecordsRepository.findByBookIsbn(isbn);
 		String bookString;
 		for (BooksActivity record : records) {
-			System.out.println(record.getBook().getName());
 			bookString = record.getBook().getName() + ", " + record.getBook().getAuthor();
 			userDAO.saveBookToHistory(record.getUser(), bookString);
 			bookRecordsRepository.delete(record);

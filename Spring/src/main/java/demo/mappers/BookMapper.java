@@ -32,7 +32,6 @@ public class BookMapper {
 		if (bookDTO == null) {
 			return null;
 		}
-		System.out.println(bookDTO.getName());
 		Genre genre = new Genre(bookDTO.getGenre(), bookDTO.getGenreDescription());
 		Author author = new Author(bookDTO.getAuthor(), bookDTO.getAuthorDescription());
 		return new Book(bookDTO.getIsbn(),bookDTO.getCount(),author,bookDTO.getName(),bookDTO.getDescription(),

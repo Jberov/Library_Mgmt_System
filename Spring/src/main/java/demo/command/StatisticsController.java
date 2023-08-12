@@ -34,7 +34,7 @@ public class StatisticsController {
 
 
   @GetMapping(value = "/mostPopularBooks",produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<JsonNode> getMostPopularByCriteria(@RequestBody(required = false) String date, @RequestHeader("Criteria") String criteria){
+  public ResponseEntity<JsonNode> getMostPopularByCriteria(@RequestBody(required = false) String date, @RequestHeader(value = "Criteria") String criteria){
     if (criteria.equals("genre")) {
       if (date != null) {
         return ResponseEntity.status(HttpStatus.OK).body(mapper.convertValue(service.getMostReadGenresByDate(Optional.of(LocalDate.parse(date))), JsonNode.class));
@@ -57,7 +57,6 @@ public class StatisticsController {
 
   @GetMapping(path = "/countOfBooks",consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<JSONObject> getCountOfReadBooks(@RequestBody(required = false) String date) {
-    System.out.println(LocalDate.now());
     JSONObject object = new JSONObject();
     if(date == null){
       object.put("countOfReadings", service.getCountOfReadBooks(Optional.empty()));

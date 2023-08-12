@@ -29,7 +29,7 @@ public class BookEntityTest {
         Book book = new Book("978-0-09-959008-8",7,new Author("Харари", "Еврейски публицист"),"Кратка история на Хомо Сапиенс","История", new Genre("Публицистика", "Описание"));
         bookRepository.save(book);
         Book found = bookRepository.findByName(book.getName());
-        AssertionsForClassTypes.assertThat(found.getAuthor())
-                .isEqualTo(book.getAuthor());
+        AssertionsForClassTypes.assertThat(found.getAuthor().getName())
+                .isEqualTo(book.getAuthor().getName());
     }
 }

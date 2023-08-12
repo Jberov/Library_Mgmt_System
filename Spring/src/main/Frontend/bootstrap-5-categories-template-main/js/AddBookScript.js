@@ -35,7 +35,6 @@ function getHeader(parameter){
 }
 
 async function getBookRequest(searchable) {
-    console.log(getHeader(searchable));
     return await $.ajax({
         url: 'http://localhost:8080/api/v1/books/' + searchable,
         type: 'GET',

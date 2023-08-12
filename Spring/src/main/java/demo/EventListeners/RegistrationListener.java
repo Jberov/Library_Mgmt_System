@@ -37,9 +37,6 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     String recipientAddress = user.getEmail();
     String subject = "Registration Confirmation";
     String message = "You registered successfully. We will send you a confirmation message to your email account." + "\r\n" + "http://localhost/bootstrap-5-login-cover-template-main/index.html?token=" + token;
-
     mailService.sendMail(recipientAddress, subject, message);
-
-    System.out.println("Mail sent");
   }
 }
