@@ -96,6 +96,40 @@ async function findBook(){
     return true;
 }
 
+async function determineUsage(){
+    const isbn = $("#isbn").text();
+    console.log(isbn);
+    const url = 'http://localhost:8080/api/v1/users/' + isbn + '/books';
+    await $.ajax({
+        url: url,
+        type: 'GET',
+        async: true,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        xhrFields: {
+            withCredentials: true            
+        },
+        statusCode: {
+            200: function(xhr) {
+                console.group()
+                $("#usedBy").text(xhr.users);
+            },
+            202: function(xhr) {
+                $("#usedBy").text(xhr.message);
+            },
+            404: function(xhr) {
+                $("#usedBy").text(xhr.responseJSON.message);
+            },
+            500: function() {
+                $("#usedBy").hide();
+            },
+            502: function() {
+                $("#usedBy").hide();
+            }
+          }
+    });
+}
+
 $(document).ready(async function(){
     $("#timestamp p").text(new Date().toLocaleDateString());
 
@@ -130,6 +164,7 @@ $(document).ready(async function(){
         $("#bookGenre").text(book.genre.toString());
         $("#genreDesc").text(book.genreDescription.toString());
         $("#count").text(book.count.toString());
+        determineUsage();
     }
 
     $("#search-button").click(async function(){
