@@ -96,7 +96,6 @@ async function findBook(){
         await getBookRequest(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
     } catch (error) {
-        console.log("No book found");
         return false;
     }
     return true;

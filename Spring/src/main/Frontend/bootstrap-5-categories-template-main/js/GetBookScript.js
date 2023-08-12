@@ -91,7 +91,6 @@ async function findBook(){
         await getBookRequest(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
     } catch (error) {
-        console.log("No book found");
         return false;
     }
     return true;
@@ -123,7 +122,6 @@ $(document).ready(async function(){
     let book = await sendFetchRequest();
 
     if (book != null) {
-        console.log("Reporting here for HTML init");
         $("#bookName").text(book.name.toString());
         $("#isbn").text(book.isbn.toString());
         $("#bookAuthor").text(book.author.toString());
