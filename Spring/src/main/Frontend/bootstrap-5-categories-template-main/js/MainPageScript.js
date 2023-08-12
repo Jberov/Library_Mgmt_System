@@ -43,7 +43,7 @@ async function leaseBookRequest(event) {
 
     const url = 'http://localhost:8080/api/v1/books/rental/' + book.isbn;
 
-    let lease = await $.ajax({
+    await $.ajax({
         url: url,
         type: 'PATCH',
         async: true,
@@ -53,28 +53,20 @@ async function leaseBookRequest(event) {
             withCredentials: true            
         },
         statusCode: {
+            200: function(xhr) {
+                alert(xhr.message);
+            },
             404: function(xhr) {
-                console.log(xhr)
-                alert(xhr.responseJSON.response);
+                alert(xhr.responseJSON.message);
             },
             500: function(xhr) {
-                alert(xhr.responseJSON.response);
+                alert(xhr.responseJSON.message);
             },
             502: function(xhr) {
-                alert(xhr.responseJSON.response);
+                alert(xhr.responseJSON.message);
             }
           }
     });
-
-    return lease;
-}
-
-async function leaseBook(event){
-    try{
-        const lease = await leaseBookRequest(event);
-        console.log("Test");
-        alert("Книгата " + lease.response.name + " успешно заета");
-    } catch {}
 }
 
 async function deleteBook(event){
@@ -235,8 +227,8 @@ $(document).ready(async function(){
         }
     });
 
-    $(document).on("click",".LeaseBookBtn",function(event){
-       leaseBook(event);
+    $(document).on("click",".LeaseBookBtn",async function(event){
+       await leaseBookRequest(event);
     });
 
     $(document).on("click",".UpdateBookBtn",function(event){
