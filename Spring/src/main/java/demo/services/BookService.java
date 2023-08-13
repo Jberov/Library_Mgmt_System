@@ -3,6 +3,8 @@ package demo.services;
 import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dto.BookDTO;
+import demo.entities.Book;
+import demo.exceptions.BookLeaseException;
 import demo.mappers.BookMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +38,17 @@ public class BookService {
 		return bookMapper.bookToDTO(booksDAO.addBook(bookMapper.bookToEntity(bookDTO)));
 	}
 	
-	public BookDTO deleteBook(String name) {
-		if ((booksDAO.getBookByName(name) == null) || (bookRecordsDAO.userHistoryExists(name))) {
+	public BookDTO deleteBook(String name) throws BookLeaseException {
+		Book book = booksDAO.getBookByName(name);
+		if ((book == null)) {
 			return null;
 		}
+
+		if (bookRecordsDAO.userHistoryExists(book.getIsbn())) {
+			throw new BookLeaseException();
+		}
+
+		System.out.println("Lease not found");
 		return bookMapper.bookToDTO(booksDAO.deleteBook(name));
 	}
 	

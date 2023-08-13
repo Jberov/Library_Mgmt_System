@@ -111,6 +111,7 @@ function showUserHistory(user){
     const history = user.userHistory;
     if(history != null) {
         $("table").show();
+        $("#HistoryHeading").show();
         let bookArray = history.Taken;
         bookArray.forEach(element => {
             const propArray = element.split(', ');
@@ -187,6 +188,7 @@ async function leaseBook(event){
 
 $(document).ready(async function(){
     $("table").hide();
+    $("#HistoryHeading").hide();
     $("#timestamp p").text(new Date().toLocaleDateString());
 
     $.ajax({

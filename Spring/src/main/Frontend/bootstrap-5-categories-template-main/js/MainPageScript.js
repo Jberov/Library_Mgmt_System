@@ -11,11 +11,28 @@ async function fetchBooks(){
 
 async function deleteBookRequest(event){
     let urlString = 'http://localhost:8080/api/v1/books/' + $(event.target).siblings("h5").text();
-    return books = await $.ajax({
+    await $.ajax({
         url: urlString,
         type: 'DELETE',
         xhrFields: {
             withCredentials: true            
+        },
+        statusCode: {
+            200: function(xhr) {
+                alert(xhr.message);
+            },
+            404: function(xhr) {
+                alert(xhr.responseJSON.error);
+            },
+            409: function(xhr) {
+                alert(xhr.responseJSON.error);
+            },
+            500: function(xhr) {
+                alert(xhr.responseJSON.error);
+            },
+            502: function(xhr) {
+                alert(xhr.responseJSON.error);
+            }
         }
     });
 }
@@ -55,6 +72,7 @@ async function leaseBookRequest(event) {
         statusCode: {
             200: function(xhr) {
                 alert(xhr.message);
+                location.reload();
             },
             404: function(xhr) {
                 alert(xhr.responseJSON.message);
@@ -65,14 +83,8 @@ async function leaseBookRequest(event) {
             502: function(xhr) {
                 alert(xhr.responseJSON.message);
             }
-          }
+        }
     });
-}
-
-async function deleteBook(event){
-    await deleteBookRequest(event);
-    location.reload();
-    alert("Книгата е изтрита");
 }
 
 async function loadBookList(){
@@ -235,9 +247,9 @@ $(document).ready(async function(){
        updateBookCount(event);
     });
 
-    $(document).on("click",".DeleteBookBtn",function(event){
+    $(document).on("click",".DeleteBookBtn",async function(event){
         if (confirm("Искате ли да изтриете тази книга?")){
-            deleteBook(event);
+            await deleteBookRequest(event);
         }
     });
 

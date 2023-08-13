@@ -42,16 +42,22 @@ public class CreateUserCommand {
 
   @PostMapping(value = "/api/v1/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userDTO, HttpServletRequest request){
-    if(service.userExistsByMail(userDTO.getEmail()) || service.userExistsByPhone(userDTO.getTelephoneNumber())){
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email or telephone are already used");
+    if(service.getUser(userDTO.getUsername()) != null){
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Вече е регистриран потребител с даденото потребителско име");
+
     }
+    if(service.userExistsByMail(userDTO.getEmail()) || service.userExistsByPhone(userDTO.getTelephoneNumber())){
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Имейлът или телефонът са вече използвани");
+    }
+
+    userDTO.setEnabled(false);
     UserDTO registered = service.createUser(userDTO);
     String appUrl = request.getContextPath();
 
     eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered,
         request.getLocale(), appUrl));
 
-    return ResponseEntity.status(HttpStatus.CREATED).body("User successfully created");
+    return ResponseEntity.status(HttpStatus.CREATED).body("Успешно създаден потребител");
   }
 
   @GetMapping("/registrationConfirm")

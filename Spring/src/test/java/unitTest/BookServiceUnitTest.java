@@ -5,6 +5,7 @@ import demo.dao.BookRecordsDAO;
 import demo.dao.BooksDAOImpl;
 import demo.dao.UserDAOImpl;
 import demo.dto.BookDTO;
+import demo.exceptions.BookLeaseException;
 import demo.services.BookService;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,14 +50,14 @@ public class BookServiceUnitTest {
     }
 
     @Test
-    public void deleteBook() {
+    public void deleteBook() throws BookLeaseException {
         BDDMockito.given(bookService.deleteBook(bookDTO.getIsbn())).willReturn(bookDTO);
         Assertions.assertEquals(bookDTO.getAuthor(),"Ювал Харари");
         
     }
     
     @Test
-    public void deleteNonExistingBook() {
+    public void deleteNonExistingBook() throws BookLeaseException {
         BDDMockito.given(bookService.deleteBook("978-1-06-954008-8")).willReturn(bookDTO);
         Assertions.assertNotNull(bookService.deleteBook("978-1-06-954008-8"),"No such book exists or not all users have returned it yet.");
         

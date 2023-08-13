@@ -46,6 +46,16 @@ public class UserDTO {
 	@NotBlank(message = "No number")
 	private String telephoneNumber;
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	private boolean enabled;
+
 	public void setRole(String role) {
 		this.role = role;
 	}
@@ -92,7 +102,7 @@ public class UserDTO {
 	private String midName;
 
 	public UserDTO(String email, String username, String password, String telephoneNumber, String role, String address,
-			String firstName, String midName, String lastName) {
+			String firstName, String midName, String lastName, Map<String, List<String>> userHistory) {
 		this.email = email;
 		this.username = username;
 		this.password = password;
@@ -102,6 +112,7 @@ public class UserDTO {
 		this.firstName = firstName;
 		this.midName = midName;
 		this.lastName = lastName;
+		this.userHistory = userHistory;
 	}
 
 	@NotBlank(message = "No last name")

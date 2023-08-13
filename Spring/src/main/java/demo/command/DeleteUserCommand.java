@@ -23,20 +23,19 @@ public class DeleteUserCommand {
 	public ResponseEntity<JSONObject> execute(@PathVariable("username") String username){
 		JSONObject result = new JSONObject();
 		try {
-			result.put("Message", "User successfully deleted");
-			result.put("Deleted user", userService.deleteUser(username));
+			result.put("Message", "Потребителят " + userService.deleteUser(username).getUsername() + " е успешно изтрит");
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (NoSuchElementException nsee) {
-			result.put("error", "No such user");
+			result.put("error", "Няма такъв потребител");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 		} catch (JDBCConnectionException jdbc) {
-			result.put("error", "Error connecting to database");
+			result.put("error", "Грешка в системата");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
-		}catch (IllegalArgumentException illegalArgumentException) {
+		} catch (IllegalArgumentException illegalArgumentException) {
 			result.put("error", illegalArgumentException.getLocalizedMessage());
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
 		} catch (Exception e) {
-			result.put("error", "Error, service is currently unavailable");
+			result.put("error", "Системата е временно недостъпна");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}

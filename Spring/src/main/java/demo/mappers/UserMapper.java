@@ -46,6 +46,6 @@ public class UserMapper {
 		}
 
 		return new User(userDTO.getUsername(), roles, userDTO.getEmail(), userDTO.getPassword(), userDTO.getTelephoneNumber(),
-				userDTO.getAddress(), userDTO.getFirstName(), userDTO.getMidName(), userDTO.getLastName());
+				userDTO.getAddress(), userDTO.getFirstName(), userDTO.getMidName(), userDTO.getLastName(), userDTO.isEnabled());
 	}
 }

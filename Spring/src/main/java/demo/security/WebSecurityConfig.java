@@ -44,7 +44,7 @@ public class WebSecurityConfig{
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/api/v1/books").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.GET, "/api/v1/books/*").hasAnyAuthority("ADMIN", "USER")
-				.antMatchers(HttpMethod.GET, "/api/v1/users/byBook/*").hasAuthority("ADMIN")
+				.antMatchers(HttpMethod.GET, "/api/v1/users/*/books").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.GET, "/api/v1/users/info/*").hasAuthority("ADMIN")
 				.antMatchers(HttpMethod.PATCH, "/api/v1/books/rental/*").hasAnyAuthority("USER", "ADMIN")
 				.antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()

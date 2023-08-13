@@ -1,8 +1,7 @@
 package demo.command;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import demo.dto.UserDTO;
+import demo.mappers.UserMapper;
 import demo.services.UserService;
 import javax.validation.Valid;
 import net.minidev.json.JSONObject;
@@ -24,31 +23,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/users")
 public class UpdateUserCommand {
   private final UserService service;
+  private final UserMapper mapper;
 
   @Autowired
-  public UpdateUserCommand(UserService service) {this.service = service;}
+  public UpdateUserCommand(UserService service, UserMapper mapper) {this.service = service;this.mapper = mapper;}
 
 
   @PutMapping(value = "/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<String> updateUser(@PathVariable(value = "username", required = false) String username ,@RequestBody @Valid UserDTO userDTO, Authentication authentication){
-    ObjectMapper mapper = new ObjectMapper();
+  public ResponseEntity<JSONObject> updateUser(@PathVariable(value = "username", required = false) String username ,@RequestBody @Valid UserDTO userDTO, Authentication authentication){
     JSONObject result = new JSONObject();
-    JsonNode node;
+    UserDTO user;
+    userDTO.setEnabled(true);
     if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN") && username != null)) {
-      node = mapper.convertValue(service.updateUser(username, userDTO), JsonNode.class);
+      user = service.updateUser(username, userDTO);
     } else {
       UserDTO persistedUser = service.getUser(username);
 
       if (!userDTO.getRole().equals(persistedUser.getRole()) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN")))
       {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Потребителят не може да си смени ролята");
+        result.put("message", "Потребителят не може да си смени ролята");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
       }
 
-      node = mapper.convertValue(service.updateUser(authentication.getName(), userDTO), JsonNode.class);
+      user = service.updateUser(authentication.getName(), userDTO);
     }
     result.put("message", "User successfully updated");
-    result.put("user", node);
-    return ResponseEntity.status(HttpStatus.OK).body("User successfully updated\n" + result);
+    result.put("user", user);
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
   @ExceptionHandler(NullPointerException.class)

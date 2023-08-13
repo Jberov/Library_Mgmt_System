@@ -138,7 +138,7 @@ public class UserService {
 			throw new NullPointerException();
 		}
 
-		//In case there is no password change
+		//In case there is password change
 		if (!userDTO.getPassword().equals(localUser.getPassword())){
 			encodePassword(userDTO);
 		}
