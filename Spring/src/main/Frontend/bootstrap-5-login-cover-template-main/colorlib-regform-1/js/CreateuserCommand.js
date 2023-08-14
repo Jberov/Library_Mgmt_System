@@ -61,20 +61,18 @@ function sendCreateRequest() {
         data: createJSONPayload(),
         contentType: 'application/json; charset=utf-8',
         dataType: 'text',
-        success: function(result) {
-           alert(result);
-           console.log("Създаден потребител");
-           window.location.replace("http://localhost/library-frontend/bootstrap-5-login-cover-template-main/index.html");
-        },
-        error: function(result) {
-            if(result.status == 400) {
-                console.log(result);
-                alert("Phone or email are already used");
-            } else if (result.status == 409){
-                alert("Username is taken");
-            }else {
-                alert("Server error");
-                console.log(result);
+        statusCode: {
+            200: function() {
+                window.location.replace("http://localhost/library-frontend/bootstrap-5-login-cover-template-main/index.html");
+            },
+            400: function() {
+                alert("Имейл или телефон са вече използвани");
+            },
+            500: function() {
+                alert("Системата е временно недостъпна");
+            },
+            502: function() {
+                alert("Грешка в системата");
             }
         }
     });

@@ -7,8 +7,8 @@ function register(){
         success: function() {
             window.location.replace("http://localhost/library-frontend/bootstrap-5-login-cover-template-main/index.html");
         },
-        error: function() {
-            alert("Проблем с потвърждението");
+        error: function(xhr) {
+            alert(xhr.response);
         }
     });
 }
