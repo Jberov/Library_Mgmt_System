@@ -188,38 +188,39 @@ async function updateBookCount(event) {
             type: 'POST',
             data: JSON.stringify(bookResponse),
             contentType: 'application/json; charset=utf-8',
-            dataType: 'text',
+            dataType: 'json',
             async: true,
             xhrFields: {
                 withCredentials: true
             },
             statusCode: {
                 201: function (xhr) {
-                    $("#messageDiv").val(xhr.message);
+                    console.log(xhr.message);
+                    $("#alertText").text(xhr.message);
                     $("#messageDiv").show();
                 },
                 400: function (xhr) {
                     $("#messageDiv").removeClass("alert-success");
                     $("#messageDiv").addClass("alert-danger");
-                    $("#messageDiv").val(xhr.responseJSON.error);
+                    $("#alertText").text(xhr.responseJSON.error);
                     $("#messageDiv").show();
                 },
                 404: function (xhr) {
                     $("#messageDiv").removeClass("alert-success");
                     $("#messageDiv").addClass("alert-danger");
-                    $("#messageDiv").val(xhr.responseJSON.error);
+                    $("#alertText").text(xhr.responseJSON.error);
                     $("#messageDiv").show();
                 },
                 500: function (xhr) {
                     $("#messageDiv").removeClass("alert-success");
                     $("#messageDiv").addClass("alert-danger");
-                    $("#messageDiv").val(xhr.responseJSON.error);
+                    $("#alertText").text(xhr.responseJSON.error);
                     $("#messageDiv").show();
                 },
                 502: function (xhr) {
                     $("#messageDiv").removeClass("alert-success");
                     $("#messageDiv").addClass("alert-danger");
-                    $("#messageDiv").val(xhr.responseJSON.error);
+                    $("#alertText").text(xhr.responseJSON.error);
                     $("#messageDiv").show();
                 }
             }
@@ -271,5 +272,9 @@ $(document).ready(async function () {
         if (! await findBook()) {
             await findUser();
         }
+    });
+
+    $(".btn-close").click(function () {
+        $("#messageDiv").hide();
     });
 });
