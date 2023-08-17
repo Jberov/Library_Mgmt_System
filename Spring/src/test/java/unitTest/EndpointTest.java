@@ -8,9 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import demo.LibraryApplication;
-import demo.repositories.BookRecordsRepository;
-import demo.repositories.BookRepository;
-import demo.repositories.UserRepository;
 import javax.servlet.ServletContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +38,7 @@ public class EndpointTest {
     private static String userURL;
     
     @Autowired
-    public EndpointTest(BookRepository bookRepository, UserRepository userRepository, BookRecordsRepository bookRecordsRepository, WebApplicationContext webApplicationContext) {
+    public EndpointTest(WebApplicationContext webApplicationContext) {
         this.webApplicationContext = webApplicationContext;
     }
 
@@ -130,15 +127,15 @@ public class EndpointTest {
     @Test
     public void givenLease_whenMockMVC_thenVerifyResponse() throws Exception {
         userURL = "/api/v1/books/rental/978-06-79826-62-9";
-        this.mockMvc.perform(patch(userURL).header("Bearer", jwt)).andDo(print())
-                .andExpect(status().is5xxServerError());
+        this.mockMvc.perform(patch(userURL).header("Basic", jwt)).andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void givenLease_whenMockMVC_thenVerifyResponseNoUser() throws Exception {
         userURL = "/api/v1/books/rental/978-06-79826-62-9";
-        this.mockMvc.perform(patch(userURL).header("Bearer", jwt)).andDo(print())
-                .andExpect(status().is5xxServerError());
+        this.mockMvc.perform(patch(userURL).header("Basic", jwt)).andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test

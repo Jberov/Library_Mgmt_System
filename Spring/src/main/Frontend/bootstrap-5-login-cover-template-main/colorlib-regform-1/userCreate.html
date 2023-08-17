@@ -19,6 +19,14 @@
     <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
     <link href="vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="../../bootstrap-5-categories-template-main/css/mdb.min.css" />
+
+    <!-- JQuery lib-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
     <!-- Main CSS-->
     <link href="css/main.css" rel="stylesheet" media="all">
 </head>
@@ -32,6 +40,10 @@
                 <div class="card-body">
                     <h2 class="title">Регистрация</h2>
                     <div method="POST" id="allInput">
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            Успешно създаден потребител
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
                         <div class="input-group">
                             <p class="errorMsg font-robo" id="usernameError">Попълнете полето</p>
                             <input class="input--style-1" type="text" placeholder="Потребителско име" id="username">

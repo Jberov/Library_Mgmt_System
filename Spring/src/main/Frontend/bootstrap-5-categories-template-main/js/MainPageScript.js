@@ -1,43 +1,43 @@
-async function fetchBooks(){
+async function fetchBooks() {
     return books = await $.ajax({
         url: 'http://localhost:8080/api/v1/books',
         type: 'GET',
         xhrFields: {
-            withCredentials: true            
+            withCredentials: true
         },
-        async:true
+        async: true
     });
 }
 
-async function deleteBookRequest(event){
+async function deleteBookRequest(event) {
     let urlString = 'http://localhost:8080/api/v1/books/' + $(event.target).siblings("h5").text();
     await $.ajax({
         url: urlString,
         type: 'DELETE',
         xhrFields: {
-            withCredentials: true            
+            withCredentials: true
         },
         statusCode: {
-            200: function(xhr) {
-                alert(xhr.message);
+            200: function (xhr) {
+                alert(xhr.Message);
             },
-            404: function(xhr) {
+            404: function (xhr) {
                 alert(xhr.responseJSON.error);
             },
-            409: function(xhr) {
+            409: function (xhr) {
                 alert(xhr.responseJSON.error);
             },
-            500: function(xhr) {
+            500: function (xhr) {
                 alert(xhr.responseJSON.error);
             },
-            502: function(xhr) {
+            502: function (xhr) {
                 alert(xhr.responseJSON.error);
             }
         }
     });
 }
 
-async function fetchBookIsbnRequest(event){
+async function fetchBookIsbnRequest(event) {
     let urlString = 'http://localhost:8080/api/v1/books/' + $(event.target).siblings("h5").text();
     books = await $.ajax({
         url: urlString,
@@ -45,9 +45,9 @@ async function fetchBookIsbnRequest(event){
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         xhrFields: {
-            withCredentials: true            
+            withCredentials: true
         },
-        beforeSend: function(oJqXhr) {
+        beforeSend: function (oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', 'Name');
         }
     });
@@ -67,56 +67,56 @@ async function leaseBookRequest(event) {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         xhrFields: {
-            withCredentials: true            
+            withCredentials: true
         },
         statusCode: {
-            200: function(xhr) {
+            200: function (xhr) {
                 alert(xhr.message);
                 location.reload();
             },
-            404: function(xhr) {
+            404: function (xhr) {
                 alert(xhr.responseJSON.message);
             },
-            500: function(xhr) {
+            500: function (xhr) {
                 alert(xhr.responseJSON.message);
             },
-            502: function(xhr) {
+            502: function (xhr) {
                 alert(xhr.responseJSON.message);
             }
         }
     });
 }
 
-async function loadBookList(){
+async function loadBookList() {
     let bookResponse = await fetchBooks();
     if (bookResponse != null) {
         let bookList = bookResponse.books;
         bookList.forEach(element => {
             $("#bookSection").append(
                 '<div class="row bookList">' +
-            '            <div class="col-md-4 mb-4">' +
-            '              <div class="bg-image hover-overlay shadow-1-strong rounded ripple" data-mdb-ripple-color="light">' +
-            '                <img src="./img/Open-book-bg.png" class="img-fluid" />' +
-            '                <a href="BookInfo.html?book=' + element.name + '">' +
-            '                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>' +
-            '                </a>' +
-            '              </div>' +
-            '            </div>' +
-            '            <div class="col-md-8 mb-4 singleBook">' +
-            '              <h5 class="BookNameHeading">' + element.name + '</h5>' +
-            '              <p>' + element.description +
-            '              </p>' +
-            '              <button type="button" class="btn btn-primary LeaseBookBtn">Заеми</button>' +
-            '              <button type="button" class="btn btn-primary UpdateBookBtn">Промени</button>' +
-            '              <button type="button" class="btn btn-danger DeleteBookBtn">Премахни</button>' +
-            '            </div>' +
-            '          </div>'
+                '            <div class="col-md-4 mb-4">' +
+                '              <div class="bg-image hover-overlay shadow-1-strong rounded ripple" data-mdb-ripple-color="light">' +
+                '                <img src="./img/Open-book-bg.png" class="img-fluid" />' +
+                '                <a href="BookInfo.html?book=' + element.name + '">' +
+                '                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>' +
+                '                </a>' +
+                '              </div>' +
+                '            </div>' +
+                '            <div class="col-md-8 mb-4 singleBook">' +
+                '              <h5 class="BookNameHeading">' + element.name + '</h5>' +
+                '              <p>' + element.description +
+                '              </p>' +
+                '              <button type="button" class="btn btn-primary LeaseBookBtn">Заеми</button>' +
+                '              <button type="button" class="btn btn-primary UpdateBookBtn">Промени</button>' +
+                '              <button type="button" class="btn btn-danger DeleteBookBtn">Премахни</button>' +
+                '            </div>' +
+                '          </div>'
             )
         });
     }
 }
 
-function getHeader(parameter){
+function getHeader(parameter) {
     const regex = /([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})/;
 
     if (regex.test(parameter)) {
@@ -132,10 +132,10 @@ async function getBookRequest(searchable) {
         type: 'GET',
         contentType: 'application/json; charset=utf-8',
         xhrFields: {
-            withCredentials: true            
+            withCredentials: true
         },
-        crossDomain:true,
-        beforeSend: function(oJqXhr) {
+        crossDomain: true,
+        beforeSend: function (oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', getHeader(searchable));
         }
     });
@@ -143,31 +143,31 @@ async function getBookRequest(searchable) {
 
 async function fetchUser(name) {
     return await $.ajax({
-       url: 'http://localhost:8080/api/v1/users/info/single/' + name,
-       type: 'GET',
-       contentType: 'application/json; charset=utf-8',
-       dataType: 'json',
-       async: true,
-       xhrFields: {
-           withCredentials: true            
-       }
-   });
+        url: 'http://localhost:8080/api/v1/users/info/single/' + name,
+        type: 'GET',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        async: true,
+        xhrFields: {
+            withCredentials: true
+        }
+    });
 }
 
-async function findUser(){
-   const searchable = $("#searchValue").val();
-   try {
-       await fetchUser(searchable);
-       window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
-   } catch (error) {
-       alert("Няма потребител или книга с такова име");
-   }
+async function findUser() {
+    const searchable = $("#searchValue").val();
+    try {
+        await fetchUser(searchable);
+        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
+    } catch (error) {
+        alert("Няма потребител или книга с такова име");
+    }
 }
 
-async function findBook(){
+async function findBook() {
     const searchable = $("#searchValue").val();
 
-    try{ 
+    try {
         await getBookRequest(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
     } catch (error) {
@@ -176,62 +176,76 @@ async function findBook(){
     return true;
 }
 
-async function updateBookCount(event){
+async function updateBookCount(event) {
     let bookResponse = await fetchBookIsbnRequest(event);
 
     const promptResp = prompt("Моля въведете с колко бройки ще се увеличи книгата", "0");
 
     if (promptResp !== null && promptResp !== "0") {
         bookResponse.count = parseInt(promptResp);
-            await $.ajax({
-                url: 'http://localhost:8080/api/v1/books',
-                type: 'POST',
-                data: JSON.stringify(bookResponse),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'text',
-                async: true,
-                xhrFields: {
-                    withCredentials: true            
+        await $.ajax({
+            url: 'http://localhost:8080/api/v1/books',
+            type: 'POST',
+            data: JSON.stringify(bookResponse),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'text',
+            async: true,
+            xhrFields: {
+                withCredentials: true
+            },
+            statusCode: {
+                201: function (xhr) {
+                    $("#messageDiv").val(xhr.message);
+                    $("#messageDiv").show();
                 },
-                error: function(result) {
-                    switch(result.status){
-                        case(400):
-                            alert(result.message);
-                            return;
-                        case(500):
-                            alert("Грешка");
-                            return;
-                        case(502):
-                            alert(result.message);
-                            return;
-                        default:
-                            alert("Грешка");
-                            return;
-                    }
+                400: function (xhr) {
+                    $("#messageDiv").removeClass("alert-success");
+                    $("#messageDiv").addClass("alert-danger");
+                    $("#messageDiv").val(xhr.responseJSON.error);
+                    $("#messageDiv").show();
+                },
+                404: function (xhr) {
+                    $("#messageDiv").removeClass("alert-success");
+                    $("#messageDiv").addClass("alert-danger");
+                    $("#messageDiv").val(xhr.responseJSON.error);
+                    $("#messageDiv").show();
+                },
+                500: function (xhr) {
+                    $("#messageDiv").removeClass("alert-success");
+                    $("#messageDiv").addClass("alert-danger");
+                    $("#messageDiv").val(xhr.responseJSON.error);
+                    $("#messageDiv").show();
+                },
+                502: function (xhr) {
+                    $("#messageDiv").removeClass("alert-success");
+                    $("#messageDiv").addClass("alert-danger");
+                    $("#messageDiv").val(xhr.responseJSON.error);
+                    $("#messageDiv").show();
                 }
-            });    
-        alert("Книгата е актуализирана");
+            }
+        });
     }
 }
 
-$(document).ready(async function(){
-   await loadBookList();
+$(document).ready(async function () {
+    $("#messageDiv").hide();
+    await loadBookList();
 
     $.ajax({
         url: 'http://localhost:8080/login',
         type: 'POST',
         xhrFields: {
-            withCredentials: true            
+            withCredentials: true
         },
-        crossDomain:true,
-        success: function(result) {
+        crossDomain: true,
+        success: function (result) {
 
-        var user_role = result.Role[0].authority;
+            var user_role = result.Role[0].authority;
             if (user_role == "USER") {
                 $('#navigation').children().each(function () {
-                    if($(this).attr('id') != "home"){
+                    if ($(this).attr('id') != "home") {
                         $(this).remove();
-                    }   
+                    }
                 });
                 $('.UpdateBookBtn').hide();
                 $('.DeleteBookBtn').hide();
@@ -239,22 +253,22 @@ $(document).ready(async function(){
         }
     });
 
-    $(document).on("click",".LeaseBookBtn",async function(event){
-       await leaseBookRequest(event);
+    $(document).on("click", ".LeaseBookBtn", async function (event) {
+        await leaseBookRequest(event);
     });
 
-    $(document).on("click",".UpdateBookBtn",function(event){
-       updateBookCount(event);
+    $(document).on("click", ".UpdateBookBtn", function (event) {
+        updateBookCount(event);
     });
 
-    $(document).on("click",".DeleteBookBtn",async function(event){
-        if (confirm("Искате ли да изтриете тази книга?")){
+    $(document).on("click", ".DeleteBookBtn", async function (event) {
+        if (confirm("Искате ли да изтриете тази книга?")) {
             await deleteBookRequest(event);
         }
     });
 
-    $("#search-button").click(async function(){
-        if(! await findBook()) {
+    $("#search-button").click(async function () {
+        if (! await findBook()) {
             await findUser();
         }
     });

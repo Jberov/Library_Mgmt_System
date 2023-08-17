@@ -108,6 +108,10 @@
       <div class="card-body">
         <h2 class="title">Добавяне на книга</h2>
         <div method="POST" id="allInput">
+          <div class="alert alert-success alert-dismissible" id="messageDiv" role="alert">
+            Успешно добавихте нова книга
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
             <div class="input-group">
                 <p class="errorMsg font-robo" id="bookNameError">Попълнете полето</p>
                 <input class="input--style-1" type="text" placeholder="Име на книгата" id="bookName">
@@ -140,7 +144,7 @@
             <br>
             <div class="textarea-input">
                 <p class="errorMsg font-robo" id="descError">Попълнете полето</p>
-                <textarea class="form-control" placeholder="Описание на жанр" id="description" rows="3"></textarea>
+                <textarea class="form-control" placeholder="Описание на книгата" id="description" rows="3"></textarea>
             </div>
             <div class="p-t-20">
                 <button class="btn btn--radius btn--green" type="submit">Добави книга</button>

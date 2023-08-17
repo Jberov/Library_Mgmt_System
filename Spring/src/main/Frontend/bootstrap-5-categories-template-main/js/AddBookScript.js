@@ -1,21 +1,21 @@
-function validateInput(){
+function validateInput() {
     let valid = true;
-    $("#allInput").children(".input-group, .textarea-input").each(function() {
+    $("#allInput").children(".input-group, .textarea-input").each(function () {
         let textInput = $(this).find("input, textarea").val();
-        if(textInput == null || textInput == ""){
+        if (textInput == null || textInput == "") {
             $(this).find(".errorMsg").show();
             valid = false;
         }
     });
 
-    if(!valid) {
+    if (!valid) {
         return false;
     }
 
     let isbn = $("#isbn").val();
     let isbnRegex = /([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})/
-    
-    if(!isbnRegex.test(isbn)){
+
+    if (!isbnRegex.test(isbn)) {
         $("#isbnError").text("Невалиден формат на isbn номер!");
         $("#isbnError").show();
         valid = false;
@@ -24,7 +24,7 @@ function validateInput(){
     return valid;
 }
 
-function getHeader(parameter){
+function getHeader(parameter) {
     const regex = /([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})/;
 
     if (regex.test(parameter)) {
@@ -40,10 +40,10 @@ async function getBookRequest(searchable) {
         type: 'GET',
         contentType: 'application/json; charset=utf-8',
         xhrFields: {
-            withCredentials: true            
+            withCredentials: true
         },
-        crossDomain:true,
-        beforeSend: function(oJqXhr) {
+        crossDomain: true,
+        beforeSend: function (oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', getHeader(searchable));
         }
     });
@@ -65,33 +65,33 @@ function createJSONPayload() {
 
 async function fetchUser(name) {
     return await $.ajax({
-       url: 'http://localhost:8080/api/v1/users/info/single/' + name,
-       type: 'GET',
-       contentType: 'application/json; charset=utf-8',
-       dataType: 'json',
-       async: true,
-       xhrFields: {
-           withCredentials: true            
-       }
-   });
+        url: 'http://localhost:8080/api/v1/users/info/single/' + name,
+        type: 'GET',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        async: true,
+        xhrFields: {
+            withCredentials: true
+        }
+    });
 }
 
-async function findUser(){
-   const searchable = $("#searchValue").val();
-   try {
-       await fetchUser(searchable);
-       window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
-   } catch (error) {
-       alert("Няма потребител или книга с такова име");
-   }
+async function findUser() {
+    const searchable = $("#searchValue").val();
+    try {
+        await fetchUser(searchable);
+        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
+    } catch (error) {
+        alert("Няма потребител или книга с такова име");
+    }
 }
 
 
 
-async function findBook(){
+async function findBook() {
     const searchable = $("#searchValue").val();
 
-    try{
+    try {
         await getBookRequest(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
     } catch (error) {
@@ -100,47 +100,63 @@ async function findBook(){
     return true;
 }
 
-$(document).ready(async function(){
+$(document).ready(async function () {
     $(".errorMsg").hide();
-    $("button").click(function(){
+    $("#messageDiv").hide();
+    $("button").click(async function () {
         $(".errorMsg").hide();
-        if(validateInput()){
-            $.ajax({
+        if (validateInput()) {
+            await $.ajax({
                 url: 'http://localhost:8080/api/v1/books',
                 type: 'POST',
                 data: createJSONPayload(),
                 contentType: 'application/json; charset=utf-8',
-                dataType: 'text',
+                dataType: 'json',
                 async: true,
                 xhrFields: {
-                    withCredentials: true            
+                    withCredentials: true
                 },
-                success: function(result) {
-                    alert(result.message);
-                },
-                error: function(error) {
-                    switch(error.status){
-                        case(400):
-                            alert(error.message);
-                            return;
-                        case(500):
-                            alert("Грешка в сървъра");
-                            return;
-                        case(502):
-                            alert("Грешка при вързване към БД");
-                            return;
-                        default:
-                            alert("Грешка");
-                            return;
+                statusCode: {
+                    201: function (xhr) {
+                        $("#messageDiv").val(xhr.message);
+                        $("#messageDiv").show();
+                    },
+                    400: function (xhr) {
+                        $("#messageDiv").removeClass("alert-success");
+                        $("#messageDiv").addClass("alert-danger");
+                        $("#messageDiv").val(xhr.responseJSON.error);
+                        $("#messageDiv").show();
+                    },
+                    404: function (xhr) {
+                        $("#messageDiv").removeClass("alert-success");
+                        $("#messageDiv").addClass("alert-danger");
+                        $("#messageDiv").val(xhr.responseJSON.error);
+                        $("#messageDiv").show();
+                    },
+                    500: function (xhr) {
+                        $("#messageDiv").removeClass("alert-success");
+                        $("#messageDiv").addClass("alert-danger");
+                        $("#messageDiv").val(xhr.responseJSON.error);
+                        $("#messageDiv").show();
+                    },
+                    502: function (xhr) {
+                        $("#messageDiv").removeClass("alert-success");
+                        $("#messageDiv").addClass("alert-danger");
+                        $("#messageDiv").val(xhr.responseJSON.error);
+                        $("#messageDiv").show();
                     }
                 }
             });
         }
     });
 
-    $("#search-button").click(async function(){
-        if(! await findBook()) {
+    $("#search-button").click(async function () {
+        if (! await findBook()) {
             findUser();
         }
+    });
+
+    $(".btn-close").click(function () {
+        $(this).hide();
     });
 })

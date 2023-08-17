@@ -117,6 +117,9 @@ async function determineUsage(){
             202: function(xhr) {
                 $("#usedBy").text(xhr.message);
             },
+            403: function(xhr) {
+                $("#usedBy").text(xhr.responseJSON.message);
+            },
             404: function(xhr) {
                 $("#usedBy").text(xhr.responseJSON.message);
             },

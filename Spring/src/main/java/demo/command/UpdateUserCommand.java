@@ -47,7 +47,7 @@ public class UpdateUserCommand {
 
       user = service.updateUser(authentication.getName(), userDTO);
     }
-    result.put("message", "User successfully updated");
+    result.put("message", "Успешно обновен потребител");
     result.put("user", user);
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

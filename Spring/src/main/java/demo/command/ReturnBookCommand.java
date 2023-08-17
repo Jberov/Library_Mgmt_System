@@ -36,8 +36,7 @@ public class ReturnBookCommand {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
-			result.put("message", "Book successfully returned");
-			result.put("response", returned);
+			result.put("message", "Успешно върната книга");
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Error connecting to database");

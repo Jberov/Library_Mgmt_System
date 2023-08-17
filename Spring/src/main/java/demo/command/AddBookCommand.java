@@ -31,21 +31,25 @@ public class AddBookCommand {
 			BookDTO addedBook = bookService.addBook(book);
 			
 			if (addedBook == null) {
-				result.put("response", "You have entered the isbn of an existing book, yet the name does not match. Request denied");
+				result.put("error", "Въвели сте книга с различно име, но еднакъв ISBN номер.");
 				return ResponseEntity.badRequest().body(result);
 			}
-			
-			result.put("message", "Success. Here is the newly added book");
-			result.put("response", addedBook);
+
+			if (bookService.getBookByName(book.getName()) != null) {
+				result.put("message", "Успешно променихте брой книги");
+			} else {
+				result.put("message", "Успешно добавихте нова книга");
+			}
+
 			return ResponseEntity.status(HttpStatus.CREATED).body(result);
 		} catch (JDBCConnectionException jdbc) {
-			result.put("error", "Error connecting to database");
+			result.put("error", "Проблем в системата");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
 		} catch (InputMismatchException ime) {
-			result.put("error", "Invalid input");
+			result.put("error", "Невалидни входни данни");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 		} catch (Exception e) {
-			result.put("error", "Error, service is currently unavailable" + e.getMessage());
+			result.put("error", "Системата е временно недостъпна");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}
