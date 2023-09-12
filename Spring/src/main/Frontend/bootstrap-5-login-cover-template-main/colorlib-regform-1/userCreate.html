@@ -39,11 +39,15 @@
                 <div class="card-heading"></div>
                 <div class="card-body">
                     <h2 class="title">Регистрация</h2>
+                    <div class="alert alert-success alert-dismissible" id="messageDiv" role="alert">
+                        <p id="alertText"></p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      <div class="alert alert-danger alert-dismissible" id="alertDiv" role="alert">
+                        <p id="errorText"></p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
                     <div method="POST" id="allInput">
-                        <div class="alert alert-success alert-dismissible" role="alert">
-                            Успешно създаден потребител
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </div>
                         <div class="input-group">
                             <p class="errorMsg font-robo" id="usernameError">Попълнете полето</p>
                             <input class="input--style-1" type="text" placeholder="Потребителско име" id="username">

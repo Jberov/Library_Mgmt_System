@@ -16,30 +16,35 @@ async function deleteUserRequest(event){
         type: 'DELETE',
         xhrFields: {
             withCredentials: true            
+        },
+        statusCode: {
+            200: function (xhr) {
+                location.reload();
+                $("#alertText").text(xhr.message);
+                $("#messageDiv").show();
+            },
+            400: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();
+            },
+            404: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("#alertDiv").show();
+            },
+            500: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("#alertDiv").show();
+            },
+            502: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("#alertDiv").show();
+            }
         }
     });
 }
 
 async function deleteUser(event){
-    let userResponse = await deleteUserRequest(event);
-
-    switch (userResponse.status) { 
-        case 404:
-            alert("Няма такъв потребител");
-            return false;
-        case 409:
-            alert(userResponse.error);
-            return false;
-        case 500:
-            alert("Проблем в системата");
-            return false;
-        case 502:
-            alert("Няма връзка със системата");
-            return false;       
-    };
-
-    alert("Потребителят е изтрит");
-    location.reload();
+    await deleteUserRequest(event);
 }
 
 async function loadUserList(){
@@ -114,7 +119,8 @@ async function findUser(){
        await fetchUser(searchable);
        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
    } catch (error) {
-       alert("Няма потребител или книга с такова име");
+        $("#errorText").text("Няма потребител или книга с такова име");
+        $("alertDiv").show();
    }
 }
 
@@ -125,14 +131,15 @@ async function findBook(){
         await getBookRequest(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/BookInfo.html?book=" + searchable);
     } catch (error) {
-        console.log("No book found");
         return false;
     }
     return true;
 }
 
 $(document).ready(async function(){
-   await loadUserList();
+    $("#messageDiv").hide();
+    $("#alertDiv").hide();
+    await loadUserList();
     $(document).on("click",".ChangeUserBtn",function(event){
        const searchable = $(event.target).siblings("h5").text();
        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/AddUserPageAdmin.html?user=" + searchable);
@@ -149,5 +156,10 @@ $(document).ready(async function(){
         if(! await findBook()) {
             await findUser();
         }
+    });
+
+    $(".btn-close").click(function () {
+        $("#messageDiv").hide();
+        $("#alertDiv").hide();
     });
 });

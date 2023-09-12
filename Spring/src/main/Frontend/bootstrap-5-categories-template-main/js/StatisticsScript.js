@@ -44,7 +44,8 @@ async function findUser(){
        await fetchUser(searchable);
        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
    } catch (error) {
-       alert("Няма потребител или книга с такова име");
+        $("#errorText").text("Няма потребител или книга с такова име");
+        $("#alertDiv").show();
    }
 }
 
@@ -139,6 +140,8 @@ async function fillOutStatistics(date=null){
 }
 
 $(document).ready(async function(){
+    $("#messageDiv").hide();
+    $("#alertDiv").hide();
     $(".errorMsg").hide();
     fillOutStatistics();
 
@@ -148,14 +151,20 @@ $(document).ready(async function(){
             fillOutStatistics(date);
             return;
         }
-        alert("Невалидна дата");
-        location.reload();
 
+        location.reload();
+        $("#errorText").text("Невалидна дата");
+        $("#alertDiv").show();
     });
 
     $("#search-button").click(async function(){
         if(! await findBook()) {
             findUser();
         }
+    });
+
+    $(".btn-close").click(function () {
+        $("#messageDiv").hide();
+        $("#alertDiv").hide();
     });
 });

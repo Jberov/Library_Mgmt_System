@@ -65,14 +65,17 @@ function sendCreateRequest() {
             200: function() {
                 window.location.replace("http://localhost/library-frontend/bootstrap-5-login-cover-template-main/index.html");
             },
-            400: function() {
-                alert("Имейл или телефон са вече използвани");
+            400: function(xhr) {
+                $("#errorText").text(xhr);
+                $("alertDiv").show();
             },
-            500: function() {
-                alert("Системата е временно недостъпна");
+            500: function(xhr) {
+                $("#errorText").text(xhr);
+                $("alertDiv").show();
             },
-            502: function() {
-                alert("Грешка в системата");
+            502: function(xhr) {
+                $("#errorText").text(xhr);
+                $("alertDiv").show();
             }
         }
     });
@@ -80,11 +83,18 @@ function sendCreateRequest() {
 
 $(document).ready(function(){
     $(".errorMsg").hide();
+    $("#messageDiv").hide();
+    $("#alertDiv").hide();
 
-    $("button").click(function(){
+    $(".btn--radius").click(function(){
         if (validateInput()) {
             sendCreateRequest();
         } 
+    });
+
+    $(".btn-close").click(function () {
+        $("#messageDiv").hide();
+        $("#alertDiv").hide();
     });
 });
 

@@ -79,12 +79,10 @@ async function sendChangeRequest(method) {
             withCredentials: true            
         },statusCode: {
             200: function (xhr) {
-                console.log(xhr);
                     $("#alertText").text(xhr);
                     $("#messageDiv").show();
                 },
             201: function (xhr) {
-                console.log(xhr);
                     $("#alertText").text(xhr);
                     $("#messageDiv").show();
                 },
@@ -94,8 +92,6 @@ async function sendChangeRequest(method) {
                     $("alertDiv").show();
                 },
                 403: function () {
-                    console.log(xhr);
-
                     $("#errorText").text("Нямате необходимите привилегии");
                     $("alertDiv").show();
                 },
@@ -104,8 +100,6 @@ async function sendChangeRequest(method) {
                     $("#alertDiv").show();
                 },
                 500: function (xhr) {
-                    console.log(xhr);
-
                     $("#errorText").text(xhr);
                     $("#alertDiv").show();
                 },

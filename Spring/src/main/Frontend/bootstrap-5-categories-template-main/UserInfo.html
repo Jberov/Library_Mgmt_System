@@ -83,8 +83,12 @@
             <!-- Jumbotron -->
           </header>
         <section style="background-color: #eee;">
-          <div class="alert alert-success alert-dismissible" role="alert">
-            Успешно върната книга
+          <div class="alert alert-success alert-dismissible" id="messageDiv" role="alert">
+            <p id="alertText"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          <div class="alert alert-danger alert-dismissible" id="alertDiv" role="alert">
+            <p id="errorText"></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
             <div class="container py-5">

@@ -31,19 +31,24 @@ async function getUser(parameter){
         xhrFields: {
             withCredentials: true            
         },
-        crossDomain:true
+        crossDomain:true,
+        403: function (xhr) {
+            $("#errorText").text(xhr.responseJSON.error);
+            $("#alertDiv").show();
+        },
+        404: function (xhr) {
+            $("#errorText").text(xhr.responseJSON.error);
+            $("#alertDiv").show();
+        },
+        500: function (xhr) {
+            $("#errorText").text(xhr.responseJSON.error);
+            $("#alertDiv").show();
+        },
+        502: function (xhr) {
+            $("#errorText").text(xhr.responseJSON.error);
+            $("#alertDiv").show();
+        }
     });
-
-    if(response.status == 400){
-        alert("Грешен критерий за търсене");
-        return false;
-    }
-
-    if(response.status == 403){
-        alert("Липса на права");
-        return false;
-    }
-    
     return response.user;
 }
 
@@ -91,7 +96,8 @@ async function findUser(){
        await fetchUser(searchable);
        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
    } catch (error) {
-       alert("Няма потребител или книга с такова име");
+        $("#errorText").text(xhr.responseJSON.message);
+        $("#alertDiv").show();
    }
 }
 
@@ -171,22 +177,39 @@ async function leaseBook(event){
                 url: url,
                 type: 'PATCH',
                 async: true,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
                 xhrFields: {
                     withCredentials: true            
                 },
-                success: function(){
-                    alert("Книгата е успешно върната");
-                },
-                error: function(error){
-                    alert("Проблем при връщането на книга, поради" + error.message);
+                statusCode: {
+                    200: function (xhr) {
+                        $("#alertText").text(xhr.message);
+                        $("#messageDiv").show();
+                    },
+                    404: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.message);
+                        $("#alertDiv").show();
+                    },
+                    500: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.message);
+                        $("#alertDiv").show();
+                    },
+                    502: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.message);
+                        $("#alertDiv").show();
+                    }
                 }
             });
         } catch (Error){
-            alert("Проблем при връщането на книга");
+            $("#errorText").text("Проблем при връщането на книга");
+            $("#alertDiv").show();
         }
 }
 
 $(document).ready(async function(){
+    $("#messageDiv").hide();
+    $("#alertDiv").hide();
     $("table").hide();
     $("#HistoryHeading").hide();
     $("#timestamp p").text(new Date().toLocaleDateString());
@@ -249,16 +272,31 @@ $(document).ready(async function(){
                 xhrFields: {
                     withCredentials: true            
                 },
-                success: function(){
-                    alert("Книгата е успешно заета");
-                },
-                error: function(error){
-                    alert("Проблем при заемането на книга, поради" + error.message);
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                statusCode: {
+                    200: function (xhr) {
+                        $("#alertText").text(xhr.message);
+                        $("#messageDiv").show();
+                    },
+                    404: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.message);
+                        $("#alertDiv").show();
+                    },
+                    500: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.message);
+                        $("#alertDiv").show();
+                    },
+                    502: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.message);
+                        $("#alertDiv").show();
+                    }
                 }
             });
             location.reload();
         } catch (Error){
-            alert("Проблем при заемането на книга");
+            $("#errorText").text("Проблем при заемането на книга");
+            $("#alertDiv").show();
         }
         
     });
@@ -281,17 +319,36 @@ $(document).ready(async function(){
                 xhrFields: {
                     withCredentials: true            
                 },
-                success: function(){
-                    alert("Книгата е успешно върната");
-                },
-                error: function(error){
-                    alert("Проблем при връщането на книга, поради" + error.message);
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                statusCode: {
+                    200: function (xhr) {
+                        $("#alertText").text(xhr.message);
+                        $("#messageDiv").show();
+                    },
+                    404: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.error);
+                        $("#alertDiv").show();
+                    },
+                    500: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.error);
+                        $("#alertDiv").show();
+                    },
+                    502: function (xhr) {
+                        $("#errorText").text(xhr.responseJSON.error);
+                        $("#alertDiv").show();
+                    }
                 }
             });
             location.reload();
         } catch (Error){
-            alert("Проблем при връщането на книга");
-        }
+            $("#errorText").text(xhr.responseJSON.message);
+            $("#alertDiv").show();        }
         
+    });
+
+    $(".btn-close").click(function () {
+        $("#messageDiv").hide();
+        $("#alertDiv").hide();
     });
 });
