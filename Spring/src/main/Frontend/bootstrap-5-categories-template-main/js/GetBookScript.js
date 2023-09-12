@@ -25,14 +25,29 @@ async function sendFetchRequest(){
         crossDomain:true,
         beforeSend: function(oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', getHeader());
+        },
+        200: function (xhr) {
+            $("#alertText").text(xhr.message);
+            $("#messageDiv").show();
+        },
+        404: function (xhr) {
+            $("#errorText").text(xhr.responseJSON.error);
+            $("#alertDiv").show();
+            return null;
+        },
+        500: function (xhr) {
+            $("#errorText").text(xhr.responseJSON.error);
+            $("#alertDiv").show();
+            return null;
+
+        },
+        502: function (xhr) {
+            $("#errorText").text(xhr.responseJSON.error);
+            $("#alertDiv").show();
+            return null;
         }
     });
 
-    if(response.status == 400){
-        alert("Грешен критерий за търсене");
-        return null;
-    }
-    
     return response.book;
 }
 
@@ -80,7 +95,8 @@ async function findUser(){
        await fetchUser(searchable);
        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
    } catch (error) {
-       alert("Няма потребител или книга с такова име");
+       $("#errorText").text(xhr.responseJSON.error);
+       $("#alertDiv").show();
    }
 }
 
@@ -174,5 +190,9 @@ $(document).ready(async function(){
         if(! await findBook()) {
             findUser();
         }
+    });
+
+    $(".btn-close").click(function () {
+        $("#alertDiv").hide();
     });
 });

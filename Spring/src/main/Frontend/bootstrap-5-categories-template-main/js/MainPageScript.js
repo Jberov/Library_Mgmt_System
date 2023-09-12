@@ -9,11 +9,11 @@ async function fetchBooks() {
         statusCode: {
             500: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();           
+                $("#alertDiv").show();           
             },
             502: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();           
+                $("#alertDiv").show();           
             }
         }
     });
@@ -27,26 +27,29 @@ async function deleteBookRequest(event) {
         xhrFields: {
             withCredentials: true
         },
+        async: true,
         statusCode: {
             200: function (xhr) {
+                location.reload();
                 $("#alertText").text(xhr.message);
                 $("#messageDiv").show();
             },
             404: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             },
             409: function (xhr) {
+                console.log("Deletion is caught");
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();            
+                $("#alertDiv").show();            
             },
             500: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();           
+                $("#alertDiv").show();           
             },
             502: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();           
+                $("#alertDiv").show();           
             }
         }
     });
@@ -68,19 +71,19 @@ async function fetchBookIsbnRequest(event) {
         statusCode: {
             400: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             },
             404: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             },
             500: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             },
             502: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.error);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             }
         }
     });
@@ -104,21 +107,20 @@ async function leaseBookRequest(event) {
         },
         statusCode: {
             200: function (xhr) {
-                location.reload();
                 $("#alertText").text(xhr.message);
                 $("#messageDiv").show();
             },
             404: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.message);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             },
             500: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.message);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             },
             502: function (xhr) {
                 $("#errorText").text(xhr.responseJSON.message);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             }
         }
     });
@@ -198,7 +200,7 @@ async function findUser() {
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
     } catch (error) {
         $("#errorText").text("Няма потребител или книга с такова име");
-        $("alertDiv").show();
+        $("#alertDiv").show();
     }
 }
 
@@ -306,6 +308,6 @@ $(document).ready(async function () {
 
     $(".btn-close").click(function () {
         $("#messageDiv").hide();
-        $("#errorText").hide();
+        $("#alertDiv").hide();
     });
 });
