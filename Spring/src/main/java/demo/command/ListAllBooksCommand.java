@@ -28,17 +28,17 @@ public class ListAllBooksCommand {
 		
 		try {
 			if (bookService.getAllBooks().isEmpty()) {
-				result.put("error", "No books found");
+				result.put("error", "Не съществуват книги");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
 			result.put("books", bookService.getAllBooks());
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (JDBCConnectionException jdbc) {
-			result.put("error", "Error connecting to database");
+			result.put("error", "Грешка при връзката с бази данни");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
 		} catch (Exception e) {
-			result.put("error", "Error, service is currently unavailable");
+			result.put("error", "Проблем със системата");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}

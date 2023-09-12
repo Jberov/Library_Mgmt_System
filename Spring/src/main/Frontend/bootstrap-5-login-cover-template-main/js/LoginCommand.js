@@ -7,8 +7,7 @@ $(document).ready(function(){
         let username = $("#usernameField").val();
         let password = $("#passwordField").val();
         if ((username == "" || username == undefined) || (password == "" || password == undefined)) {
-            console.log("Everything hidden");
-            $("#errorMsg").text("Please enter text into marked fields");
+            $("#errorMsg").text("Моля въведете парола и/или потребителско име");
             $("#errorMsg").show();
             return;
         }

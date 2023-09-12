@@ -5,7 +5,17 @@ async function fetchBooks() {
         xhrFields: {
             withCredentials: true
         },
-        async: true
+        async: true,
+        statusCode: {
+            500: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();           
+            },
+            502: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();           
+            }
+        }
     });
 }
 
@@ -19,19 +29,24 @@ async function deleteBookRequest(event) {
         },
         statusCode: {
             200: function (xhr) {
-                alert(xhr.Message);
+                $("#alertText").text(xhr.message);
+                $("#messageDiv").show();
             },
             404: function (xhr) {
-                alert(xhr.responseJSON.error);
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();
             },
             409: function (xhr) {
-                alert(xhr.responseJSON.error);
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();            
             },
             500: function (xhr) {
-                alert(xhr.responseJSON.error);
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();           
             },
             502: function (xhr) {
-                alert(xhr.responseJSON.error);
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();           
             }
         }
     });
@@ -49,6 +64,24 @@ async function fetchBookIsbnRequest(event) {
         },
         beforeSend: function (oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', 'Name');
+        },
+        statusCode: {
+            400: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();
+            },
+            404: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();
+            },
+            500: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();
+            },
+            502: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("alertDiv").show();
+            }
         }
     });
 
@@ -71,17 +104,21 @@ async function leaseBookRequest(event) {
         },
         statusCode: {
             200: function (xhr) {
-                alert(xhr.message);
                 location.reload();
+                $("#alertText").text(xhr.message);
+                $("#messageDiv").show();
             },
             404: function (xhr) {
-                alert(xhr.responseJSON.message);
+                $("#errorText").text(xhr.responseJSON.message);
+                $("alertDiv").show();
             },
             500: function (xhr) {
-                alert(xhr.responseJSON.message);
+                $("#errorText").text(xhr.responseJSON.message);
+                $("alertDiv").show();
             },
             502: function (xhr) {
-                alert(xhr.responseJSON.message);
+                $("#errorText").text(xhr.responseJSON.message);
+                $("alertDiv").show();
             }
         }
     });
@@ -160,7 +197,8 @@ async function findUser() {
         await fetchUser(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
     } catch (error) {
-        alert("Няма потребител или книга с такова име");
+        $("#errorText").text("Няма потребител или книга с такова име");
+        $("alertDiv").show();
     }
 }
 
@@ -195,33 +233,24 @@ async function updateBookCount(event) {
             },
             statusCode: {
                 201: function (xhr) {
-                    console.log(xhr.message);
                     $("#alertText").text(xhr.message);
                     $("#messageDiv").show();
                 },
                 400: function (xhr) {
-                    $("#messageDiv").removeClass("alert-success");
-                    $("#messageDiv").addClass("alert-danger");
-                    $("#alertText").text(xhr.responseJSON.error);
-                    $("#messageDiv").show();
+                    $("#errorText").text(xhr.responseJSON.error);
+                    $("alertDiv").show();
                 },
                 404: function (xhr) {
-                    $("#messageDiv").removeClass("alert-success");
-                    $("#messageDiv").addClass("alert-danger");
-                    $("#alertText").text(xhr.responseJSON.error);
-                    $("#messageDiv").show();
+                    $("#errorText").text(xhr.responseJSON.error);
+                    $("#alertDiv").show();
                 },
                 500: function (xhr) {
-                    $("#messageDiv").removeClass("alert-success");
-                    $("#messageDiv").addClass("alert-danger");
-                    $("#alertText").text(xhr.responseJSON.error);
-                    $("#messageDiv").show();
+                    $("#errorText").text(xhr.responseJSON.error);
+                    $("#alertDiv").show();
                 },
                 502: function (xhr) {
-                    $("#messageDiv").removeClass("alert-success");
-                    $("#messageDiv").addClass("alert-danger");
-                    $("#alertText").text(xhr.responseJSON.error);
-                    $("#messageDiv").show();
+                    $("#errorText").text(xhr.responseJSON.error);
+                    $("#alertDiv").show();
                 }
             }
         });
@@ -230,6 +259,7 @@ async function updateBookCount(event) {
 
 $(document).ready(async function () {
     $("#messageDiv").hide();
+    $("#alertDiv").hide();
     await loadBookList();
 
     $.ajax({
@@ -276,5 +306,6 @@ $(document).ready(async function () {
 
     $(".btn-close").click(function () {
         $("#messageDiv").hide();
+        $("#errorText").hide();
     });
 });
