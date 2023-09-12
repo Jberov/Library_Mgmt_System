@@ -107,11 +107,15 @@
     <div class="container">
       <div class="card-body">
         <h2 class="title">Добавяне на книга</h2>
+        <div class="alert alert-success alert-dismissible" id="messageDiv" role="alert">
+          <p id="alertText"></p>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="alert alert-danger alert-dismissible" id="alertDiv" role="alert">
+          <p id="errorText"></p>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div method="POST" id="allInput">
-          <div class="alert alert-success alert-dismissible" id="messageDiv" role="alert">
-            Успешно добавихте нова книга
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
             <div class="input-group">
                 <p class="errorMsg font-robo" id="bookNameError">Попълнете полето</p>
                 <input class="input--style-1" type="text" placeholder="Име на книгата" id="bookName">

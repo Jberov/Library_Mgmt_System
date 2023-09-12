@@ -31,7 +31,7 @@ public class AddBookCommand {
 			BookDTO addedBook = bookService.addBook(book);
 			
 			if (addedBook == null) {
-				result.put("error", "Въвели сте книга с различно име, но еднакъв ISBN номер.");
+				result.put("error", "Въвели сте книга с различаващи се имена и ISBN номера");
 				return ResponseEntity.badRequest().body(result);
 			}
 
@@ -58,6 +58,6 @@ public class AddBookCommand {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Невалиден номер на книга");
 	}
 }

@@ -35,6 +35,12 @@ public class BookService {
 			return bookMapper.bookToDTO(booksDAO.increaseCount(bookDTO.getIsbn(), bookDTO.getCount()));
 		}
 
+		if (booksDAO.getBookByName(bookDTO.getName()) != null) {
+			if (!booksDAO.getBookByName(bookDTO.getName()).getIsbn().equals(bookDTO.getIsbn())) {
+				return null;
+			}
+		}
+
 		return bookMapper.bookToDTO(booksDAO.addBook(bookMapper.bookToEntity(bookDTO)));
 	}
 	

@@ -82,7 +82,8 @@ async function findUser() {
         await fetchUser(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
     } catch (error) {
-        alert("Няма потребител или книга с такова име");
+        $("#errorText").text("Няма потребител или книга с такова име");
+        $("#alertDiv").show();
     }
 }
 
@@ -101,9 +102,11 @@ async function findBook() {
 }
 
 $(document).ready(async function () {
-    $(".errorMsg").hide();
+    $("#alertDiv").hide();
     $("#messageDiv").hide();
-    $("button").click(async function () {
+    $(".errorMsg").hide();
+
+    $(".btn--radius").click(async function () {
         $(".errorMsg").hide();
         if (validateInput()) {
             await $.ajax({
@@ -118,32 +121,24 @@ $(document).ready(async function () {
                 },
                 statusCode: {
                     201: function (xhr) {
-                        $("#messageDiv").val(xhr.message);
+                        $("#messageDiv").text(xhr.message);
                         $("#messageDiv").show();
                     },
                     400: function (xhr) {
-                        $("#messageDiv").removeClass("alert-success");
-                        $("#messageDiv").addClass("alert-danger");
-                        $("#messageDiv").val(xhr.responseJSON.error);
-                        $("#messageDiv").show();
+                        $("#errorText").text(xhr.responseJSON.error);
+                        $("#alertDiv").show();
                     },
                     404: function (xhr) {
-                        $("#messageDiv").removeClass("alert-success");
-                        $("#messageDiv").addClass("alert-danger");
-                        $("#messageDiv").val(xhr.responseJSON.error);
-                        $("#messageDiv").show();
+                        $("#errorText").text(xhr.responseJSON.error);
+                        $("#alertDiv").show();
                     },
                     500: function (xhr) {
-                        $("#messageDiv").removeClass("alert-success");
-                        $("#messageDiv").addClass("alert-danger");
-                        $("#messageDiv").val(xhr.responseJSON.error);
-                        $("#messageDiv").show();
+                        $("#errorText").text(xhr.responseJSON.error);
+                        $("#alertDiv").show();
                     },
                     502: function (xhr) {
-                        $("#messageDiv").removeClass("alert-success");
-                        $("#messageDiv").addClass("alert-danger");
-                        $("#messageDiv").val(xhr.responseJSON.error);
-                        $("#messageDiv").show();
+                        $("#errorText").text(xhr.responseJSON.error);
+                        $("#alertDiv").show();
                     }
                 }
             });
@@ -157,6 +152,7 @@ $(document).ready(async function () {
     });
 
     $(".btn-close").click(function () {
-        $(this).hide();
+        $("#messageDiv").hide();
+        $("#alertDiv").hide();
     });
 })
