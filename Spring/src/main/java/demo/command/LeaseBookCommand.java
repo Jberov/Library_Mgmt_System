@@ -56,6 +56,6 @@ public class LeaseBookCommand {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Невалиден ISBN номер");
 	}
 }

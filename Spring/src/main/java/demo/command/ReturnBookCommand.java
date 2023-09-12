@@ -32,7 +32,7 @@ public class ReturnBookCommand {
 		try {
 			BookDTO returned = userService.returnBook(isbn, authentication.getName());
 			if (returned == null) {
-				result.put("message", "No such book exists or has been taken by you");
+				result.put("error", "Няма такава книга или е вече заета от вас");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			

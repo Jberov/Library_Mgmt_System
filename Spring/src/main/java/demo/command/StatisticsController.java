@@ -70,6 +70,6 @@ public class StatisticsController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
   public ResponseEntity<String> headerMissing(ServletRequestBindingException ex) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No criteria header set");
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Няма критерий за търсене");
   }
 }

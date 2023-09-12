@@ -39,32 +39,32 @@ public class UserHistoryCommand {
 
 		try {
 			if (history == null) {
-				result.put("error", "User has no history");
+				result.put("error", "Няма потребителска история");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
 			result.put(endUser + "'s history", history);
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (JDBCConnectionException jdbc) {
-			result.put("error", "Error connecting to database");
+			result.put("error", "Грешка към връзката с БД");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
 		} catch (InputMismatchException ime) {
-			result.put("error", "Invalid input");
+			result.put("error", "Невалидни данни");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 		} catch (Exception e) {
-			result.put("error", "Error, service is currently unavailable " + e.getMessage());
+			result.put("error", "Системата е временно недостъпна");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}
 	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing parameter(s): " + ex.getParameterName());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Липсващи параметри: " + ex.getParameterName());
 	}
 
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<String> handleNoUser(NullPointerException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such user");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Няма такъв потребител");
 	}
 	
 }

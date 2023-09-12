@@ -46,20 +46,20 @@ public class GetUserCommand {
 			}
 
 			if (user == null) {
-				result.put("error", "No such user");
+				result.put("error", "Няма такъв потребител");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 			
 			result.put("user", user);
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		} catch (JDBCConnectionException jdbc) {
-			result.put("error", "Error connecting to database");
+			result.put("error", "Грешка към връзката с база данни");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
 		} catch (InputMismatchException ime) {
-			result.put("error", "Invalid input");
+			result.put("error", "Невалидни данни");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 		} catch (Exception e) {
-			result.put("error", "Error, service is currently unavailable");
+			result.put("error", "Систематае  временно недостъпна");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}

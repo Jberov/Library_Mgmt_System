@@ -42,12 +42,12 @@ public class GetBookCommand {
 			} else if (criteria.equals("Isbn")) {
 				book = bookService.getBookById(isbn);
 			} else {
-				result.put("error", "Please set header for criteria search Name or Isbn");
+				result.put("error", "Моля задайте критериий за търсене Name или Isbn");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 			}
 
 			if (book == null){
-				result.put("error", "No such book found");
+				result.put("error", "Няма намерена книга");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 
@@ -55,13 +55,13 @@ public class GetBookCommand {
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 
 		} catch (JDBCConnectionException jdbc) {
-			result.put("error", "Error connecting to database");
+			result.put("error", "Грешка към връзката с БД");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
 		} catch (InputMismatchException ime) {
-			result.put("error", "Invalid input");
+			result.put("error", "Невалидни данни");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 		} catch (Exception e) {
-			result.put("error", "Error, service is currently unavailable");
+			result.put("error", "Системата е времмно недостъпна");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}
@@ -70,13 +70,13 @@ public class GetBookCommand {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Невалиден номер на книгата");
 	}
 
 	@ExceptionHandler(ServletRequestBindingException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public ResponseEntity<String> headerMissing(ServletRequestBindingException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No criteria header set");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Няма критерий за търсене");
 	}
 }

@@ -41,13 +41,13 @@ public class GetBookUsedAtTheMomentCommand {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 			}
 		} catch (JDBCConnectionException jdbc) {
-			result.put("error", "Error connecting to database");
+			result.put("error", "Проблем в системата");
 			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(result);
 		} catch (InputMismatchException ime) {
-			result.put("error", "Invalid input");
+			result.put("error", "Невалидни входни данни");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 		} catch (Exception e) {
-			result.put("error", "Error, service is currently unavailable");
+			result.put("error", "Системата е временно недостъпна");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
 	}
@@ -56,7 +56,7 @@ public class GetBookUsedAtTheMomentCommand {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public ResponseEntity<String> validationError(MethodArgumentNotValidException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid isbn number");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Невалиден ISBN номер");
 	}
 	
 }
