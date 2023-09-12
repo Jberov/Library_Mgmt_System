@@ -98,6 +98,6 @@ public class CreateUserCommand {
   @ResponseStatus(HttpStatus.CONFLICT)
   @ResponseBody
   public ResponseEntity<String> userAlreadyExists(IllegalArgumentException ex) {
-    return ResponseEntity.status(HttpStatus.CONFLICT).body("Such user already exists!");
+    return ResponseEntity.status(HttpStatus.CONFLICT).body("Вече съществува такъв потребител!");
   }
 }

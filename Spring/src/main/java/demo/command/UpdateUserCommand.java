@@ -4,7 +4,6 @@ import demo.dto.UserDTO;
 import demo.mappers.UserMapper;
 import demo.services.UserService;
 import javax.validation.Valid;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,34 +27,28 @@ public class UpdateUserCommand {
   @Autowired
   public UpdateUserCommand(UserService service, UserMapper mapper) {this.service = service;this.mapper = mapper;}
 
-
   @PutMapping(value = "/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<JSONObject> updateUser(@PathVariable(value = "username", required = false) String username ,@RequestBody @Valid UserDTO userDTO, Authentication authentication){
-    JSONObject result = new JSONObject();
-    UserDTO user;
+  public ResponseEntity<String> updateUser(@PathVariable(value = "username", required = false) String username ,@RequestBody @Valid UserDTO userDTO, Authentication authentication){
     userDTO.setEnabled(true);
     if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN") && username != null)) {
-      user = service.updateUser(username, userDTO);
+      service.updateUser(username, userDTO);
     } else {
       UserDTO persistedUser = service.getUser(username);
 
       if (!userDTO.getRole().equals(persistedUser.getRole()) && authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ADMIN")))
       {
-        result.put("message", "Потребителят не може да си смени ролята");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Потребителят не може да си смени ролята");
       }
 
-      user = service.updateUser(authentication.getName(), userDTO);
+      service.updateUser(authentication.getName(), userDTO);
     }
-    result.put("message", "Успешно обновен потребител");
-    result.put("user", user);
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body("Успешно обновен потребител");
   }
 
   @ExceptionHandler(NullPointerException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ResponseBody
   public ResponseEntity<String> userAlreadyExists(IllegalArgumentException ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such user exists!");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Няма такъв потребител");
   }
 }

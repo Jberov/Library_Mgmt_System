@@ -108,8 +108,12 @@
       <div class="card-body">
         <h2 class="title">Добавяне на потребител</h2>
         <div method="POST" id="allInput">
-          <div class="alert alert-success alert-dismissible" role="alert">
-            Успешно създаден потребител
+          <div class="alert alert-success alert-dismissible" id="messageDiv" role="alert">
+            <p id="alertText"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          <div class="alert alert-danger alert-dismissible" id="alertDiv" role="alert">
+            <p id="errorText"></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
           <div class="input-group stringInput">

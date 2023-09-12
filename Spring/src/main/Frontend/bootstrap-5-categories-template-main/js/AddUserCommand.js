@@ -77,19 +77,43 @@ async function sendChangeRequest(method) {
         async: true,
         xhrFields: {
             withCredentials: true            
-        },
-        success: function(result) {
-           alert(result);
-        },
-        error: function(result) {
-            if (result.status == 400) {
-                alert("Нямате права да смените ролята си.");
-            } else if (result.status == 403){
-                alert("Нямате права");
-            } else {
-                alert("Грешка в системата");
+        },statusCode: {
+            200: function (xhr) {
+                console.log(xhr);
+                    $("#alertText").text(xhr);
+                    $("#messageDiv").show();
+                },
+            201: function (xhr) {
+                console.log(xhr);
+                    $("#alertText").text(xhr);
+                    $("#messageDiv").show();
+                },
+                400: function (xhr) {
+                    console.log(xhr);
+                    $("#errorText").text(xhr);
+                    $("alertDiv").show();
+                },
+                403: function () {
+                    console.log(xhr);
+
+                    $("#errorText").text("Нямате необходимите привилегии");
+                    $("alertDiv").show();
+                },
+                404: function (xhr) {
+                    $("#errorText").text(xhr);
+                    $("#alertDiv").show();
+                },
+                500: function (xhr) {
+                    console.log(xhr);
+
+                    $("#errorText").text(xhr);
+                    $("#alertDiv").show();
+                },
+                502: function (xhr) {
+                    $("#errorText").text(xhr);
+                    $("#alertDiv").show();
+                }
             }
-        }
     });
 }
 
@@ -125,12 +149,15 @@ async function findUser(){
         await fetchUser(searchable);
         window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
     } catch (error) {
-        alert("Няма потребител или книга с такова име");
+        $("#errorText").text("Няма потребител или книга с такова име");
+        $("#alertDiv").show();
     }
 }
 
 $(document).ready(async function(){
     $(".errorMsg").hide();
+    $("#messageDiv").hide();
+    $("#alertDiv").hide();
     let method = await determineOperation();
 
     if (method == 'PUT') {
@@ -149,6 +176,11 @@ $(document).ready(async function(){
         if(! await findBook()) {
              findUser();
         }
+    });
+
+    $(".btn-close").click(function () {
+        $("#messageDiv").hide();
+        $("#alertDiv").hide();
     });
 });
 
