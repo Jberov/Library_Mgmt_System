@@ -1,5 +1,3 @@
-
-
 function getHeader(parameter){
     const regex = /([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})/;
 
@@ -21,6 +19,12 @@ async function getBookRequest(searchable) {
         crossDomain:true,
         beforeSend: function(oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', getHeader(searchable));
+        },
+        statusCode: {
+            500: function () {
+                $("#errorText").text("Системата е временно недостъпна");
+                $("#alertDiv").show();
+            }
         }
     });
 }
@@ -34,6 +38,12 @@ async function fetchUser(name) {
        async: true,
        xhrFields: {
            withCredentials: true            
+       },
+       statusCode: {
+           500: function () {
+               $("#errorText").text("Системата е временно недостъпна");
+               $("#alertDiv").show();
+           }
        }
    });
 }
@@ -71,6 +81,12 @@ async function getBookReadCount(payload) {
         async: true,
         xhrFields: {
             withCredentials: true            
+        },
+        statusCode: {
+            500: function () {
+                $("#errorText").text("Системата е временно недостъпна");
+                $("#alertDiv").show();
+            }
         }
     });
 }
@@ -88,20 +104,23 @@ async function getMostReadByKey(payload, header="") {
         },
         beforeSend: function(oJqXhr) {
             oJqXhr.setRequestHeader('Criteria', header);
+        },
+        statusCode: {
+            500: function () {
+                $("#errorText").text("Системата е временно недостъпна");
+                $("#alertDiv").show();
+            }
         }
     });
 }
 
 function createString(statData, base) {
     let i = 1;
-    console.log(base);
-
     $.each(statData, function(key, value){
 
         base += '\n' + i + ". " + key + ", прочетен " + value + " път/и;" + '\n';
         i++;
     });
-
     return base;
 }
 
@@ -119,8 +138,6 @@ async function fillOutStatistics(date=null){
     $("#countOfReadings").text("Брой прочитания: " + statData.countOfReadings);
 
     statData = await getMostReadByKey(date, 'genre');
-
-    console.log(statData);
 
     let compexString = "Най-четени жанрове са:\n";
 

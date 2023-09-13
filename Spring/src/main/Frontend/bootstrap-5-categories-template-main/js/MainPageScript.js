@@ -39,7 +39,6 @@ async function deleteBookRequest(event) {
                 $("#alertDiv").show();
             },
             409: function (xhr) {
-                console.log("Deletion is caught");
                 $("#errorText").text(xhr.responseJSON.error);
                 $("#alertDiv").show();            
             },

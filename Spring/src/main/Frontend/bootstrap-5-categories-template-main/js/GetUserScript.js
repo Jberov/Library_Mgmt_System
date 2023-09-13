@@ -32,21 +32,23 @@ async function getUser(parameter){
             withCredentials: true            
         },
         crossDomain:true,
-        403: function (xhr) {
-            $("#errorText").text(xhr.responseJSON.error);
-            $("#alertDiv").show();
-        },
-        404: function (xhr) {
-            $("#errorText").text(xhr.responseJSON.error);
-            $("#alertDiv").show();
-        },
-        500: function (xhr) {
-            $("#errorText").text(xhr.responseJSON.error);
-            $("#alertDiv").show();
-        },
-        502: function (xhr) {
-            $("#errorText").text(xhr.responseJSON.error);
-            $("#alertDiv").show();
+        statusCode:{
+            403: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("#alertDiv").show();
+            },
+            404: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("#alertDiv").show();
+            },
+            500: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("#alertDiv").show();
+            },
+            502: function (xhr) {
+                $("#errorText").text(xhr.responseJSON.error);
+                $("#alertDiv").show();
+            }
         }
     });
     return response.user;
@@ -168,8 +170,6 @@ async function fetchBookIsbnRequest(book){
 
 async function leaseBook(event){
         const book = $(event.target).closest('tr').find('.nameCol').text();
-        console.log(book);
-
         const isbn = await fetchBookIsbnRequest(book);
         const url = 'http://localhost:8080/api/v1/books/rental/' + isbn;
         try {
@@ -256,14 +256,9 @@ $(document).ready(async function(){
 
     $(document).on("click",".LeaseBook", async function(event){
         const book = $(event.target).closest('tr').find('.nameCol').text();
-        console.log(book);
-
         const isbn = await fetchBookIsbnRequest(book);
-
-       
         const url = 'http://localhost:8080/api/v1/books/rental/' + isbn;
 
-        console.log(url);
         try {
             await $.ajax({
                 url: url,
@@ -282,18 +277,20 @@ $(document).ready(async function(){
                     404: function (xhr) {
                         $("#errorText").text(xhr.responseJSON.message);
                         $("#alertDiv").show();
+                        return;
                     },
                     500: function (xhr) {
                         $("#errorText").text(xhr.responseJSON.message);
                         $("#alertDiv").show();
+                        return;
                     },
                     502: function (xhr) {
                         $("#errorText").text(xhr.responseJSON.message);
                         $("#alertDiv").show();
+                        return;
                     }
                 }
             });
-            location.reload();
         } catch (Error){
             $("#errorText").text("Проблем при заемането на книга");
             $("#alertDiv").show();
@@ -303,14 +300,9 @@ $(document).ready(async function(){
 
     $(document).on("click",".ReturnBook",async function(event){
         const book = $(event.target).closest('tr').find('.nameCol').text();
-        console.log(book);
-
         const isbn = await fetchBookIsbnRequest(book);
-
-       
         const url = 'http://localhost:8080/api/v1/books/reconveyance/' + isbn;
 
-        console.log(url);
         try {
             await $.ajax({
                 url: url,
@@ -329,26 +321,30 @@ $(document).ready(async function(){
                     404: function (xhr) {
                         $("#errorText").text(xhr.responseJSON.error);
                         $("#alertDiv").show();
+                        return;
                     },
                     500: function (xhr) {
                         $("#errorText").text(xhr.responseJSON.error);
                         $("#alertDiv").show();
+                        return;
                     },
                     502: function (xhr) {
                         $("#errorText").text(xhr.responseJSON.error);
                         $("#alertDiv").show();
+                        return;
                     }
                 }
             });
-            location.reload();
         } catch (Error){
-            $("#errorText").text(xhr.responseJSON.message);
-            $("#alertDiv").show();        }
+            $("#errorText").text("Грешка при връщането на книги");
+            $("#alertDiv").show();        
+        }
         
     });
 
     $(".btn-close").click(function () {
         $("#messageDiv").hide();
         $("#alertDiv").hide();
+        location.reload();
     });
 });
