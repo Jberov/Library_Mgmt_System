@@ -24,13 +24,19 @@ public class ReturnBookCommand {
 		this.userService = userService;
 	}
 	
-	@PatchMapping(value = "api/v1/books/reconveyance/{isbn}")
-	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn, Authentication authentication) {
+	@PatchMapping(value = {"api/v1/books/reconveyance/{isbn}","api/v1/books/reconveyance/{isbn}/{username}"})
+	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn, Authentication authentication, @PathVariable(value = "username", required = false) String username) {
 		
 		JSONObject result = new JSONObject();
 		
 		try {
-			BookDTO returned = userService.returnBook(isbn, authentication.getName());
+			BookDTO returned;
+			if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN") && username != null)) {
+				returned = userService.returnBook(isbn, username);
+			} else {
+				returned = userService.returnBook(isbn, authentication.getName());
+			}
+
 			if (returned == null) {
 				result.put("error", "Няма такава книга или е вече заета от вас");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
