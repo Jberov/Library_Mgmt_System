@@ -21,6 +21,7 @@ public class AutoReminderService {
 
   private final MailService mailService;
 
+  //TODO Set for less busy hours
   @Scheduled(cron = "0 0 */24 * * *")
   protected void runChecksForReturns(){
     for(BooksActivity activity : recordsDAO.getAllActivity()) {

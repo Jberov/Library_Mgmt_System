@@ -46,7 +46,7 @@ public class User {
 	@Column(unique = true)
 	private String email;
 
-	@Column(unique = true)
+	@Column
 	private String password;
 
 	@Column(unique = true)
