@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,7 +59,7 @@ public class CreateUserCommand {
     return ResponseEntity.status(HttpStatus.CREATED).body("Успешно създаден потребител");
   }
 
-  @GetMapping("/registrationConfirm")
+  @PostMapping("/registrationConfirm")
   public ResponseEntity<String> confirmRegistration
       (WebRequest request, Model model, @RequestParam("token") String token) {
 

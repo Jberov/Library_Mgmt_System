@@ -129,6 +129,7 @@ public class UserService {
 	public void enableUser(String username){
 		User user = userDAO.findUserByName(username);
 		user.setEnabled(true);
+		System.out.println("enabled");
 		userDAO.updateUser(username, user);
 	}
 

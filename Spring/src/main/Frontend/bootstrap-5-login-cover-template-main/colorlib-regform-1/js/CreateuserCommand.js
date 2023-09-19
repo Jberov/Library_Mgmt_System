@@ -1,10 +1,8 @@
 function validateInput() {
     $(".errorMsg").hide();
         let textInput, flag = false;
-        console.log($("#allInput").children(".input-group").length);
         $("#allInput").children(".input-group").each(function(){
             textInput = $(this).find("input").val();
-            console.log(textInput.toString());
             if( textInput == "" || textInput == undefined ) {
                 $(this).find(".errorMsg").show();
                 flag = true;
@@ -54,28 +52,29 @@ function validateInput() {
     return true;
 }
 
-function sendCreateRequest() {
-    return $.ajax({
+async function sendCreateRequest() {
+     await $.ajax({
         url: 'http://localhost:8080/api/v1/users',
         type: "POST",
         data: createJSONPayload(),
         contentType: 'application/json; charset=utf-8',
+        async: true,
         dataType: 'text',
         statusCode: {
-            200: function() {
+            201: function() {
                 window.location.replace("http://localhost/library-frontend/bootstrap-5-login-cover-template-main/index.html");
             },
             400: function(xhr) {
                 $("#errorText").text(xhr);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             },
             500: function(xhr) {
                 $("#errorText").text(xhr);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             },
             502: function(xhr) {
                 $("#errorText").text(xhr);
-                $("alertDiv").show();
+                $("#alertDiv").show();
             }
         }
     });
@@ -86,9 +85,9 @@ $(document).ready(function(){
     $("#messageDiv").hide();
     $("#alertDiv").hide();
 
-    $(".btn--radius").click(function(){
+    $(".btn--radius").click(async function(){
         if (validateInput()) {
-            sendCreateRequest();
+            await sendCreateRequest();
         } 
     });
 
