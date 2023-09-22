@@ -40,6 +40,7 @@ public class AddBookCommand {
 				return ResponseEntity.status(HttpStatus.CREATED).body(result);
 			}
 
+			bookService.addBook(book);
 			result.put("message", "Успешно добавихте нова книга");
 			return ResponseEntity.status(HttpStatus.CREATED).body(result);
 		} catch (JDBCConnectionException jdbc) {
