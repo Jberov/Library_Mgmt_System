@@ -18,10 +18,10 @@ async function validateInput() {
         }
 
         textInput = $("#password").val();
-        let regexPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+        let regexPattern = /[0-9a-zA-Z!@#$%^&*/?]{8,}/;
 
         if (!regexPattern.test(textInput)) {
-            $("#passwordError").text("Паролата трябва да съдържа поне една цифра, една главна и малка буква и да е с дължина от поне 8 символа");
+            $("#passwordError").text("Паролата трябва да съдържа поне една цифра, специален знак, една главна и малка буква и да е с дължина от поне 8 символа");
             $("#passwordError").show();
             return false;
         }
@@ -68,8 +68,16 @@ function getParam(){
 }
 
 async function sendChangeRequest(method) {
+    let urlPath, param = getParam();
+
+    if (param == null){
+        urlPath = 'http://localhost:8080/api/v1/users';
+    } else {
+        urlPath = 'http://localhost:8080/api/v1/users/' + param;
+    }
+
     return $.ajax({
-        url: 'http://localhost:8080/api/v1/users/' + getParam(),
+        url: urlPath,
         type: method,
         data: createJSONPayload(),
         contentType: 'application/json; charset=utf-8',
@@ -160,7 +168,6 @@ $(document).ready(async function(){
     }
 
     $("#register").click(async function(){
-
         if (validateInput()) {
             sendChangeRequest(method);
         } 

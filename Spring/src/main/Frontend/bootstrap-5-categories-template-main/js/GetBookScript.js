@@ -24,12 +24,9 @@ async function sendFetchRequest(){
         },
         crossDomain:true,
         beforeSend: function(oJqXhr) {
-            oJqXhr.setRequestHeader('Criteria', getHeader());
+            oJqXhr.setRequestHeader('Criteria', criteria);
         },
-        200: function (xhr) {
-            $("#alertText").text(xhr.message);
-            $("#messageDiv").show();
-        },
+        200: function () {return response.book;},
         404: function (xhr) {
             $("#errorText").text(xhr.responseJSON.error);
             $("#alertDiv").show();
@@ -39,7 +36,6 @@ async function sendFetchRequest(){
             $("#errorText").text(xhr.responseJSON.error);
             $("#alertDiv").show();
             return null;
-
         },
         502: function (xhr) {
             $("#errorText").text(xhr.responseJSON.error);
@@ -54,11 +50,11 @@ async function sendFetchRequest(){
 function getHeader(parameter){
     const regex = /([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})/;
 
-    if (regex.test(parameter)) {
-        return "Isbn";
+    if (!regex.test(parameter)) {
+        return "Name";
     }
 
-    return "Name";
+    return "Isbn";
 }
 
 async function getBookRequest(searchable) {
@@ -95,7 +91,7 @@ async function findUser(){
        await fetchUser(searchable);
        window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/UserInfo.html?user=" + searchable);
    } catch (error) {
-       $("#errorText").text(xhr.responseJSON.error);
+       $("#errorText").text("Няма намерена книга или потребител");
        $("#alertDiv").show();
    }
 }
@@ -114,7 +110,6 @@ async function findBook(){
 
 async function determineUsage(){
     const isbn = $("#isbn").text();
-    console.log(isbn);
     const url = 'http://localhost:8080/api/v1/users/' + isbn + '/books';
     await $.ajax({
         url: url,
@@ -150,6 +145,7 @@ async function determineUsage(){
 }
 
 $(document).ready(async function(){
+    $("#alertDiv").hide();
     $("#timestamp p").text(new Date().toLocaleDateString());
 
     $.ajax({
@@ -175,6 +171,7 @@ $(document).ready(async function(){
     let book = await sendFetchRequest();
 
     if (book != null) {
+        $("#alertDiv").hide();
         $("#bookName").text(book.name.toString());
         $("#isbn").text(book.isbn.toString());
         $("#bookAuthor").text(book.author.toString());
@@ -190,6 +187,7 @@ $(document).ready(async function(){
         if(! await findBook()) {
             findUser();
         }
+        
     });
 
     $(".btn-close").click(function () {

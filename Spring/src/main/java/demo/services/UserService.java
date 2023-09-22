@@ -129,7 +129,6 @@ public class UserService {
 	public void enableUser(String username){
 		User user = userDAO.findUserByName(username);
 		user.setEnabled(true);
-		System.out.println("enabled");
 		userDAO.updateUser(username, user);
 	}
 
@@ -144,6 +143,10 @@ public class UserService {
 			encodePassword(userDTO);
 		}
 
+		if(!checkForPasswordChange(username, userDTO)){
+			userDTO.setEnabled(false);
+		}
+
 		userDAO.updateUser(username, userMapper.userDTOToEntity(userDTO));
 		return userDTO;
 	}
@@ -151,6 +154,11 @@ public class UserService {
 	private void encodePassword(UserDTO userDTO){
 		String encodedPassword = this.passwordEncoder.encode(userDTO.getPassword());
 		userDTO.setPassword(encodedPassword);
+	}
+
+	public boolean checkForPasswordChange(String username, UserDTO userDTO){
+		UserDTO localUser = getUser(username);
+		return localUser.getEmail().equals(userDTO.getEmail());
 	}
 
 	@Transactional
