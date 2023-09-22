@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -40,6 +41,7 @@ public class Book {
 	private String name;
 
 	@Column(nullable = false)
+	@Lob
 	private String description;
 	
 	public Book(String isbn, int countBooks, Author author, String name, String description, Genre genre) {

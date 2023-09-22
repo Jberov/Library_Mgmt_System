@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +20,7 @@ public class Genre {
   private String genre;
 
   @Column
+  @Lob
   private String description;
 
   public Genre() {

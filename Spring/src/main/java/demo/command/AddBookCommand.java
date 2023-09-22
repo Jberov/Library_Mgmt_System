@@ -26,21 +26,21 @@ public class AddBookCommand {
 	@PostMapping(value = "/api/v1/books", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<JSONObject> execute(@RequestBody @Valid BookDTO book) {
 		JSONObject result = new JSONObject();
-		
+		BookDTO addedBook;
 		try {
-			BookDTO addedBook = bookService.addBook(book);
-			
-			if (addedBook == null) {
-				result.put("error", "Въвели сте книга с различаващи се имена и ISBN номера");
-				return ResponseEntity.badRequest().body(result);
-			}
-
 			if (bookService.getBookByName(book.getName()) != null) {
+				addedBook = bookService.addBook(book);
+
+				if (addedBook == null) {
+					result.put("error", "Въвели сте книга с различаващи се имена и ISBN номера");
+					return ResponseEntity.badRequest().body(result);
+				}
+
 				result.put("message", "Успешно променихте брой книги");
-			} else {
-				result.put("message", "Успешно добавихте нова книга");
+				return ResponseEntity.status(HttpStatus.CREATED).body(result);
 			}
 
+			result.put("message", "Успешно добавихте нова книга");
 			return ResponseEntity.status(HttpStatus.CREATED).body(result);
 		} catch (JDBCConnectionException jdbc) {
 			result.put("error", "Проблем в системата");

@@ -32,10 +32,10 @@ $(document).ready(function(){
                 if(oJqXhr.status != 401) {
                     console.log("Status is " + oJqXhr.status);
                     // network error or http status different than 401 Unauthorized
-                    $("#errorMsg").text("Connection error");
+                    $("#errorMsg").text("Проблем при връзката");
                     $("#errorMsg").show();
                 } else {
-                    $("#errorMsg").text("Wrong username or password");
+                    $("#errorMsg").text("Грешно потребителско име или парола");
                     $("#errorMsg").show();
                 }
             }
