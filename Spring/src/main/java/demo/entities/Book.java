@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,14 +28,14 @@ public class Book {
 	@Column(nullable = false)
 	private int countBooks;
 
-	@OneToOne(targetEntity=Author.class, fetch= FetchType.EAGER, cascade = {PERSIST, MERGE, REFRESH, DETACH})
+	@OneToOne(targetEntity=Author.class, fetch= FetchType.EAGER, cascade = {PERSIST, MERGE, REFRESH, DETACH, REMOVE})
 	private Author author;
 
 	public Genre getGenre() {
 		return genre;
 	}
 
-	@ManyToOne(targetEntity=Genre.class, fetch= FetchType.EAGER, cascade = {PERSIST, MERGE, REFRESH, DETACH})
+	@ManyToOne(targetEntity=Genre.class, fetch= FetchType.EAGER, cascade = {PERSIST, MERGE, REFRESH, DETACH, REMOVE})
 	private Genre genre;
 	
 	@Column(unique = true, name = "book_name")

@@ -43,8 +43,8 @@ public class CreateUserCommand {
   public ResponseEntity<String> createUser(@RequestBody @Valid UserDTO userDTO, HttpServletRequest request){
     if(service.getUser(userDTO.getUsername()) != null){
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Вече е регистриран потребител с даденото потребителско име");
-
     }
+
     if(service.userExistsByMail(userDTO.getEmail()) || service.userExistsByPhone(userDTO.getTelephoneNumber())){
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Имейлът или телефонът са вече използвани");
     }

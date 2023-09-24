@@ -14,6 +14,7 @@ function getHeader(){
 }
 
 async function sendFetchRequest(){
+    console.log(getURLParam())
     let response = await $.ajax({
         url: 'http://localhost:8080/api/v1/books/' + getURLParam(),
         type: 'GET',
@@ -24,7 +25,7 @@ async function sendFetchRequest(){
         },
         crossDomain:true,
         beforeSend: function(oJqXhr) {
-            oJqXhr.setRequestHeader('Criteria', criteria);
+            oJqXhr.setRequestHeader('Criteria', getHeader(getURLParam()));
         },
         200: function () {return response.book;},
         404: function (xhr) {
