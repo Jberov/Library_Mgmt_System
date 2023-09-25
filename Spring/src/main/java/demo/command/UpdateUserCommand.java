@@ -1,6 +1,7 @@
 package demo.command;
 
 import demo.EventListeners.OnRegistrationCompleteEvent;
+import demo.EventListeners.PassChangeEvent;
 import demo.dto.UserDTO;
 import demo.services.UserService;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,13 @@ public class UpdateUserCommand {
   @Autowired
   public UpdateUserCommand(UserService service, ApplicationEventPublisher eventPublisher) {this.service = service; this.eventPublisher = eventPublisher;}
 
+  @PostMapping(value = "/{username}/resetPassword", produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<String> sendMailForPass(@PathVariable(value = "username") String username, HttpServletRequest request){
+    eventPublisher.publishEvent(new PassChangeEvent(username, request.getLocale()));
+    return ResponseEntity.status(HttpStatus.OK).body("Успешно изпратена парола");
+  }
+
+
   @PutMapping(value = "/{username}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> updateUser(@PathVariable(value = "username", required = false) String username ,@RequestBody @Valid UserDTO userDTO, Authentication authentication, HttpServletRequest request){
     userDTO.setEnabled(true);
@@ -43,7 +52,6 @@ public class UpdateUserCommand {
 
     if (!service.checkForPasswordChange(username, userDTO)){
       String appUrl = request.getContextPath();
-      System.out.println("eMAIL changes");
       eventPublisher.publishEvent(new OnRegistrationCompleteEvent(userDTO,
           request.getLocale(), appUrl));
     }

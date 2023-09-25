@@ -39,4 +39,11 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     String message = "You registered successfully. We will send you a confirmation message to your email account." + "\r\n" + "http://localhost/library-frontend/bootstrap-5-login-cover-template-main/ConfirmationPage.html?token=" + token;
     mailService.sendMail(recipientAddress, subject, message);
   }
+
+  private void resendPassMail(String user) {
+    String recipientAddress = "jballer878@gmail.com";
+    String subject = "Pass change request";
+    String message = "A request was sent to change password from " + user + " to change password";
+    mailService.sendMail(recipientAddress, subject, message);
+  }
 }
