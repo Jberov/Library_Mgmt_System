@@ -3,6 +3,8 @@ function getBasicAuthString (sUsername, sPassword) {
 }
 $(document).ready(function(){
     $("#errorMsg").hide();
+    $("#successMsg").hide();
+
     $("button").click(function(){
         let username = $("#usernameField").val();
         let password = $("#passwordField").val();
@@ -41,4 +43,36 @@ $(document).ready(function(){
             }
         });
     });
-  });
+
+    $("#passLink").click(function(){
+        $("#successMsg").hide();
+        const username = $("#usernameField").val();
+        if ((username == "" || username == undefined)) {
+            $("#errorMsg").text("Моля въведете потребителско име за възстановяване на паролата");
+            $("#errorMsg").show();
+            return;
+        }
+        const urlAdd = 'http://localhost:8080/api/v1/users/' + username + '/resetPassword';
+
+        $.ajax({
+            url: urlAdd,
+            type: 'POST',
+            statusCode: {
+                200: function (xhr) {
+                    $("#successMsg").text(xhr);
+                    $("#successMsg").show();
+                },
+                400: function (xhr) {
+                    $("#errorMsg").text(xhr);
+                    $("#errorMsg").show();
+                    return;
+                },
+                500: function (xhr) {
+                    $("#errorMsg").text(xhr);
+                    $("#errorMsg").show();
+                    return;
+                }
+            }
+        });
+    });
+});

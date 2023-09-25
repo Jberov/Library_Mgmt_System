@@ -34,8 +34,17 @@ public class UpdateUserCommand {
 
   @PostMapping(value = "/{username}/resetPassword", produces = MediaType.TEXT_PLAIN_VALUE)
   public ResponseEntity<String> sendMailForPass(@PathVariable(value = "username") String username, HttpServletRequest request){
-    eventPublisher.publishEvent(new PassChangeEvent(username, request.getLocale()));
-    return ResponseEntity.status(HttpStatus.OK).body("Успешно изпратена парола");
+    try {
+      if (username == null || username.equals("")){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Моля задайте потребителско име");
+      }
+
+      eventPublisher.publishEvent(new PassChangeEvent(username, request.getLocale()));
+      return ResponseEntity.status(HttpStatus.OK).body("Успешно изпратен мейл за смяна");
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Проблем при пращането на мейл");
+    }
   }
 
 
