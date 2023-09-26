@@ -28,11 +28,16 @@ public class LeaseBookCommand {
 		this.userService = userService;
 	}
 	
-	@PatchMapping(value = "api/v1/books/rental/{isbn}")
-	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn, Authentication authentication) {
+	@PatchMapping(value = {"api/v1/books/rental/{isbn}","api/v1/books/rental/{isbn}/{username}"})
+	public ResponseEntity<JSONObject> execute(@PathVariable("isbn") @Valid String isbn, Authentication authentication, @PathVariable(value = "username", required = false) String username) {
 		JSONObject result = new JSONObject();
 		try {
-			BookDTO leased = userService.leaseBook(isbn, authentication.getName());
+			BookDTO leased;
+			if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN") && username != null)) {
+				leased = userService.leaseBook(isbn, username);
+			} else {
+				leased = userService.leaseBook(isbn, authentication.getName());
+			}
 			if (leased == null) {
 				result.put("message", "Книгата не съществува или не е достъпна");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);

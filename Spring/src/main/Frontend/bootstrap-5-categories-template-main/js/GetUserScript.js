@@ -172,7 +172,7 @@ async function leaseBook(event){
         const book = $(event.target).closest('tr').find('.nameCol').text();
         const isbn = await fetchBookIsbnRequest(book);
         const url = 'http://localhost:8080/api/v1/books/rental/' + isbn;
-        try {
+
             $.ajax({
                 url: url,
                 type: 'PATCH',
@@ -201,10 +201,6 @@ async function leaseBook(event){
                     }
                 }
             });
-        } catch (Error){
-            $("#errorText").text("Проблем при връщането на книга");
-            $("#alertDiv").show();
-        }
 }
 
 $(document).ready(async function(){
@@ -257,9 +253,9 @@ $(document).ready(async function(){
     $(document).on("click",".LeaseBook", async function(event){
         const book = $(event.target).closest('tr').find('.nameCol').text();
         const isbn = await fetchBookIsbnRequest(book);
-        const url = 'http://localhost:8080/api/v1/books/rental/' + isbn;
+        const url = 'http://localhost:8080/api/v1/books/rental/' + isbn + '/' + $("#username").text();
 
-        try {
+
             await $.ajax({
                 url: url,
                 type: 'PATCH',
@@ -291,18 +287,13 @@ $(document).ready(async function(){
                     }
                 }
             });
-        } catch (Error){
-            $("#errorText").text("Проблем при заемането на книга");
-            $("#alertDiv").show();
-        }
         
     });
 
     $(document).on("click",".ReturnBook",async function(event){
         const book = $(event.target).closest('tr').find('.nameCol').text();
         const isbn = await fetchBookIsbnRequest(book);
-        const url = 'http://localhost:8080/api/v1/books/reconveyance/' + isbn;
-
+        const url = 'http://localhost:8080/api/v1/books/reconveyance/' + isbn + '/' + $("#username").text();
         try {
             await $.ajax({
                 url: url,

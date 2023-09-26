@@ -124,10 +124,10 @@ function createString(statData, base) {
     return base;
 }
 
-async function fillOutStatistics(date=null){
+async function fillOutStatistics(date){
     let statData, payload;
 
-    if (date === null) {
+    if (date == null) {
         payload = "";
     } else{
         payload = date;
@@ -137,23 +137,28 @@ async function fillOutStatistics(date=null){
 
     $("#countOfReadings").text("Брой прочитания: " + statData.countOfReadings);
 
-    statData = await getMostReadByKey(date, 'genre');
+    statData = await getMostReadByKey(payload, 'genre');
 
     let compexString = "Най-четени жанрове са:\n";
 
     $("#mostReadGenre").text(createString(statData, compexString));
 
-    statData = await getMostReadByKey(date, 'author');
+    statData = await getMostReadByKey(payload, 'author');
 
     compexString = "Най-четени автори са:\n";
 
     $("#mostReadAuthor").text(createString(statData, compexString));
 
-    statData = await getMostReadByKey(date);
+    statData = await getMostReadByKey(payload);
 
     compexString = "Най-четени книги са:\n";
 
     $("#mostReadBooks").text(createString(statData, compexString));
+}
+
+function validateDate(date){
+    const regex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+    return regex.test(date);
 }
 
 $(document).ready(async function(){
@@ -163,7 +168,8 @@ $(document).ready(async function(){
     fillOutStatistics();
 
     $("#dateSearchBtn").click(function(){
-        const date = $("#date").text();
+        const date = $("#date").val();
+        console.log(date);
         if (validateDate(date)) {
             fillOutStatistics(date);
             return;

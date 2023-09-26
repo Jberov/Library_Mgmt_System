@@ -23,12 +23,9 @@ $(document).ready(function(){
                 oJqXhr.setRequestHeader('Authorization', getBasicAuthString(username, password));
             },
             async: true,
-            success: function(result) {
+            success: function() {
                 $("#errorMsg").hide();
                 window.location.replace("http://localhost/library-frontend/bootstrap-5-categories-template-main/MainPage.html");
-
-                
-                // Do something with the result
             },
             error: function(oJqXhr) {
                 if(oJqXhr.status != 401) {
@@ -45,6 +42,7 @@ $(document).ready(function(){
     });
 
     $("#passLink").click(function(){
+        $("#errorMsg").hide();
         $("#successMsg").hide();
         const username = $("#usernameField").val();
         if ((username == "" || username == undefined)) {

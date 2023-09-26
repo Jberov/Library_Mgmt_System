@@ -15,10 +15,11 @@ function validateInput() {
     let isbn = $("#isbn").val();
     let isbnRegex = /([97(8|9)]{3}[-][0-9]{1,5}[-][0-9]{0,7}[-][0-9]{0,6}[-][0-9])|([0-9]{13})/
 
+    console.log(isbnRegex.test(isbn));
     if (!isbnRegex.test(isbn)) {
         $("#isbnError").text("Невалиден формат на isbn номер!");
         $("#isbnError").show();
-        valid = false;
+        return false;
     }
 
     return valid;
@@ -125,7 +126,7 @@ $(document).ready(async function () {
                         $("#messageDiv").show();
                     },
                     400: function (xhr) {
-                        $("#errorText").text(xhr.responseJSON.error);
+                        $("#errorText").text(xhr);
                         $("#alertDiv").show();
                     },
                     404: function (xhr) {
